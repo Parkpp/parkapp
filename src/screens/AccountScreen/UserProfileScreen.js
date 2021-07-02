@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 // import styles from './styles';
 // import { firebase } from "../../firebase/config";
 
-export default function UserProfile(props) {
+export default function UserProfileScreen(props) {
   // const userRef = firebase.firestore().collection("users");
   const { user } = props;
   console.log("what is user-->", user);
