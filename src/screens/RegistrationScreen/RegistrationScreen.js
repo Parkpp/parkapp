@@ -9,6 +9,8 @@ export default function RegistrationScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const onFooterLinkPress = () => {
     navigation.navigate("Login");
@@ -29,6 +31,8 @@ export default function RegistrationScreen({ navigation }) {
           id: uid,
           email,
           fullName,
+          username,
+          phoneNumber,
         };
         const usersRef = firebase.firestore().collection("users");
         usersRef
@@ -67,12 +71,32 @@ export default function RegistrationScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
+          placeholder="Username"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
           placeholder="E-mail"
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setEmail(text)}
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Phone Number"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setPhoneNumber(text)}
+          value={phoneNumber}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+          keyboardType="numeric"
         />
         <TextInput
           style={styles.input}
