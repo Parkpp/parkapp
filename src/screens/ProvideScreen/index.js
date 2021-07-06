@@ -1,15 +1,30 @@
+//Component will render buttons to navigate to 
+// |   |   |  |--ParkingSpotListScreen.js
+// |   |   |  |--SingleViewScreen.js
+// |   |   |  |--CurrentSessionScreen.js
+// |   |   |  |--styles.js
+
+
+
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react'
-import { firebase } from './src/firebase/config'
+import { firebase } from '../../firebase/config'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { LoginScreen, HomeScreen, RegistrationScreen, ProvideScreen } from './src/screens'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ProvideScreen, CurrentSessionScreen, ParkingSpotListScreen, SingleSpotScreen, ProvideParkingScreen } from './src/screens'
+import { ProvideScreen} from './ProvideScreen'
+import { CurrentSessionScreen} from './CurrentSessionScreen'
+import { ParkingSpotListScreen} from './ParkingSpotListScreen'
+import { SingleSpotScreen} from './SingleSpotScreen'
 import {decode, encode} from 'base-64'
+
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
 const Stack = createStackNavigator();
-
+const Tab = createBottomTabNavigator()
+//const Tab = create();
 export default function App() {
 
   const [loading, setLoading] = useState(true)
@@ -45,22 +60,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        { user ? (
-          <>
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
-
-           <Stack.Screen name="Provide">
-           {props => <ProvideScreen {...props} extraData={user} />}
-         </Stack.Screen>
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
+            <Stack.Screen name="ProvideScreen" component={ProvideScreen} />
+            <Stack.Screen name="CurrentSession" component={CurrentSessionScreen} />
+            <Stack.Screen name="ParkingSpotList" component={ParkingSpotListScreen} />
+            <Stack.Screen name="SingleSpot" component={SingleSpotScreen} />
+            <Stack.Screen name="ProvideParking" component={ProvideParkingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
