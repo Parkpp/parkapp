@@ -10,7 +10,7 @@ import {
   HomeScreen,
   RegistrationScreen,
   ProvideScreen,
-  //AccountScreen
+  AccountScreen,
 } from "./src/screens";
 import { decode, encode } from "base-64";
 if (!global.btoa) {
@@ -66,7 +66,7 @@ export default function App() {
               {(props) => <ProvideScreen {...props} extraData={user} />}
             </Tab.Screen>
             <Tab.Screen name="Account">
-              {(props) => <AccountScreen {...props} extraData={user} />}
+              {(props) => <AccountScreen {...props} user={user} />}
             </Tab.Screen>
           </Tab.Navigator>
         </NavigationContainer>

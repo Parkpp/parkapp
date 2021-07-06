@@ -58,6 +58,7 @@ export default function HomeScreen(props) {
   };
 
   const renderEntity = ({ item, index }) => {
+    console.log("Home Screen props ->", props);
     return (
       <View style={styles.entityContainer}>
         <Text style={styles.entityText}>
@@ -81,6 +82,12 @@ export default function HomeScreen(props) {
         />
         <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
           <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.navigation.navigate("Account")}
+        >
+          <Text style={styles.buttonText}>Account</Text>
         </TouchableOpacity>
       </View>
       {entities && (
