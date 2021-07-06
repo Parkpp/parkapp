@@ -58,6 +58,7 @@ export default function HomeScreen(props) {
   };
 
   const renderEntity = ({ item, index }) => {
+    console.log("Home Screen props ->", props);
     return (
       <View style={styles.entityContainer}>
         <Text style={styles.entityText}>

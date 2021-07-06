@@ -61,9 +61,9 @@ export default function App() {
             <Stack.Screen name="Account">
               {(props) => <AccountScreen {...props} user={user} />}
             </Stack.Screen>
-            <Stack.Screen name="User Profile">
+            {/* <Stack.Screen name="User Profile">
               {(props) => <UserProfileScreen {...props} user={user} />}
-            </Stack.Screen>
+            </Stack.Screen> */}
           </>
         ) : (
           <>
