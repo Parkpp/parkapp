@@ -13,7 +13,7 @@ import { ProvideScreen } from "./ProvideScreen";
 //import { CurrentSessionScreen } from "./CurrentSessionScreen";
 import { ParkingSpotListScreen } from "./ParkingSpotListScreen";
 import { ProvideParkingScreen } from "./ProvideParkingScreen";
-//import { SingleSpotScreen } from "./SingleSpotScreen";
+import { SingleSpotScreen } from "./SingleSpotScreen";
 import { decode, encode } from "base-64";
 
 if (!global.btoa) {
@@ -36,9 +36,9 @@ export default function App() {
           component={ParkingSpotListScreen}
         />
         <Stack.Screen name="ProvideParking" component={ProvideParkingScreen} />
-        {/* <Stack.Screen name="SingleSpot" component={SingleSpotScreen}>
+        <Stack.Screen name="SingleSpot">
           {() => <SingleSpotScreen {...props} extraData={spot} />}
-        </Stack.Screen> */}
+        </Stack.Screen>
 
         {/* <Stack.Screen name="CurrentSession" component={CurrentSessionScreen} />
            

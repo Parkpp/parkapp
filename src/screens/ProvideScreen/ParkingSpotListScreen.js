@@ -24,44 +24,43 @@ if (!global.atob) {
 export const ParkingSpotListScreen = (props) => {
   const [spots, setParkingSpots] = useState([]);
 
-  useEffect( () => {
+  useEffect(() => {
     //Make call to firebase
-    const getParkingSpots = async() =>{
-
+    const getParkingSpots = async () => {
       const db = firebase.firestore();
       const parkingSpotsRef = db.collection("parkingSpots");
       const snapshot = await parkingSpotsRef.get();
-  
+
       if (snapshot.empty) {
         console.log("No matching documents.");
       }
-  
+
       let parkingSpots = [];
-  
+
       snapshot.forEach((doc) => {
-        parkingSpots.push(doc.data());
+        let data = {};
+        data = { ...doc.data() };
+        data["id"] = doc.id;
+        console.log(data);
+        parkingSpots.push(data);
       });
-      console.log(parkingSpots);
-  
-      setParkingSpots(parkingSpots)
 
-    }
+      setParkingSpots(parkingSpots);
+    };
 
-      getParkingSpots()
-  },[]);
+    getParkingSpots();
+  }, []);
 
-  const toSingleSpotView  = (spot)=>{
-
-    props.navigation.navigate('singleSpot',{parkingSpot: spot})
-
-  }
+  const toSingleSpotView = (id) => {
+    props.navigation.navigate("singleSpot", { parkingSpot: id });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       {spots.map((spot, idx) => {
         console.log(spot.city);
         return (
-          <TouchableOpacity key={idx} onPress={()=> toSingleSpotView(spot)}>
+          <TouchableOpacity key={idx} onPress={() => toSingleSpotView(spot.id)}>
             <View>
               {/* //render image, location */}
               <Text>{spot.description}</Text>
