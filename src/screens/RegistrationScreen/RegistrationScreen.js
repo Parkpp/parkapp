@@ -33,13 +33,14 @@ export default function RegistrationScreen({ navigation }) {
           fullName,
           username,
           phoneNumber,
+          isProvider: false,
         };
         const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
           .set(data)
           .then(() => {
-            navigation.navigate("Home", { user: data });
+            navigation.navigate("Map", { user: data });
           })
           .catch((error) => {
             alert(error);
@@ -92,11 +93,12 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Phone Number"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setPhoneNumber(text)}
+          onChangeText={(text) => setPhoneNumber(Number(text))}
           value={phoneNumber}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
           keyboardType="numeric"
+          maxLength={10}
         />
         <TextInput
           style={styles.input}

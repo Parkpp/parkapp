@@ -7,6 +7,13 @@ export function UserProfileScreen(props) {
   // const userRef = firebase.firestore().collection("users");
   const { user } = props;
   console.log("what is user-->", user);
+
+  // function updateUser() {
+  //   return (
+
+  //   )
+  // }
+
   return (
     <View>
       <Text>Profile Info</Text>

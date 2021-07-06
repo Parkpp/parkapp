@@ -4,7 +4,6 @@ import { firebase } from "./src/firebase/config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import {
   LoginScreen,
   HomeScreen,
@@ -13,15 +12,15 @@ import {
   AccountScreen,
 } from "./src/screens";
 import { decode, encode } from "base-64";
+import { parkingSpots } from "./parkingSeed";
+//parkingSpots();
+
 if (!global.btoa) {
   global.btoa = encode;
 }
 if (!global.atob) {
   global.atob = decode;
 }
-
-import { parkingSpots } from "./parkingSeed";
-//parkingSpots();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
