@@ -48,23 +48,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ProvideScreen(props) {
+export const ProvideScreen = (props) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   //Funtion to handle navigation to Current Session Screen
   const toCurrentSession = () => {
-    props.navigation.navitate("CurrentSession");
+    props.navigation.navigate("CurrentSession");
   };
 
   //Funtion to handle navigation to Current Session Screen
   const toParkingSpotList = () => {
-    props.navigation.navitate("ParkinSpotList");
+      //'Root', { screen: 'Settings' }
+    props.navigation.navigate("ParkingSpotList");
   };
 
   //Funtion to handle navigation to Current Session Screen
   const toProvideParking = () => {
-    props.navigation.navitate("ProvideParking");
+    props.navigation.navigate("ProvideParking");
   };
 
   return (

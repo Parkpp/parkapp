@@ -82,12 +82,6 @@ export default function HomeScreen(props) {
         <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate("Provide")}
-        >
-          <Text style={styles.buttonText}>Provide</Text>
-        </TouchableOpacity>
       </View>
       {entities && (
         <View style={styles.listContainer}>
