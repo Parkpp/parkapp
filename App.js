@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import { firebase } from "./src/firebase/config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import {
   LoginScreen,
   HomeScreen,
   RegistrationScreen,
   ProvideScreen,
+  //AccountScreen
 } from "./src/screens";
 import { decode, encode } from "base-64";
 if (!global.btoa) {
@@ -18,8 +20,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-import {parkingSpots} from "./seed";
-
+import { parkingSpots } from "./parkingSeed";
 //parkingSpots();
 
 const Stack = createStackNavigator();
@@ -53,27 +54,30 @@ export default function App() {
   if (loading) {
     return <></>;
   }
-
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        {user ? (
-          <>
+    <>
+      {user ? (
+        <NavigationContainer>
+          <Tab.Navigator>
             <Tab.Screen name="Map">
               {(props) => <HomeScreen {...props} extraData={user} />}
             </Tab.Screen>
-
             <Tab.Screen name="Provide">
               {(props) => <ProvideScreen {...props} extraData={user} />}
             </Tab.Screen>
-          </>
-        ) : (
-          <>
-            <Tab.Screen name="Login" component={LoginScreen} />
-            <Tab.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
-      </Tab.Navigator>
-    </NavigationContainer>
+            <Tab.Screen name="Account">
+              {(props) => <AccountScreen {...props} extraData={user} />}
+            </Tab.Screen>
+          </Tab.Navigator>
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Registration" component={RegistrationScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   );
 }

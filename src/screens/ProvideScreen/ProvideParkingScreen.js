@@ -91,7 +91,6 @@ export const ProvideParkingScreen = (props) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="City"
           onChangeText={(text) => setCity(text)}
           value={city}
@@ -101,7 +100,6 @@ export const ProvideParkingScreen = (props) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="State"
           onChangeText={(text) => setState(text)}
           value={state}
