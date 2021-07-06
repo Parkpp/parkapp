@@ -3,15 +3,16 @@ import React, { useEffect, useState } from "react";
 import { firebase } from "./src/firebase/config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import {
   LoginScreen,
   HomeScreen,
   RegistrationScreen,
+  ProvideScreen,
   AccountScreen,
 } from "./src/screens";
 import { decode, encode } from "base-64";
-import UserProfileScreen from "./src/screens/AccountScreen/UserProfileScreen";
-
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -19,7 +20,11 @@ if (!global.atob) {
   global.atob = decode;
 }
 
+import { parkingSpots } from "./parkingSeed";
+//parkingSpots();
+
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -49,29 +54,30 @@ export default function App() {
   if (loading) {
     return <></>;
   }
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {user ? (
-          <>
-            <Stack.Screen name="Home">
+    <>
+      {user ? (
+        <NavigationContainer>
+          <Tab.Navigator>
+            <Tab.Screen name="Map">
               {(props) => <HomeScreen {...props} extraData={user} />}
-            </Stack.Screen>
-            <Stack.Screen name="Account">
+            </Tab.Screen>
+            <Tab.Screen name="Provide">
+              {(props) => <ProvideScreen {...props} extraData={user} />}
+            </Tab.Screen>
+            <Tab.Screen name="Account">
               {(props) => <AccountScreen {...props} user={user} />}
-            </Stack.Screen>
-            {/* <Stack.Screen name="User Profile">
-              {(props) => <UserProfileScreen {...props} user={user} />}
-            </Stack.Screen> */}
-          </>
-        ) : (
-          <>
+            </Tab.Screen>
+          </Tab.Navigator>
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer>
+          <Stack.Navigator>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   );
 }
