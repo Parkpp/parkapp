@@ -62,7 +62,7 @@ export default function App() {
               {(props) => <HomeScreen {...props} extraData={user} />}
             </Tab.Screen>
             <Tab.Screen name="Provide">
-              {(props) => <ProvideScreen {...props} extraData={user} />}
+              {(props) => <ProvideScreen {...props} user={user} />}
             </Tab.Screen>
             <Tab.Screen name="Account">
               {(props) => <AccountScreen {...props} user={user} />}
