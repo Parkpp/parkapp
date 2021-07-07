@@ -7,7 +7,6 @@ import { firebase } from "../../firebase/config";
 const Stack = createStackNavigator();
 
 export function AccountScreen(props) {
-  console.log("Account Screen props-->", props);
 
   const onLogoutPress = () => {
     firebase
