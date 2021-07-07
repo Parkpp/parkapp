@@ -20,48 +20,56 @@ if (!global.atob) {
   global.atob = decode;
 }
 
+import { parkingSpots } from "../../../parkingSeed";
+//parkingSpots()
+
+
+
+//API call to convert entered user loction to Geopoint long and lat
 //Need to pull in data from firebase
 export const ParkingSpotListScreen = (props) => {
   const [spots, setParkingSpots] = useState([]);
 
-  useEffect( () => {
+  const user = props.user;
+
+
+  useEffect(() => {
     //Make call to firebase
-    const getParkingSpots = async() =>{
+    const getParkingSpots = async () => {
+      //Need logic to check "userId" field and filter query  as so
 
       const db = firebase.firestore();
-      const parkingSpotsRef = db.collection("parkingSpots");
+      const parkingSpotsRef = db
+        .collection("parkingSpots")
+        .where("userId", "==", user.id);
       const snapshot = await parkingSpotsRef.get();
-  
+
       if (snapshot.empty) {
         console.log("No matching documents.");
       }
-  
+
       let parkingSpots = [];
-  
-      snapshot.forEach((doc) => {
+
+        snapshot.forEach((doc) => {
         parkingSpots.push(doc.data());
       });
-      console.log(parkingSpots);
-  
-      setParkingSpots(parkingSpots)
 
-    }
 
-      getParkingSpots()
-  },[]);
+      setParkingSpots(parkingSpots);
+    };
 
-  const toSingleSpotView  = (spot)=>{
+    getParkingSpots();
+  }, []);
 
-    props.navigation.navigate('singleSpot',{parkingSpot: spot})
-
-  }
+  const toSingleSpotView = (spot) => {
+    props.navigation.navigate("singleSpot", { parkingSpot: spot });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       {spots.map((spot, idx) => {
-        console.log(spot.city);
         return (
-          <TouchableOpacity key={idx} onPress={()=> toSingleSpotView(spot)}>
+          <TouchableOpacity key={idx} onPress={() => toSingleSpotView(spot)}>
             <View>
               {/* //render image, location */}
               <Text>{spot.description}</Text>
