@@ -177,18 +177,18 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          placeholder="License Plate"
-          onChangeText={(text) => setLicensePlate(text)}
-          value={licensePlate}
+          placeholder="Color"
+          onChangeText={(text) => setVehicleColor(text)}
+          value={vehicleColor}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          placeholder="Color"
-          onChangeText={(text) => setVehicleColor(text)}
-          value={vehicleColor}
+          placeholder="License Plate"
+          onChangeText={(text) => setLicensePlate(text)}
+          value={licensePlate}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
