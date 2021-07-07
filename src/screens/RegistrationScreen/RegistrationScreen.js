@@ -29,6 +29,8 @@ export default function RegistrationScreen({ navigation }) {
       return;
     }
 
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -50,10 +52,11 @@ export default function RegistrationScreen({ navigation }) {
           year: vehicleYear,
           licensePlate: licensePlate,
           color: vehicleColor,
+          createdAt: timestamp,
         };
 
         const vehicleRef = firebase.firestore().collection("vehicles");
-        vehicleRef;
+        vehicleRef.add(vehicleData);
         const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
@@ -145,7 +148,6 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="Brand"
           onChangeText={(text) => setVehicleMake(text)}
           value={vehicleMake}
@@ -155,7 +157,6 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="Model"
           onChangeText={(text) => setVehicleModel(text)}
           value={vehicleModel}
@@ -165,7 +166,6 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="Year"
           onChangeText={(text) => setVehicleYear(Number(text))}
           value={vehicleYear}
@@ -177,7 +177,6 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="License Plate"
           onChangeText={(text) => setLicensePlate(text)}
           value={licensePlate}
@@ -187,7 +186,6 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
           placeholder="Color"
           onChangeText={(text) => setVehicleColor(text)}
           value={vehicleColor}
