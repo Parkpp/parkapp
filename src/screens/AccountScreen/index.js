@@ -8,7 +8,6 @@ import { UserProfileScreen } from "./UserProfileScreen";
 const Account = createStackNavigator();
 
 export default function App(props) {
-  console.log("Any props here->", props);
   const { user } = props;
   return (
     <NavigationContainer independent={true}>
