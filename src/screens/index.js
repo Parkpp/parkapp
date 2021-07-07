@@ -4,8 +4,8 @@ export { default as HomeScreen } from './HomeScreen/HomeScreen';
 
 export { default as RegistrationScreen } from './RegistrationScreen/RegistrationScreen';
 
-export { default as AccountScreen } from './AccountScreen/AccountScreen';
+export { default as AccountScreen } from './AccountScreen/';
 
-export { default as ProvideScreen } from './ProvideScreen/ProvideScreen';
+export { default as ProvideScreen } from './ProvideScreen/';
 
 export { default as MapScreen } from './MapScreen/MapScreen';
