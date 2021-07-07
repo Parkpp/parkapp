@@ -21,9 +21,6 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-import { parkingSpots } from './parkingSeed';
-//parkingSpots();
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +61,7 @@ export default function App () {
               {props => <MapScreen {...props} extraData={user} />}
             </Tab.Screen>
             <Tab.Screen name='Provide'>
-              {props => <ProvideScreen {...props} extraData={user} />}
+              {props => <ProvideScreen {...props} user={user} />}
             </Tab.Screen>
             <Tab.Screen name='Account'>
               {props => <AccountScreen {...props} user={user} />}
