@@ -15,7 +15,7 @@ export function VehicleScreen(props) {
         .where("userId", "==", user.id)
         // .orderBy("createdAt", "desc")
         .get();
-      console.log("what is vehicle?-->", vehicle);
+      // console.log("what is vehicle?-->", vehicle);
     };
   });
 

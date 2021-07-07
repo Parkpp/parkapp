@@ -7,8 +7,6 @@ import { firebase } from "../../firebase/config";
 const Stack = createStackNavigator();
 
 export function AccountScreen(props) {
-  console.log("Account Screen props-->", props);
-
   const onLogoutPress = () => {
     firebase
       .auth()
@@ -24,9 +22,6 @@ export function AccountScreen(props) {
 
   return (
     <>
-      {/* <Stack.Screen name="User Profile">
-        {(props) => <UserProfileScreen {...props} user={props} />}
-      </Stack.Screen> */}
       <View>
         <TouchableOpacity
           style={styles.button}
