@@ -34,6 +34,12 @@ export function AccountScreen(props) {
         >
           <Text style={styles.buttonTitle}>Profile -&gt; </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => props.navigation.navigate("Vehicle Information")}
+        >
+          <Text style={styles.buttonTitle}>Vehicle -&gt; </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => onLogoutPress()}>
           <Text style={styles.buttonTitle}>Sign Out</Text>
         </TouchableOpacity>

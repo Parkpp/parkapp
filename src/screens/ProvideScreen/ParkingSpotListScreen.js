@@ -41,7 +41,7 @@ export const ParkingSpotListScreen = (props) => {
         let data = {};
         data = { ...doc.data() };
         data["id"] = doc.id;
-        console.log(data);
+
         parkingSpots.push(data);
       });
 
