@@ -5,12 +5,19 @@ import styles from "./styles";
 import { firebase } from "../../firebase/config";
 
 export default function RegistrationScreen({ navigation }) {
+  //User Info
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  //Vehicle Information
+  const [vehicleMake, setVehicleMake] = useState("");
+  const [vehicleModel, setVehicleModel] = useState("");
+  const [vehicleYear, setVehicleYear] = useState("");
+  const [licensePlate, setLicensePlate] = useState("");
+  const [vehicleColor, setVehicleColor] = useState("");
 
   const onFooterLinkPress = () => {
     navigation.navigate("Login");
@@ -21,6 +28,8 @@ export default function RegistrationScreen({ navigation }) {
       alert("Passwords don't match.");
       return;
     }
+
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
     firebase
       .auth()
@@ -33,13 +42,27 @@ export default function RegistrationScreen({ navigation }) {
           fullName,
           username,
           phoneNumber,
+          isProvider: false,
         };
+        const vehicleData = {
+          userId: uid,
+          // vehicleId: ,
+          make: vehicleMake,
+          model: vehicleModel,
+          year: vehicleYear,
+          licensePlate: licensePlate,
+          color: vehicleColor,
+          createdAt: timestamp,
+        };
+
+        const vehicleRef = firebase.firestore().collection("vehicles");
+        vehicleRef.add(vehicleData);
         const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
           .set(data)
           .then(() => {
-            navigation.navigate("Home", { user: data });
+            navigation.navigate("Map", { user: data });
           })
           .catch((error) => {
             alert(error);
@@ -92,11 +115,12 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Phone Number"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setPhoneNumber(text)}
+          onChangeText={(text) => setPhoneNumber(Number(text))}
           value={phoneNumber}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
           keyboardType="numeric"
+          maxLength={10}
         />
         <TextInput
           style={styles.input}
@@ -118,6 +142,57 @@ export default function RegistrationScreen({ navigation }) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
+
+        <Text>Vehicle Information</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          placeholder="Brand"
+          onChangeText={(text) => setVehicleMake(text)}
+          value={vehicleMake}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          placeholder="Model"
+          onChangeText={(text) => setVehicleModel(text)}
+          value={vehicleModel}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          placeholder="Year"
+          onChangeText={(text) => setVehicleYear(Number(text))}
+          value={vehicleYear}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+          keyboardType="numeric"
+          maxLength={10}
+        />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          placeholder="Color"
+          onChangeText={(text) => setVehicleColor(text)}
+          value={vehicleColor}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#aaaaaa"
+          placeholder="License Plate"
+          onChangeText={(text) => setLicensePlate(text)}
+          value={licensePlate}
+          underlineColorAndroid="transparent"
+          autoCapitalize="none"
+        />
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => onRegisterPress()}
