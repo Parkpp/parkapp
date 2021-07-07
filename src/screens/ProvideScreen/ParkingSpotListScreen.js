@@ -1,7 +1,7 @@
-import “react-native-gesture-handler”;
-import React, { useEffect, useState } from “react”;
-import { firebase } from “../../firebase/config”;
-import { decode, encode } from “base-64";
+import "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
+import { firebase } from "../../firebase/config";
+import { decode, encode } from "base-64";
 import {
   Image,
   SafeAreaView,
@@ -9,16 +9,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from “react-native”;
-import { KeyboardAwareScrollView } from “react-native-keyboard-aware-scroll-view”;
-import styles from “./styles”;
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import styles from "./styles";
 if (!global.btoa) {
   global.btoa = encode;
 }
 if (!global.atob) {
   global.atob = decode;
 }
-import { parkingSpots } from “../../../parkingSeed”;
+import { parkingSpots } from "../../../parkingSeed";
 //parkingSpots()
 //API call to convert entered user loction to Geopoint long and lat
 //Need to pull in data from firebase
@@ -28,17 +28,17 @@ export const ParkingSpotListScreen = (props) => {
   useEffect(() => {
     //Make call to firebase
     const getParkingSpots = async () => {
-      //Need logic to check “userId” field and filter query  as so
+      //Need logic to check "userId" field and filter query  as so
       const db = firebase.firestore();
       const parkingSpotsRef = db
-        .collection(“parkingSpots”)
-        .where(“userId”, “==“, user.id);
+        .collection("parkingSpots")
+        .where("userId", "==", user.id);
       const snapshot = await parkingSpotsRef.get();
       if (snapshot.empty) {
-        console.log(“No matching documents.“);
+        console.log("No matching documents.");
       }
       let parkingSpots = [];
-        snapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         parkingSpots.push(doc.data());
       });
       setParkingSpots(parkingSpots);
@@ -46,7 +46,7 @@ export const ParkingSpotListScreen = (props) => {
     getParkingSpots();
   }, []);
   const toSingleSpotView = (spot) => {
-    props.navigation.navigate(“singleSpot”, { parkingSpot: spot });
+    props.navigation.navigate("singleSpot", { parkingSpot: spot });
   };
   return (
     <SafeAreaView style={styles.container}>

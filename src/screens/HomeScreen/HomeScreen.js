@@ -38,7 +38,7 @@ export default function HomeScreen(props) {
   }, []);
 
   const onAddButtonPress = () => {
-    if (entityText && entityText.length > 0) {
+    if (entityText?.length > 0) {
       const timestamp = firebase.firestore.FieldValue.serverTimestamp();
       const data = {
         text: entityText,
@@ -81,12 +81,6 @@ export default function HomeScreen(props) {
         />
         <TouchableOpacity style={styles.button} onPress={onAddButtonPress}>
           <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate("Account")}
-        >
-          <Text style={styles.buttonText}>Account</Text>
         </TouchableOpacity>
       </View>
       {entities && (
