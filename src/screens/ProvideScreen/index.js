@@ -1,9 +1,3 @@
-//Component will render buttons to navigate to
-// |   |   |  |--ParkingSpotListScreen.js
-// |   |   |  |--SingleViewScreen.js
-// |   |   |  |--CurrentSessionScreen.js
-// |   |   |  |--styles.js
-
 import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { firebase } from "../../firebase/config";
