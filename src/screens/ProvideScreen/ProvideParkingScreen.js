@@ -13,7 +13,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import styles from "./styles";
-import SelectDropdown from "react-native-select-dropdown";
+
 if (!global.btoa) {
   global.btoa = encode;
 }
