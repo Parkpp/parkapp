@@ -4,9 +4,7 @@ import { set } from "react-native-reanimated";
 import { firebase } from "../../firebase/config";
 
 export function VehicleScreen(props) {
-  // const userRef = firebase.firestore().collection("users");
   const { user } = props;
-  console.log("what is user-->", user);
   const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
@@ -20,10 +18,10 @@ export function VehicleScreen(props) {
         console.log("No matching documents.");
       }
       let vehicles = [];
-      snapshot.map((doc) => {
+      snapshot.forEach((doc) => {
         vehicles.push(doc.data());
       });
-      console.log("what are vehicles-->", vehicles);
+
       setVehicles(vehicles);
     };
     getVehicles();
@@ -31,11 +29,17 @@ export function VehicleScreen(props) {
 
   return (
     <View>
-      <Text>Profile Info</Text>
-      <Text>Username: </Text>
-      <Text>FullName: </Text>
-      <Text>Email: </Text>
-      <Text>Phone Number: </Text>
+      {vehicles.map((vehicle, idx) => {
+        return (
+          <View key={idx}>
+            <Text>Brand: {vehicle.make}</Text>
+            <Text>Model: {vehicle.model}</Text>
+            <Text>year: {vehicle.year}</Text>
+            <Text>color: {vehicle.color}</Text>
+            <Text>License Plate: {vehicle.licensePlate}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
