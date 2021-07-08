@@ -12,7 +12,7 @@ export const parkingSpots = async () => {
     street: "22155 Hillside",
     city: "Chicago",
     state: "IL",
-    zipcode: 60640,
+    postalCode: 60640,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9839992,
@@ -27,7 +27,7 @@ export const parkingSpots = async () => {
     street: "22155 Hillside",
     city: "Los Angeles",
     state: "California",
-    zipcode: 60640,
+    postalCode: 60640,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9739992,
@@ -41,7 +41,7 @@ export const parkingSpots = async () => {
     street: "33 Gilmer St SE",
     city: "Atlanta",
     state: "GA",
-    zipcode: 60640,
+    postalCode: 60640,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,
@@ -56,7 +56,7 @@ export const parkingSpots = async () => {
     street: "5050 N BroadDrive",
     city: "Chicago",
     state: "IL",
-    zipcode: 60640,
+    postalCode: 60640,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9799992,
@@ -70,7 +70,7 @@ export const parkingSpots = async () => {
     street: "106 Observatory",
     city: "Ann Arbor",
     state: "MI",
-    zipcode: 60640,
+    postalCode: 60640,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,

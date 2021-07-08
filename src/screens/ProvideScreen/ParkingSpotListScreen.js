@@ -18,7 +18,7 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode;
 }
-import { parkingSpots } from "../../../parkingSeed";
+
 //parkingSpots()
 //API call to convert entered user loction to Geopoint long and lat
 //Need to pull in data from firebase
