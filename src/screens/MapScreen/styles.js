@@ -65,8 +65,9 @@ export default StyleSheet.create({
   },
   searchBar: {
     position: 'absolute',
-    top: Platform.OS === 'android' ? 20 : Platform.OS === 'ios' ? 50 : 10,
-    width: Platform.OS === 'ios' ? '100%' : '85%',
+    top: Platform.OS === 'android' ? 30 : Platform.OS === 'ios' ? 50 : 10,
+    width: Platform.OS === 'ios' ? '96%' : '83%',
+    left: '2%',
     zIndex: 3
   },
   textInputSearchBar: {
