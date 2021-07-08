@@ -16,6 +16,10 @@ import { firebase, GOOGLE_API_KEY } from "../../firebase/config";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Geocoder from "react-native-geocoding";
+
+Geocoder.init(GOOGLE_API_KEY, { language: "en" });
 
 const dummyData = [
   {
@@ -68,6 +72,14 @@ const dummyData = [
   },
 ];
 
+export const geocode = async (text) => {
+  let coords = await Geocoder.from(text);
+  return {
+    latitude: coords.results[0].geometry.location.lat,
+    longitude: coords.results[0].geometry.location.lng,
+  };
+};
+
 export default function MapScreen(props) {
   const [location, setLocation] = useState(null);
   const [searchlocation, setSearchLocation] = useState(null);
@@ -109,15 +121,34 @@ export default function MapScreen(props) {
 
   return (
     <SafeAreaView style={styles.AndroidSafeArea}>
-      <View style={styles.searchBar}>
+      {/* <View style={styles.searchBar}>
         <TextInput
           style={styles.textInputSearchBar}
-          onChangeText={(text) => setText(text)}
-          onSubmitEditing={(text) => {
+          onChangeText={text => setText(text)}
+          onSubmitEditing={text => {
             searchForLocation(text);
           }}
-          placeholder={"Search"}
-          placeholderTextColor={"#666"}
+          placeholder={'Search'}
+          placeholderTextColor={'#666'}
+        />
+      </View> */}
+      <View style={styles.searchBar}>
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          query={{
+            key: GOOGLE_API_KEY,
+            language: "en",
+          }}
+          onPress={async (data, details = null) => {
+            setSearchLocation(data.description);
+            let coords = await geocode(data.description);
+            setRegion({
+              ...coords,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            });
+          }}
+          onFail={(error) => console.error(error)}
         />
       </View>
       <MapView

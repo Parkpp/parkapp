@@ -1,5 +1,5 @@
 import React from "react";
-// import { firebase } from "../../firebase/config";
+import { firebase } from "../../firebase/config";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import MapScreen from "./MapScreen";
@@ -14,7 +14,11 @@ export default function App(props) {
   return (
     <NavigationContainer independent={true}>
       <mapStack.Navigator>
-        <mapStack.Screen name="MapScreen" component={MapScreen} />
+        <mapStack.Screen
+          name="MapScreen"
+          component={MapScreen}
+          options={{ headerShown: false }}
+        />
         <mapStack.Screen
           name="MapSingleSpotScreen"
           component={MapSingleSpotScreen}
