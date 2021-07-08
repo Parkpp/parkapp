@@ -1,5 +1,5 @@
 import React from "react";
-import { firebase } from "../../firebase/config";
+// import { firebase } from "../../firebase/config";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import MapScreen from "./MapScreen";
