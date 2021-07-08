@@ -12,7 +12,7 @@ import {
   StatusBar,
 } from "react-native";
 import styles from "./styles";
-import { firebase, MAPBOX_ACCESS_TOKEN } from "../../firebase/config";
+import { firebase, GOOGLE_API_KEY } from "../../firebase/config";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
