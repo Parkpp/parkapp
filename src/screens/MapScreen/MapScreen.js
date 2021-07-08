@@ -18,6 +18,7 @@ import * as Location from 'expo-location';
 import axios from 'axios';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
+import { getDistance } from 'geolib';
 
 Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 
@@ -104,6 +105,20 @@ export default function MapScreen (props) {
       } catch (error) {
         setLoading(true);
       }
+      console.log(
+        (getDistance(
+          {
+            latitude: region.latitude,
+            longitude: region.longitude
+          },
+          {
+            latitude: dummyData[0].latitude,
+            longitude: dummyData[0].longitude
+          }
+        ) / 1,
+        609.344),
+        'miles'
+      );
     })();
   }, []);
   // console.log(location);
@@ -160,6 +175,9 @@ export default function MapScreen (props) {
         region={region}
       >
         {dummyData.map((spot, idx) => {
+          // if(getDistance({ latitude: region.latitude,
+          // 	longitude: region.longitude }, { latitude: spot.latitude,
+          // 		longitude: spot.longitude }) < 10)
           return (
             <Marker
               key={idx}
