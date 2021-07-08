@@ -19,13 +19,12 @@ export function VehicleScreen(props) {
     };
   });
 
-  return (
-    <View>
+  return;
+  /* <View>
       <Text>Profile Info</Text>
       <Text>Username: </Text>
       <Text>FullName: </Text>
       <Text>Email: </Text>
       <Text>Phone Number: </Text>
-    </View>
-  );
+    </View> */
 }
