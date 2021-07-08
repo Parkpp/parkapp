@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { set } from "react-native-reanimated";
 import { firebase } from "../../firebase/config";
 
 export function VehicleScreen(props) {
-  // const userRef = firebase.firestore().collection("users");
   const { user } = props;
-  console.log("what is user-->", user);
   const [vehicles, setVehicles] = useState([]);
 
   useEffect(() => {
     const vehicleRef = firebase.firestore().collection("vehicles");
-    const getVehicle = async () => {
-      const vehicle = await vehicleRef
+    const getVehicles = async () => {
+      const vehiclesRef = vehicleRef
         .where("userId", "==", user.id)
-        // .orderBy("createdAt", "desc")
-        .get();
-      // console.log("what is vehicle?-->", vehicle);
+        .orderBy("createdAt", "desc");
+      const snapshot = await vehiclesRef.get();
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+      }
+      let vehicles = [];
+      snapshot.forEach((doc) => {
+        vehicles.push(doc.data());
+      });
+
+      setVehicles(vehicles);
     };
-  });
+    getVehicles();
+  }, []);
 
   return (
     <View>
-      <Text>Profile Info</Text>
-      <Text>Username: </Text>
-      <Text>FullName: </Text>
-      <Text>Email: </Text>
-      <Text>Phone Number: </Text>
+      {vehicles.map((vehicle, idx) => {
+        return (
+          <View key={idx}>
+            <Text>Brand: {vehicle.make}</Text>
+            <Text>Model: {vehicle.model}</Text>
+            <Text>year: {vehicle.year}</Text>
+            <Text>color: {vehicle.color}</Text>
+            <Text>License Plate: {vehicle.licensePlate}</Text>
+          </View>
+        );
+      })}
     </View>
-  )
+  );
 }
