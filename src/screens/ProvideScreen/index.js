@@ -9,35 +9,31 @@ import { ParkingSpotListScreen } from "./ParkingSpotListScreen";
 import { ProvideParkingScreen } from "./ProvideParkingScreen";
 import { SingleSpotScreen } from "./SingleSpotScreen";
 import { decode, encode } from "base-64";
-
 if (!global.btoa) {
   global.btoa = encode;
 }
 if (!global.atob) {
   global.atob = decode;
 }
-
 const Stack = createStackNavigator();
-
 //const Tab = create();
-export default function App() {
+export default function App(props) {
+  const user = props.user;
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen name="ProvideScreen" component={ProvideScreen} />
-        <Stack.Screen
-          name="ParkingSpotList"
-          component={ParkingSpotListScreen}
-        />
-        <Stack.Screen name="ProvideParking" component={ProvideParkingScreen} />
-        <Stack.Screen name="SingleSpot">
-          {() => <SingleSpotScreen {...props} extraData={spot} />}
+        <Stack.Screen name="ParkingSpotList">
+          {(props) => <ParkingSpotListScreen {...props} user={user} />}
         </Stack.Screen>
-
-        {/* <Stack.Screen name="CurrentSession" component={CurrentSessionScreen} />
-           
-           
-             */}
+        <Stack.Screen name="ProvideParking">
+          {(props) => <ProvideParkingScreen {...props} user={user} />}
+        </Stack.Screen>
+        <Stack.Screen name="SingleSpot" component={SingleSpotScreen}>
+          {() => <SingleSpotScreen {...props} user={user} />}
+        </Stack.Screen>
+        {/* <Stack.Screen name=“CurrentSession” component={CurrentSessionScreen} />
+         */}
       </Stack.Navigator>
     </NavigationContainer>
   );
