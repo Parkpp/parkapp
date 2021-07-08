@@ -27,5 +27,5 @@ export function VehicleScreen(props) {
       <Text>Email: </Text>
       <Text>Phone Number: </Text>
     </View>
-  );
+  )
 }
