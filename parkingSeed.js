@@ -13,6 +13,7 @@ export const parkingSpots = async () => {
     city: "Chicago",
     state: "IL",
     postalCode: 60640,
+    reserved: false,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9839992,
@@ -28,6 +29,7 @@ export const parkingSpots = async () => {
     city: "Los Angeles",
     state: "California",
     postalCode: 60640,
+    reserved: false,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9739992,
@@ -42,6 +44,7 @@ export const parkingSpots = async () => {
     city: "Atlanta",
     state: "GA",
     postalCode: 60640,
+    reserved: false,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,
@@ -57,6 +60,7 @@ export const parkingSpots = async () => {
     city: "Chicago",
     state: "IL",
     postalCode: 60640,
+    reserved: false,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9799992,
@@ -71,6 +75,7 @@ export const parkingSpots = async () => {
     city: "Ann Arbor",
     state: "MI",
     postalCode: 60640,
+    reserved: false,
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,

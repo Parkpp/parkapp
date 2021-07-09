@@ -11,7 +11,9 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles";
+import { parkingSpots } from "../../../parkingSeed";
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -19,45 +21,82 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-//parkingSpots()
-//API call to convert entered user loction to Geopoint long and lat
-//Need to pull in data from firebase
 export const ParkingSpotListScreen = (props) => {
   const [spots, setParkingSpots] = useState([]);
   const user = props.user;
-  useEffect(() => {
-    //Make call to firebase
-    const getParkingSpots = async () => {
-      //Need logic to check "userId" field and filter query  as so
-      const db = firebase.firestore();
-      const parkingSpotsRef = db
-        .collection("parkingSpots")
-        .where("userId", "==", user.id);
-      const snapshot = await parkingSpotsRef.get();
-      if (snapshot.empty) {
-        console.log("No matching documents.");
-      }
-      let parkingSpots = [];
-      snapshot.forEach((doc) => {
-        parkingSpots.push(doc.data());
-      });
-      setParkingSpots(parkingSpots);
-    };
-    getParkingSpots();
-  }, []);
-  const toSingleSpotView = (spot) => {
-    props.navigation.navigate("singleSpot", { parkingSpot: spot });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      (async () => {
+        console.log("up here after navigating back");
+
+        // Do something when the screen is focused
+        const db = firebase.firestore();
+        const parkingSpotsRef = db
+          .collection("parkingSpots")
+          .where("userId", "==", user.id);
+        const snapshot = await parkingSpotsRef.get();
+        if (snapshot.empty) {
+          console.log("No matching documents.");
+        }
+        //let parkingSpots = snapshot.map(doc=> doc.data());
+
+        let parkingSpots = [];
+        snapshot.forEach((doc) => {
+          console.log("trying to find time", doc.data().Time);
+          parkingSpots.push(doc.data());
+        });
+
+        setParkingSpots(parkingSpots);
+      })();
+    }, [])
+  );
+
+  const updateSpot = (spot) => {
+    //console.log("This is the parking spot informaion", spot);
+    props.navigation.navigate("UpdateParkingSpot", { spot: spot });
   };
+
+  const deleteSpot = (spot) => {
+    props.navigation.navigate("DeleteParkingSpot", { spot: spot });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {spots.map((spot, idx) => {
+        console.log("down here after navigating back");
+
         return (
-          <TouchableOpacity key={idx} onPress={() => toSingleSpotView(spot)}>
-            <View>
-              {/* //render image, location */}
-              <Text>{spot.description}</Text>
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity key={idx} onPress={() => toSingleSpotView(spot)}>
+              <View>
+                {/* //render image, location */}
+                <Text>{spot.id}</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => updateSpot(spot)}
+              >
+                <Text style={styles.buttonTitle}>Update Spot</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => deleteSpot(spot)}
+              >
+                <Text style={styles.buttonTitle}>Delete Spot</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
+          </View>
         );
       })}
     </SafeAreaView>

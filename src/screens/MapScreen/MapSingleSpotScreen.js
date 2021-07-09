@@ -4,6 +4,9 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 
+
+//
+
 export default function MapSingleSpotScreen() {
   return (
     <View>
