@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AccountScreen } from "./AccountScreen";
 import { UserProfileScreen } from "./UserProfileScreen";
 import { VehicleScreen } from "./VehicleScreen";
+import { UserProfileUpdateScreen } from "./UserProfileUpdateScreen";
 
 const Account = createStackNavigator();
 
@@ -16,6 +17,9 @@ export default function App(props) {
         <Account.Screen name="Account" component={AccountScreen} />
         <Account.Screen name="User Profile">
           {(props) => <UserProfileScreen {...props} user={user} />}
+        </Account.Screen>
+        <Account.Screen name="Update Profile">
+          {(props) => <UserProfileUpdateScreen {...props} user={user} />}
         </Account.Screen>
         <Account.Screen name="Vehicle Information">
           {(props) => <VehicleScreen {...props} user={user} />}

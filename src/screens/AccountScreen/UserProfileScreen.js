@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import {
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  TextInput,
-  Modal,
-} from "react-native";
-// import styles from './styles';
+import { Text, TouchableOpacity, View, TextInput, Modal } from "react-native";
+import styles from "./styles";
 // import { firebase } from "../../firebase/config";
 
 export function UserProfileScreen(props) {
@@ -39,15 +33,16 @@ export function UserProfileScreen(props) {
   return (
     <View>
       <Text>Profile Info</Text>
-      <Text>
-        Username:
-        <TouchableWithoutFeedback onPress={form}>
-          <Text>{user.username}</Text>
-        </TouchableWithoutFeedback>
-      </Text>
+      <Text>Username: {user.username}</Text>
       <Text>FullName: {user.fullName}</Text>
       <Text>Email: {user.email}</Text>
       <Text>Phone Number: {user.phoneNumber}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => props.navigation.navigate("Update Profile")}
+      >
+        <Text style={styles.buttonTitle}>Edit Profile -&gt; </Text>
+      </TouchableOpacity>
     </View>
   );
 }
