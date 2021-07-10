@@ -44,8 +44,12 @@ export default function MapScreen (props) {
       console.log('No matching documents.');
     });
     let parkingSpots = [];
+    let ctr = 0;
     await snapshot.forEach(doc => {
+      console.log(doc.id);
       parkingSpots.push(doc.data());
+      parkingSpots[ctr].id = doc.id;
+      ctr++;
     });
     setParkingSpots(parkingSpots);
   };
@@ -139,7 +143,7 @@ export default function MapScreen (props) {
           parkingSpots.map(spot => {
             return (
               <Marker
-                key={spot.description}
+                key={spot.id}
                 coordinate={{
                   latitude: spot.latitude,
                   longitude: spot.longitude
@@ -147,7 +151,7 @@ export default function MapScreen (props) {
                 pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
               >
                 <Callout
-                  key={spot.description}
+                  key={spot.id}
                   onPress={event => markerClick(event, spot.description)}
                 >
                   <Text>{spot.description}</Text>
