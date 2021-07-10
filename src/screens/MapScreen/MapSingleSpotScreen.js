@@ -20,6 +20,7 @@ export default function MapSingleSpotScreen (props) {
         {`${spot.street} ${spot.city}, ${spot.state} ${spot.zipcode}`}
       </Text>
       <Text>Rate placeholder</Text>
+      <Text>Availability Placeholder?</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
