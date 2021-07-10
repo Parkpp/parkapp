@@ -5,13 +5,29 @@ import styles from './styles';
 import { firebase } from '../../firebase/config';
 
 export default function MapSingleSpotScreen (props) {
-  // console.log(props);
+  let spot = props.route.params.parkingSpot;
+  const img = spot.imageUrl;
   return (
-    <View>
-      <TouchableOpacity style={[styles.button, { backgroundColor: 'navy' }]}>
-        <Text style={styles.buttonTitle}>Go Back</Text>
+    <View style={styles.container}>
+      <Text>{spot.description}</Text>
+      <Image
+        source={{
+          uri: spot.imageUrl
+        }}
+        style={styles.image}
+      ></Image>
+      <Text>
+        {`${spot.street} ${spot.city}, ${spot.state} ${spot.zipcode}`}
+      </Text>
+      <Text>Rate placeholder</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          props.navigation.navigate('ReservationScreen');
+        }}
+      >
+        <Text>Would you like to reserve this spot?</Text>
       </TouchableOpacity>
-      <Text>Placeholder Page</Text>
     </View>
   );
 }

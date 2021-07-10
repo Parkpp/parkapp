@@ -81,5 +81,9 @@ export default StyleSheet.create({
     height: 45,
     paddingHorizontal: 10,
     fontSize: 18
+  },
+  image: {
+    width: 300,
+    height: 150
   }
 });

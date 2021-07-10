@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import MapScreen from './MapScreen';
 import MapSingleSpotScreen from './MapSingleSpotScreen';
-//import { ReservationScreen } from "./ReservationScreen";
+import ReservationScreen from '../ReservationScreen/ReservationScreen';
 //import { PaymentScreen } from "./PaymentScreen";
 
 const mapStack = createStackNavigator();
@@ -20,11 +20,11 @@ export default function App (props) {
         <mapStack.Screen name='MapSingleSpotScreen'>
           {props => <MapSingleSpotScreen {...props} user={user} />}
         </mapStack.Screen>
-        {/* <mapStack.Screen
-          name="ReservationScreen"
+        <mapStack.Screen
+          name='ReservationScreen'
           component={ReservationScreen}
         />
-        <mapStack.Screen name="PaymentScreen" component={PaymentScreen} /> */}
+        {/* <mapStack.Screen name='PaymentScreen' component={PaymentScreen} /> */}
       </mapStack.Navigator>
     </NavigationContainer>
   );

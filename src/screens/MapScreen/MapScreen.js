@@ -46,7 +46,6 @@ export default function MapScreen (props) {
     let parkingSpots = [];
     let ctr = 0;
     await snapshot.forEach(doc => {
-      console.log(doc.id);
       parkingSpots.push(doc.data());
       parkingSpots[ctr].id = doc.id;
       ctr++;
