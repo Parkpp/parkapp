@@ -1,85 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  Keyboard,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar
-} from 'react-native';
+import { Text, View, SafeAreaView } from 'react-native';
 import styles from './styles';
 import { firebase, GOOGLE_API_KEY } from '../../firebase/config';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
-import axios from 'axios';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
-import { getDistance } from 'geolib';
 import { LogBox } from 'react-native';
 
 LogBox.ignoreAllLogs(true);
 
 Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
-
-// let db = firebase.firestore();
-
-// const dummyData = [
-//   {
-//     city: 'Los Angeles',
-//     description: 'Test Spot 1',
-//     imageUrl:
-//       'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
-//     latitude: 34.049114,
-//     longitude: -118.252324,
-//     state: 'CA',
-//     street: '478-418 5th St',
-//     userId: 'uyUPmfHSBdR73FVXfG2vWQbTkQm2',
-//     zipcode: 90013
-//   },
-//   {
-//     city: 'Los Angeles',
-//     description: 'Test Spot 2',
-//     imageUrl:
-//       'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
-//     latitude: 34.054303,
-//     longitude: -118.249590,
-//     state: 'CA',
-//     street: 'W 2nd St',
-//     userId: 'uyUPmfHSBdR73FVXfG2vWQbTkQm2',
-//     zipcode: 90012
-//   },
-//   {
-//     city: 'Los Angeles',
-//     description: 'Test Spot 3',
-//     imageUrl:
-//       'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
-//     latitude: 34.052598,
-//     longitude: 118.243934,
-//     state: 'CA',
-//     street: '131-161 W 1st St',
-//     userId: 'uyUPmfHSBdR73FVXfG2vWQbTkQm2',
-//     zipcode: 90012
-//   },
-//   {
-//     city: 'Los Angeles',
-//     description: 'Test Spot 4',
-//     imageUrl:
-//       'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
-//     latitude: 34.044381,
-//     longitude: -118.244440,
-//     state: 'CA',
-//     street: '366-498 E 5th St',
-//     userId: 'uyUPmfHSBdR73FVXfG2vWQbTkQm2',
-//     zipcode: 90013
-//   }
-// ];
-// dummyData.forEach(doc => {
-//   db.collection('parkingSpots').add(doc);
-// });
 
 export default function MapScreen (props) {
   const [location, setLocation] = useState(null);
@@ -102,10 +33,9 @@ export default function MapScreen (props) {
       longitude: coords.results[0].geometry.location.lng
     };
   };
+
   let snapshot;
   const fetchParkingSpots = async newState => {
-    // console.log(newState);
-    // console.log('fetch parking spots');
     const db = firebase.firestore();
     const parkingSpotsRef = db
       .collection('parkingSpots')
@@ -115,25 +45,9 @@ export default function MapScreen (props) {
     });
     let parkingSpots = [];
     await snapshot.forEach(doc => {
-      // console.log(region);
       parkingSpots.push(doc.data());
-      // if (
-      //   getDistance(
-      //     {
-      //       latitude: region.latitude,
-      //       longitude: region.longitude
-      //     },
-      //     {
-      //       latitude: doc.data().latitude,
-      //       longitude: doc.data().longitude
-      //     }
-      //   ) <= 16093
-      // ) {
-      //   parkingSpots.push(doc.data());
-      // }
     });
     setParkingSpots(parkingSpots);
-    // console.log(parkingSpots);
   };
 
   useEffect(() => {
@@ -150,13 +64,20 @@ export default function MapScreen (props) {
     fetchParkingSpots(state);
   }, []);
 
-  const markerClick = event => {
-    props.navigation.navigate('MapSingleSpotScreen');
+  const markerClick = (event, spotDescription) => {
+    let spot;
+    for (let i = 0; i < parkingSpots.length; i++) {
+      if (parkingSpots[i].description == spotDescription) {
+        spot = parkingSpots[i];
+      }
+    }
+    props.navigation.navigate('MapSingleSpotScreen', {
+      parkingSpot: spot
+    });
   };
 
   const onRegionChangeComplete = async () => {
     const currState = state;
-    // console.log(currState);
     const loc = await Geocoder.from(region.latitude, region.longitude).catch(
       () => {
         console.log('error geocoding');
@@ -169,14 +90,10 @@ export default function MapScreen (props) {
         newState = obj.short_name;
       }
     });
-    // console.log(newState, 'states');
     if (newState != currState) {
       setState(newState);
       fetchParkingSpots(newState);
-      // console.log('fetched');
     }
-    // console.log('region complete');
-    // console.log('loop check');
   };
 
   return (
@@ -227,14 +144,13 @@ export default function MapScreen (props) {
                   latitude: spot.latitude,
                   longitude: spot.longitude
                 }}
-                onCalloutPress={event => markerClick(event)}
+                pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
               >
-                <Callout>
-                  <TouchableHighlight>
-                    <View>
-                      <Text>{spot.description}</Text>
-                    </View>
-                  </TouchableHighlight>
+                <Callout
+                  key={spot.description}
+                  onPress={event => markerClick(event, spot.description)}
+                >
+                  <Text>{spot.description}</Text>
                 </Callout>
               </Marker>
             );
