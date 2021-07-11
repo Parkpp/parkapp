@@ -1,47 +1,68 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View, TextInput, Modal } from "react-native";
+import { useEffect } from "react/cjs/react.development";
+import { firebase } from "../../firebase/config";
 import styles from "./styles";
+import { VehicleScreen } from "./VehicleScreen";
 // import { firebase } from "../../firebase/config";
 
 export function UserProfileScreen(props) {
-  console.log("props-->", props);
-  const { user } = props;
-  const [username, setUsername] = useState("");
+  const { user, navigation } = props;
+  const [currentUser, setCurrentUser] = useState([]);
+  const [loading, setLoading] = useState(true);
+  let email = firebase.auth().currentUser.email;
+
   //References specific user in users collection
-
-  // const userRef = firebase.firestore().collect("users").doc(user.id)
-
-  // const update = await userRef.update({reference value: new value})
-
-  const form = () => {
-    return (
-      <Modal transparent={true} visibile={true}>
-        <TextInput
-          autofocus={true}
-          // style={styles.input}
-          placeholder="Full Name"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-      </Modal>
-    );
+  const getUser = async () => {
+    const userRef = firebase
+      .firestore()
+      .collection("users")
+      .where("id", "==", user.id);
+    const snapshot = await userRef.get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+    }
+    let singleUser = [];
+    snapshot.forEach((doc) => {
+      singleUser.push(doc.data());
+    });
+    setCurrentUser(singleUser);
   };
 
+  useEffect(() => {
+    getUser();
+    navigation.addListener("focus", () => setLoading(!loading));
+  }, [props.navigation, loading]);
+
+  console.log("currentUser-->", currentUser);
   return (
     <View>
-      <Text>Profile Info</Text>
-      <Text>Username: {user.username}</Text>
-      <Text>FullName: {user.fullName}</Text>
-      <Text>Email: {user.email}</Text>
-      <Text>Phone Number: {user.phoneNumber}</Text>
+      {currentUser.map((singleUser, idx) => {
+        return (
+          <View key={idx}>
+            <Text>Profile Info</Text>
+            <Text>Full Name: {singleUser.fullName}</Text>
+            <Text>Username: {singleUser.username}</Text>
+            <Text>Email: {email}</Text>
+            <Text>Phone Number: {singleUser.phoneNumber}</Text>
+          </View>
+        );
+      })}
+
       <TouchableOpacity
         style={styles.button}
-        onPress={() => props.navigation.navigate("Update Profile")}
+        onPress={() =>
+          navigation.navigate("Update Profile", { user: currentUser })
+        }
       >
-        <Text style={styles.buttonTitle}>Edit Profile -&gt; </Text>
+        <Text style={styles.buttonTitle}>Update Profile -&gt; </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Update Credentials")}
+      >
+        <Text style={styles.buttonTitle}>Update Credentials -&gt; </Text>
       </TouchableOpacity>
     </View>
   );
