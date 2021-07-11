@@ -22,7 +22,6 @@ if (!global.atob) {
 }
 
 import * as Location from "expo-location";
-import { cond } from "react-native-reanimated";
 
 export const ProvideParkingScreen = (props) => {
   const [description, setdescription] = useState("");
@@ -67,7 +66,6 @@ export const ProvideParkingScreen = (props) => {
   };
 
   //API call to firebase to save data
-
   const addParkingSpot = async () => {
     const db = firebase.firestore();
     const parkingRef = db.collection("parkingSpots");
@@ -202,10 +200,36 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              secureTextEntry
-              placeholder="Zip-code"
+              placeholder="postalCode"
               onChangeText={(text) => setpostalCode(text)}
               value={postalCode}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="rate"
+              onChangeText={(text) => setRate(text)}
+              value={rate}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="startTime"
+              onChangeText={(text) => setStartTime(text)}
+              value={startTime}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder="endTime"
+              onChangeText={(text) => setEndTime(text)}
+              value={endTime}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />

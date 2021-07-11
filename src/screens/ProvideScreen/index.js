@@ -4,11 +4,11 @@ import { firebase } from "../../firebase/config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ProvideScreen } from "./ProvideScreen";
-//import { CurrentSessionScreen } from "./CurrentSessionScreen";
+import { CurrentSessionScreen } from "./CurrentSessionScreen";
 import { ParkingSpotListScreen } from "./ParkingSpotListScreen";
 import { ProvideParkingScreen } from "./ProvideParkingScreen";
 import { UpdateParkingSpotScreen } from "./UpdateParkingSpotScreen";
-import {DeleteParkingSpotScreen } from "./DeleteParkingSpotScreen"
+import { DeleteParkingSpotScreen } from "./DeleteParkingSpotScreen";
 
 import { decode, encode } from "base-64";
 if (!global.btoa) {
@@ -37,8 +37,10 @@ export default function App(props) {
         <Stack.Screen name="DeleteParkingSpot">
           {(props) => <DeleteParkingSpotScreen {...props} user={user} />}
         </Stack.Screen>
-        {/* <Stack.Screen name=“CurrentSession” component={CurrentSessionScreen} />
-         */}
+
+        <Stack.Screen name="CurrentSession">
+          {(props) => <CurrentSessionScreen {...props} user={user} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

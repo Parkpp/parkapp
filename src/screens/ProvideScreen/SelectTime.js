@@ -10,16 +10,24 @@ export const createTimeList = () => {
     if (i % 2 == 0) hour = i / 2;
 
     min = i % 2 == 0 ? "00" : "30";
-
     time = `${parseInt(hour)}:${min}:00`;
 
     if (i < 20) time = `0${time}`;
 
     timeList.push(time);
-    if (i < 2) timeList.pop();
 
+    if (i < 2) timeList.pop();
     i++;
   }
-
   return timeList;
+};
+
+const listMaker = () => {
+  // timeList = [];
+
+  for (let i = 0; i < 48; i++) {
+    console.log(i);
+  }
+
+  return "hello";
 };

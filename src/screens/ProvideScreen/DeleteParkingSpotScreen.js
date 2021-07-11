@@ -23,52 +23,65 @@ if (!global.atob) {
 
 export const DeleteParkingSpotScreen = (props) => {
   const spotToDelete = props.route.params.spot;
+  const [canDelete, setCanDelete] = useState(true);
 
   const db = firebase.firestore();
 
   const confirmDeleteParkingSpot = async () => {
     //Check if parking spot is currnetlu active in parkingSpot db
-    //Check if parking spot is currently active in orders Model
-
     const parkingSpotRef = db.collection("parkingSpots").doc(spotToDelete.id);
-    const spotToDelete = await (await parkingSpotRef.get()).data();
+    const spot = await (await parkingSpotRef.get()).data();
+    console.log(spot)
 
-    console.log();
-    if(doc)
-    return;
-    //  const db = firebase.firestore();
-    //     const parkingSpotsRef = db
-    //       .collection("parkingSpots")
-    //       .where("userId", "==", spotToDelete.id);
+    if (!spot.reserved) {
+      console.log("This parking spot is not reserved");
 
-    // console.log(parkingSpotsRef.doc())
-    //     const snapshot = await parkingSpotsRef.get();
+      await db.collection("parkingSpots").doc(spot.id).delete();
 
-    await db.collection("parkingSpots").doc(spot.id).delete();
+      returnToParkingSpotsList()
+    } else {
+      setCanDelete(false);
+    }
   };
 
   const returnToParkingSpotsList = () => {
     props.navigation.navigate("ParkingSpotList");
   };
 
+  console.log(canDelete);
   return (
-    <View style={styles.container}>
-      <View></View>
+    <>
+      {!canDelete ? (
+        <TouchableOpacity
+          style={{ flex: 1, }}
+          onPress={() => returnToParkingSpotsList()}
+        >
+          <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
+            <Text>
+              This spot can not be deleted because it is currently reserved
+            </Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.container}>
+          <View></View>
 
-      <Text>Do you want to delete this parking spot</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => confirmDeleteParkingSpot()}
-      >
-        <Text style={styles.buttonTitle}>Yes</Text>
-      </TouchableOpacity>
+          <Text>Do you want to delete this parking spot</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => confirmDeleteParkingSpot()}
+          >
+            <Text style={styles.buttonTitle}>Yes</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => returnToParkingSpotsList()}
-      >
-        <Text style={styles.buttonTitle}>No</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => returnToParkingSpotsList()}
+          >
+            <Text style={styles.buttonTitle}>No</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </>
   );
 };

@@ -7,13 +7,15 @@ export const parkingSpots = async () => {
   let spot = parkingRef.doc();
   await spot.set({
     id: spot.id,
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
+    userId: "OsfwfFpPkPbuqq301qEIpe4mYIj2",
     description: "Etty's garage",
     street: "22155 Hillside",
     city: "Chicago",
     state: "IL",
     postalCode: 60640,
-    reserved: false,
+    reserved: true,
+    startTime: "",
+    endTime: "",
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9839992,
@@ -23,13 +25,15 @@ export const parkingSpots = async () => {
   spot = parkingRef.doc();
   await spot.set({
     id: spot.id,
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm24444444",
+    userId: "OsfwfFpPkPbuqq301qEIpe4mYIj2",
     description: "Mildreds's drive way",
     street: "22155 Hillside",
     city: "Los Angeles",
     state: "California",
     postalCode: 60640,
     reserved: false,
+    startTime: "",
+    endTime: "",
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9739992,
@@ -38,13 +42,15 @@ export const parkingSpots = async () => {
 
   spot = parkingRef.doc();
   await spot.set({
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm244444",
+    userId: "OsfwfFpPkPbuqq301qEIpe4mYIj2",
     description: "By company's garage",
     street: "33 Gilmer St SE",
     city: "Atlanta",
     state: "GA",
     postalCode: 60640,
-    reserved: false,
+    reserved: true,
+    startTime: "",
+    endTime: "",
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,
@@ -54,13 +60,15 @@ export const parkingSpots = async () => {
   spot = parkingRef.doc();
   await spot.set({
     id: spot.id,
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
+    userId: "OsfwfFpPkPbuqq301qEIpe4mYIj2",
     description: "Etty's backyard",
     street: "5050 N BroadDrive",
     city: "Chicago",
     state: "IL",
     postalCode: 60640,
     reserved: false,
+    startTime: "",
+    endTime: "",
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9799992,
@@ -69,13 +77,15 @@ export const parkingSpots = async () => {
 
   spot = parkingRef.doc();
   await spot.set({
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm233333",
+    userId: "OsfwfFpPkPbuqq301qEIpe4mYIj2",
     description: "Mikes's front yard",
     street: "106 Observatory",
     city: "Ann Arbor",
     state: "MI",
     postalCode: 60640,
-    reserved: false,
+    reserved: true,
+    startTime: "",
+    endTime: "",
     imageUrl:
       "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
     latitude: 41.9719992,
