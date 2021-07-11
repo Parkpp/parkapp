@@ -27,9 +27,13 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [userLogged, setUserLogged] = useState(null);
 
   useEffect(() => {
     const usersRef = firebase.firestore().collection("users");
+    const authListener = firebase.auth().onAuthStateChanged((user) => {
+      setUserLogged(user ? true : false);
+    });
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         usersRef
@@ -47,14 +51,16 @@ export default function App() {
         setLoading(false);
       }
     });
+    return authListener;
   }, []);
 
   if (loading) {
     return <></>;
   }
+
   return (
     <>
-      {user ? (
+      {userLogged ? (
         <NavigationContainer>
           <Tab.Navigator>
             <Tab.Screen name="Map">
