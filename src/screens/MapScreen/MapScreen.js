@@ -19,8 +19,7 @@ Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 
 export default function MapScreen (props) {
   const [location, setLocation] = useState(null);
-  const [searchlocation, setSearchLocation] = useState(null);
-  const [state, setState] = useState('NY');
+  const [searchLocation, setSearchLocation] = useState(null);
   const [parkingSpots, setParkingSpots] = useState(null);
   const [region, setRegion] = useState({
     latitude: 40.757952,
@@ -28,8 +27,6 @@ export default function MapScreen (props) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421
   });
-  const [text, setText] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const geocode = async text => {
     let coords = await Geocoder.from(text);
@@ -58,14 +55,9 @@ export default function MapScreen (props) {
 
   useEffect(() => {
     async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        let currLoc = await Location.getCurrentPositionAsync();
-        setLocation(currLoc);
-        setLoading(false);
-      } catch (error) {
-        setLoading(true);
-      }
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      let currLoc = await Location.getCurrentPositionAsync();
+      setLocation(currLoc);
     };
     fetchParkingSpots(state);
   }, []);
@@ -113,7 +105,7 @@ export default function MapScreen (props) {
           }}
           onPress={async (data = null) => {
             setSearchLocation(data.description);
-            let coords = await geocode(data.description);
+            let coords = await geocode(searchLocation);
             setRegion({
               ...coords,
               latitudeDelta: 0.0922,
