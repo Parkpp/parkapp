@@ -7,6 +7,11 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
 import { LogBox } from 'react-native';
+import { dummyData } from '../../../parkingSeed';
+// const db = firebase.firestore();
+// dummyData.forEach(doc => {
+//   db.collection('parkingSpots').add(doc);
+// });
 
 LogBox.ignoreAllLogs(true);
 
@@ -35,11 +40,9 @@ export default function MapScreen (props) {
   };
 
   let snapshot;
-  const fetchParkingSpots = async newState => {
+  const fetchParkingSpots = async () => {
     const db = firebase.firestore();
-    const parkingSpotsRef = db
-      .collection('parkingSpots')
-      .where('state', '==', newState);
+    const parkingSpotsRef = db.collection('parkingSpots');
     snapshot = await parkingSpotsRef.get().catch(() => {
       console.log('No matching documents.');
     });
@@ -79,25 +82,25 @@ export default function MapScreen (props) {
     });
   };
 
-  const onRegionChangeComplete = async () => {
-    const currState = state;
-    const loc = await Geocoder.from(region.latitude, region.longitude).catch(
-      () => {
-        console.log('error geocoding');
-      }
-    );
-    let results = loc.results[0].address_components;
-    let newState;
-    results.forEach(obj => {
-      if (obj.short_name.length == 2 && obj.short_name != 'US') {
-        newState = obj.short_name;
-      }
-    });
-    if (newState != currState) {
-      setState(newState);
-      fetchParkingSpots(newState);
-    }
-  };
+  // const onRegionChangeComplete = async () => {
+  //   const currState = state;
+  //   const loc = await Geocoder.from(region.latitude, region.longitude).catch(
+  //     () => {
+  //       console.log('error geocoding');
+  //     }
+  //   );
+  //   let results = loc.results[0].address_components;
+  //   let newState;
+  //   results.forEach(obj => {
+  //     if (obj.short_name.length == 2 && obj.short_name != 'US') {
+  //       newState = obj.short_name;
+  //     }
+  //   });
+  //   if (newState != currState) {
+  //     setState(newState);
+  //     fetchParkingSpots(newState);
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -135,7 +138,7 @@ export default function MapScreen (props) {
             longitudeDelta: Number(region.longitudeDelta)
           };
           setRegion(tempRegion);
-          onRegionChangeComplete();
+          // onRegionChangeComplete();
         }}
       >
         {parkingSpots &&
