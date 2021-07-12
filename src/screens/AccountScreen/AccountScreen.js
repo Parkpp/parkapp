@@ -9,8 +9,6 @@ const Stack = createStackNavigator();
 export function AccountScreen(props) {
   const onSignOutPress = () => {
     firebase.auth().signOut();
-    if (userLogged == false) {
-    }
   };
 
   return (
