@@ -25,15 +25,14 @@ const Tab = createBottomTabNavigator();
 export default class extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { user: null, loading: true };
+    this.state = { user: null, loading: true, userLogged: null };
     this.handleUser = this.handleUser.bind(this);
+  }
 
-    //State for UserLogged in status
-    // const authListener = firebase.auth().onAuthStateChanged((user) => {
-    //   setUserLogged(user ? true : false);
-    // });
-
-    //    return authListener;
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      this.setState(user ? { userLogged: true } : { userLogged: false });
+    });
   }
 
   async handleUser() {
@@ -60,8 +59,7 @@ export default class extends React.Component {
 
     return (
       <>
-      {/* Check User Logged not user object */}
-        {user ? (
+        {this.state.userLogged ? (
           <NavigationContainer>
             <Tab.Navigator>
               <Tab.Screen name="Map">
