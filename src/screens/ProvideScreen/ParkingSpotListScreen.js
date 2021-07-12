@@ -22,7 +22,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-parkingSpots();
+//parkingSpots();
 
 export const ParkingSpotListScreen = (props) => {
   const [spots, setParkingSpots] = useState([]);
@@ -51,34 +51,10 @@ export const ParkingSpotListScreen = (props) => {
           console.log(error);
         }
 
-        //let parkingSpots = snapshot.map(doc=> doc.data());
-
-        //        console.log(parkingSpots);
         setParkingSpots(parkingSpots);
       })();
     }, [])
   );
-
-  const buttonsOrActiveStatus = (spot) => {
-    if (spot.reserved) return <Text>ACTIVE</Text>;
-    return (
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.provideButton}
-          onPress={() => updateSpot(spot)}
-        >
-          <Text style={styles.buttonTitle}>Update</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.provideButton}
-          onPress={() => deleteSpot(spot)}
-        >
-          <Text style={styles.buttonTitle}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   const updateSpot = (spot) => {
     //console.log("This is the parking spot informaion", spot);
@@ -89,11 +65,38 @@ export const ParkingSpotListScreen = (props) => {
     props.navigation.navigate("DeleteParkingSpot", { spot: spot });
   };
 
+  const buttonsOrActiveStatus = (spot) => {
+    if (spot.reserved) {
+      return (
+        <View style={{flex:1}}>
+          <Text>ACTIVE</Text>;
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.provideButton}
+            onPress={() => updateSpot(spot)}
+          >
+            <Text style={styles.buttonTitle}>Update</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.provideButton}
+            onPress={() => deleteSpot(spot)}
+          >
+            <Text style={styles.buttonTitle}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} persistentScrollbar={true}>
         {spots.map((spot, idx) => {
-          console.log(spot.imageUrl);
           return (
             <View key={idx} style={styles.singleParkingSpot}>
               <View style={styles.parkingSpotInfo}>
@@ -105,7 +108,6 @@ export const ParkingSpotListScreen = (props) => {
                   <Text>Street: {spot.street}</Text>
                   <Text>City: {spot.city}</Text>
                   <Text>State: {spot.state}</Text>
-                  <Text>postal code: {spot.postalCode}</Text>
                   <Text>Rate: ${spot.rate}/hr</Text>
                   <Text>Start time: {spot.startTime}</Text>
                   <Text>End time: {spot.endTime}</Text>

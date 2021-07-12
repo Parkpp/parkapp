@@ -39,8 +39,6 @@ export default class extends React.Component {
         try {
           const userData = (await usersRef.doc(user.uid).get()).data();
           this.setState({ loading: false });
-          // setUser(userData);
-
           this.setState({ user: userData });
         } catch (error) {
           console.log(error);

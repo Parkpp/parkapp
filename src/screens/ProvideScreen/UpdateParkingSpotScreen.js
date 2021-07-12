@@ -41,15 +41,15 @@ export const UpdateParkingSpotScreen = (props) => {
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
   //Request for permision to render map if not granted
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        //setErrorMsg("Permission to access location was denied");
-        return;
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       //setErrorMsg("Permission to access location was denied");
+  //       return;
+  //     }
+  //   })();
+  // }, []);
 
   //Geocoding - Fucntion to retrieve lat & long from user entered address
   const onRegisterPress = async () => {

@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flex: 1,
     // alignItems: "center",
     // justifyContent: "center",
-    margin: 10,
+    //margin: 10,
   },
   title: {},
   logo: {
@@ -96,7 +96,7 @@ export default StyleSheet.create({
   },
   parkingSpotImage: {
     flex: 1,
-    width: 150,
+    width: 130,
     height: 100,
     resizeMode: "cover",
     margin: 1,
