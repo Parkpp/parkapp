@@ -7,23 +7,24 @@ export function VehicleScreen(props) {
   const { user } = props;
   const [vehicles, setVehicles] = useState([]);
 
-  useEffect(() => {
-    const vehicleRef = firebase.firestore().collection("vehicles");
-    const getVehicles = async () => {
-      const vehiclesRef = vehicleRef
-        .where("userId", "==", user.id)
-        .orderBy("createdAt", "desc");
-      const snapshot = await vehiclesRef.get();
-      if (snapshot.empty) {
-        console.log("No matching documents.");
-      }
-      let vehicles = [];
-      snapshot.forEach((doc) => {
-        vehicles.push(doc.data());
-      });
+  const vehicleRef = firebase.firestore().collection("vehicles");
+  const getVehicles = async () => {
+    const vehiclesRef = vehicleRef
+      .where("userId", "==", user.id)
+      .orderBy("createdAt", "desc");
+    const snapshot = await vehiclesRef.get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+    }
+    let vehicles = [];
+    snapshot.forEach((doc) => {
+      vehicles.push(doc.data());
+    });
 
-      setVehicles(vehicles);
-    };
+    setVehicles(vehicles);
+  };
+
+  useEffect(() => {
     getVehicles();
   }, []);
 
@@ -34,8 +35,8 @@ export function VehicleScreen(props) {
           <View key={idx}>
             <Text>Brand: {vehicle.make}</Text>
             <Text>Model: {vehicle.model}</Text>
-            <Text>year: {vehicle.year}</Text>
-            <Text>color: {vehicle.color}</Text>
+            <Text>Year: {vehicle.year}</Text>
+            <Text>Color: {vehicle.color}</Text>
             <Text>License Plate: {vehicle.licensePlate}</Text>
           </View>
         );
