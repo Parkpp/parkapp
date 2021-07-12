@@ -7,6 +7,7 @@ import { UserProfileScreen } from "./UserProfileScreen";
 import { VehicleScreen } from "./VehicleScreen";
 import { UserProfileUpdateScreen } from "./UserProfileUpdateScreen";
 import { UpdateUserCredentialScreen } from "./UpdateUserCredentialScreen";
+import { UpdateVehicleScreen } from "./UpdateVehicleScreen";
 const Account = createStackNavigator();
 
 export default function App(props) {
@@ -29,6 +30,7 @@ export default function App(props) {
         <Account.Screen name="Vehicle Information">
           {(props) => <VehicleScreen {...props} user={user} />}
         </Account.Screen>
+        <Account.Screen name="Update Vehicle" component={UpdateVehicleScreen} />
       </Account.Navigator>
     </NavigationContainer>
   );

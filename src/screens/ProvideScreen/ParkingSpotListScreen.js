@@ -68,8 +68,8 @@ export const ParkingSpotListScreen = (props) => {
   const buttonsOrActiveStatus = (spot) => {
     if (spot.reserved) {
       return (
-        <View style={{flex:1}}>
-          <Text>ACTIVE</Text>;
+        <View style={{ flex: 1 }}>
+          <Text>ACTIVE</Text>
         </View>
       );
     } else {
@@ -94,7 +94,6 @@ export const ParkingSpotListScreen = (props) => {
   };
 
   return (
-    
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} persistentScrollbar={true}>
         {spots.map((spot, idx) => {

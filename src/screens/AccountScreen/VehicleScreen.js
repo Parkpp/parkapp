@@ -4,7 +4,7 @@ import { set } from "react-native-reanimated";
 import { firebase } from "../../firebase/config";
 
 export function VehicleScreen(props) {
-  const { user } = props;
+  const { user, navigation } = props;
   const [vehicles, setVehicles] = useState([]);
 
   const vehicleRef = firebase.firestore().collection("vehicles");
@@ -41,6 +41,12 @@ export function VehicleScreen(props) {
           </View>
         );
       })}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Update Vehicle")}
+      >
+        <Text style={styles.buttonTitle}>Update Vehicle -&gt; </Text>
+      </TouchableOpacity>
     </View>
   );
 }

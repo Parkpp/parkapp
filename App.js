@@ -10,7 +10,7 @@ import {
   RegistrationScreen,
   ProvideScreen,
   AccountScreen,
-  MapScreen,
+  // MapScreen,
 } from "./src/screens";
 import { decode, encode } from "base-64";
 if (!global.btoa) {
@@ -62,9 +62,9 @@ export default class extends React.Component {
         {this.state.userLogged ? (
           <NavigationContainer>
             <Tab.Navigator>
-              <Tab.Screen name="Map">
+              {/* <Tab.Screen name="Map">
                 {(props) => <MapScreen {...props} extraData={user} />}
-              </Tab.Screen>
+              </Tab.Screen> */}
               <Tab.Screen name="Provide">
                 {(props) => <ProvideScreen {...props} user={user} />}
               </Tab.Screen>
