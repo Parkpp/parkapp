@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
-import { set } from "react-native-reanimated";
+import { Text, View, TouchableOpacity } from "react-native";
 import { firebase } from "../../firebase/config";
+import styles from "./styles";
 
 export function VehicleScreen(props) {
   const { user, navigation } = props;
@@ -43,7 +43,9 @@ export function VehicleScreen(props) {
       })}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Update Vehicle")}
+        onPress={() =>
+          navigation.navigate("Update Vehicle", { vehicle: vehicles })
+        }
       >
         <Text style={styles.buttonTitle}>Update Vehicle -&gt; </Text>
       </TouchableOpacity>
