@@ -31,27 +31,16 @@ export const UpdateParkingSpotScreen = (props) => {
   const [city, setCity] = useState(spotToUpdate.city);
   const [state, setState] = useState(spotToUpdate.state);
   const [postalCode, setpostalCode] = useState(spotToUpdate.postalCode);
-  const [rate, setRate] = useState(spotToUpdate.rate)
+  const [rate, setRate] = useState(spotToUpdate.rate);
   const [spotCheck, setSpotCheck] = useState(false);
   const [coords, setCoords] = useState({});
   const [startTime, setStartTime] = useState(spotToUpdate.startTime);
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
- 
 
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
-  //Request for permision to render map if not granted
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       //setErrorMsg("Permission to access location was denied");
-  //       return;
-  //     }
-  //   })();
-  // }, []);
 
-  //Geocoding - Fucntion to retrieve lat & long from user entered address
+  //Geocoding- retrieve lat & long from user entered address
   const onRegisterPress = async () => {
     const address = `${street}, ${city}, ${state}`;
     const returnedCoords = await Location.geocodeAsync(address);
@@ -70,10 +59,9 @@ export const UpdateParkingSpotScreen = (props) => {
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
-    //Update parking spot info in firebase
+
+      //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
-        // id: spotToUpdate.id,
-        // userId: props.user.id,
         description: description,
         street: `${address.name} ${address.street}`,
         city: address.city,
@@ -156,7 +144,7 @@ export const UpdateParkingSpotScreen = (props) => {
             />
             <TextInput
               style={styles.input}
-              placeholder={spotToUpdate.description}
+              placeholder={description}
               placeholderTextColor="#aaaaaa"
               onChangeText={(text) => setdescription(text)}
               value={description}
@@ -165,7 +153,7 @@ export const UpdateParkingSpotScreen = (props) => {
             />
             <TextInput
               style={styles.input}
-              placeholder={spotToUpdate.street}
+              placeholder={street}
               placeholderTextColor="#aaaaaa"
               onChangeText={(text) => setStreet(text)}
               value={street}
@@ -175,7 +163,7 @@ export const UpdateParkingSpotScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={spotToUpdate.city}
+              placeholder={city}
               onChangeText={(text) => setCity(text)}
               value={city}
               underlineColorAndroid="transparent"
@@ -184,7 +172,7 @@ export const UpdateParkingSpotScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={spotToUpdate.state}
+              placeholder={state}
               onChangeText={(text) => setState(text)}
               value={state}
               underlineColorAndroid="transparent"
@@ -193,23 +181,41 @@ export const UpdateParkingSpotScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={spotToUpdate.postalCode}
+              placeholder={postalCode}
               onChangeText={(text) => setpostalCode(text)}
               value={postalCode}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
-              
+
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={spotToUpdate.rate}
+              placeholder={rate}
               onChangeText={(text) => setRate(text)}
               value={rate}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
-            
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder={startTime}
+              onChangeText={(text) => setStartTime(text)}
+              value={startTime}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#aaaaaa"
+              placeholder= {endTime}
+              onChangeText={(text) => setEndTime(text)}
+              value={endTime}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+
             {/* <SelectTime/> */}
 
             {/* Upload image */}

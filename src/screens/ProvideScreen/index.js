@@ -18,7 +18,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 const Stack = createStackNavigator();
-//const Tab = create();
+
 export default function App(props) {
   const user = props.user;
   return (

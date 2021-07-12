@@ -28,7 +28,6 @@ export default function LoginScreen(props) {
                             alert("User does not exist anymore.")
                             return;
                         }
-                        const user = firestoreDocument.data()
                         props.onLogin()
                     })
                     .catch(error => {
