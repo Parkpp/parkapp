@@ -6,8 +6,4 @@ export { default as AccountScreen } from "./AccountScreen/";
 
 export { default as ProvideScreen } from "./ProvideScreen/";
 
-<<<<<<< HEAD
-// export { default as MapScreen } from "./MapScreen/";
-=======
 //export { default as MapScreen } from "./MapScreen/";
->>>>>>> main
