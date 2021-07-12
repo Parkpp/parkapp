@@ -1,51 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, SafeAreaView } from 'react-native';
-import styles from './styles';
-import { firebase, GOOGLE_API_KEY } from '../../firebase/config';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import Geocoder from 'react-native-geocoding';
-import { LogBox } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Text, View, SafeAreaView } from "react-native";
+import styles from "./styles";
+import { firebase, GOOGLE_API_KEY } from "../../firebase/config";
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
+import * as Location from "expo-location";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Geocoder from "react-native-geocoding";
+import { LogBox } from "react-native";
 
-LogBox.ignoreAllLogs(true);
+//LogBox.ignoreAllLogs(true);
 
-Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
+Geocoder.init(GOOGLE_API_KEY, { language: "en" });
 
-export default function MapScreen (props) {
+export default function MapScreen(props) {
   const [location, setLocation] = useState(null);
   const [searchlocation, setSearchLocation] = useState(null);
-  const [state, setState] = useState('NY');
+  const [state, setState] = useState("NY");
   const [parkingSpots, setParkingSpots] = useState(null);
   const [region, setRegion] = useState({
     latitude: 40.757952,
     longitude: -73.985572,
     latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421
+    longitudeDelta: 0.0421,
   });
   const [text, setText] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const geocode = async text => {
+  const geocode = async (text) => {
     let coords = await Geocoder.from(text);
     return {
       latitude: coords.results[0].geometry.location.lat,
-      longitude: coords.results[0].geometry.location.lng
+      longitude: coords.results[0].geometry.location.lng,
     };
   };
 
   let snapshot;
-  const fetchParkingSpots = async newState => {
+  const fetchParkingSpots = async (newState) => {
     const db = firebase.firestore();
     const parkingSpotsRef = db
-      .collection('parkingSpots')
-      .where('state', '==', newState);
-    snapshot = await parkingSpotsRef.get().catch(() => {
-      console.log('No matching documents.');
+      .collection("parkingSpots")
+      .where("state", "==", newState);
+    snapshot = await parkingSpotsRef.get().catch((error) => {
+      console.log("No matching documents.");
     });
     let parkingSpots = [];
     let ctr = 0;
-    await snapshot.forEach(doc => {
+    await snapshot.forEach((doc) => {
       parkingSpots.push(doc.data());
       parkingSpots[ctr].id = doc.id;
       ctr++;
@@ -74,22 +74,22 @@ export default function MapScreen (props) {
         spot = parkingSpots[i];
       }
     }
-    props.navigation.navigate('MapSingleSpotScreen', {
-      parkingSpot: spot
+    props.navigation.navigate("MapSingleSpotScreen", {
+      parkingSpot: spot,
     });
   };
 
   const onRegionChangeComplete = async () => {
     const currState = state;
     const loc = await Geocoder.from(region.latitude, region.longitude).catch(
-      () => {
-        console.log('error geocoding');
+      (error) => {
+        console.log("error geocoding");
       }
     );
     let results = loc.results[0].address_components;
     let newState;
-    results.forEach(obj => {
-      if (obj.short_name.length == 2 && obj.short_name != 'US') {
+    results.forEach((obj) => {
+      if (obj.short_name.length == 2 && obj.short_name != "US") {
         newState = obj.short_name;
       }
     });
@@ -103,10 +103,10 @@ export default function MapScreen (props) {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.searchBar}>
         <GooglePlacesAutocomplete
-          placeholder='Search'
+          placeholder="Search"
           query={{
             key: GOOGLE_API_KEY,
-            language: 'en'
+            language: "en",
           }}
           onPress={async (data = null) => {
             setSearchLocation(data.description);
@@ -114,10 +114,10 @@ export default function MapScreen (props) {
             setRegion({
               ...coords,
               latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
+              longitudeDelta: 0.0421,
             });
           }}
-          onFail={error => console.error(error)}
+          onFail={(error) => console.error(error)}
         />
       </View>
       <MapView
@@ -127,31 +127,31 @@ export default function MapScreen (props) {
         showsUserLocation
         showsMyLocationButton={true}
         region={region}
-        onRegionChangeComplete={async region => {
+        onRegionChangeComplete={async (region) => {
           let tempRegion = {
             latitude: Number(region.latitude).toFixed(4),
             longitude: Number(region.longitude).toFixed(4),
             latitudeDelta: Number(region.latitudeDelta),
-            longitudeDelta: Number(region.longitudeDelta)
+            longitudeDelta: Number(region.longitudeDelta),
           };
           setRegion(tempRegion);
           onRegionChangeComplete();
         }}
       >
         {parkingSpots &&
-          parkingSpots.map(spot => {
+          parkingSpots.map((spot) => {
             return (
               <Marker
                 key={spot.id}
                 coordinate={{
                   latitude: spot.latitude,
-                  longitude: spot.longitude
+                  longitude: spot.longitude,
                 }}
-                pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
+                pinColor={props.user.id == spot.userId ? "blue" : "red"}
               >
                 <Callout
                   key={spot.id}
-                  onPress={event => markerClick(event, spot.description)}
+                  onPress={(event) => markerClick(event, spot.description)}
                 >
                   <Text>{spot.description}</Text>
                 </Callout>
