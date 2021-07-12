@@ -6,8 +6,7 @@ import styles from "./styles";
 
 export function UserProfileUpdateScreen(props) {
   const user = props.route.params.user[0];
-  console.log("What is this user--->", user);
-  // console.log("UpdateScreen props-->", props);
+  //can get user info from firebase.firestore().auth.user.uid
   const [fullName, setFullName] = useState(user.fullName);
 
   const [username, setUsername] = useState(user.username);
@@ -21,7 +20,6 @@ export function UserProfileUpdateScreen(props) {
       phoneNumber: phoneNumber,
     };
     await userRef.update(data);
-    // await userRef.updateEmail(email);
     Alert.alert("Your profile has been successfully updated!");
 
     props.navigation.navigate("User Profile");

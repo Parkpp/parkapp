@@ -3,7 +3,6 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import { useEffect } from "react/cjs/react.development";
 
 const Stack = createStackNavigator();
 

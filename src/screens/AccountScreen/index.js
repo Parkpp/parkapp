@@ -10,7 +10,6 @@ import { UpdateUserCredentialScreen } from "./UpdateUserCredentialScreen";
 const Account = createStackNavigator();
 
 export default function App(props) {
-  // console.log("index props-->", props);
   const { user } = props;
   return (
     <NavigationContainer independent={true}>

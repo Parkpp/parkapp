@@ -10,8 +10,6 @@ export function UpdateUserCredentialScreen({ navigation }) {
 
   let user = firebase.auth().currentUser;
 
-  console.log("What is Auth user--->", user.uid);
-
   const reauthenticate = (currentPassword) => {
     let cred = firebase.auth.EmailAuthProvider.credential(
       user.email,
