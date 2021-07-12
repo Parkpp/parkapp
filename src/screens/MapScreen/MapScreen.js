@@ -1,101 +1,60 @@
-import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  Keyboard,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
-  View,
-  SafeAreaView,
-  Platform,
-  StatusBar,
-} from "react-native";
-import styles from "./styles";
-import { firebase, GOOGLE_API_KEY } from "../../firebase/config";
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
-import * as Location from "expo-location";
-import axios from "axios";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Geocoder from "react-native-geocoding";
+import React, { useEffect, useState } from 'react';
+import { Text, View, SafeAreaView } from 'react-native';
+import styles from './styles';
+import { firebase, GOOGLE_API_KEY } from '../../firebase/config';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import Geocoder from 'react-native-geocoding';
+import { LogBox } from 'react-native';
 
-Geocoder.init(GOOGLE_API_KEY, { language: "en" });
+LogBox.ignoreAllLogs(true);
 
-const dummyData = [
-  {
-    city: "New York City",
-    description: "Test Spot 1",
-    imageUrl:
-      "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
-    latitude: 40.757749,
-    longitude: -73.985096,
-    State: "NY",
-    street: "198-116 W 45th St",
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
-    zipcode: 10036,
-  },
-  {
-    city: "New York City",
-    description: "Test Spot 2",
-    imageUrl:
-      "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
-    latitude: 40.756629,
-    longitude: -73.98842,
-    State: "NY",
-    street: "298-200 W 42nd St",
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
-    zipcode: 10036,
-  },
-  {
-    city: "New York City",
-    description: "Test Spot 3",
-    imageUrl:
-      "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
-    latitude: 40.754646,
-    longitude: -73.987941,
-    State: "NY",
-    street: "558-540 Fashion Ave",
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
-    zipcode: 10018,
-  },
-  {
-    city: "New York City",
-    description: "Test Spot 4",
-    imageUrl:
-      "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
-    latitude: 40.76078,
-    longitude: -73.988459,
-    State: "NY",
-    street: "316 W 47th St",
-    userId: "uyUPmfHSBdR73FVXfG2vWQbTkQm2",
-    zipcode: 10036,
-  },
-];
+Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 
-export const geocode = async (text) => {
-  let coords = await Geocoder.from(text);
-  return {
-    latitude: coords.results[0].geometry.location.lat,
-    longitude: coords.results[0].geometry.location.lng,
-  };
-};
-
-export default function MapScreen(props) {
+export default function MapScreen (props) {
   const [location, setLocation] = useState(null);
   const [searchlocation, setSearchLocation] = useState(null);
+  const [state, setState] = useState('NY');
+  const [parkingSpots, setParkingSpots] = useState(null);
   const [region, setRegion] = useState({
     latitude: 40.757952,
     longitude: -73.985572,
     latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    longitudeDelta: 0.0421
   });
   const [text, setText] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // const userID = props.extraData.id;
+  const geocode = async text => {
+    let coords = await Geocoder.from(text);
+    return {
+      latitude: coords.results[0].geometry.location.lat,
+      longitude: coords.results[0].geometry.location.lng
+    };
+  };
+
+  let snapshot;
+  const fetchParkingSpots = async newState => {
+    const db = firebase.firestore();
+    const parkingSpotsRef = db
+      .collection('parkingSpots')
+      .where('state', '==', newState);
+    snapshot = await parkingSpotsRef.get().catch(() => {
+      console.log('No matching documents.');
+    });
+    let parkingSpots = [];
+    let ctr = 0;
+    await snapshot.forEach(doc => {
+      parkingSpots.push(doc.data());
+      parkingSpots[ctr].id = doc.id;
+      ctr++;
+    });
+    setParkingSpots(parkingSpots);
+  };
 
   useEffect(() => {
-    (async () => {
+    async () => {
       try {
         let { status } = await Location.requestForegroundPermissionsAsync();
         let currLoc = await Location.getCurrentPositionAsync();
@@ -104,51 +63,61 @@ export default function MapScreen(props) {
       } catch (error) {
         setLoading(true);
       }
-    })();
+    };
+    fetchParkingSpots(state);
   }, []);
-  // console.log(location);
-  // const markerClick = event => {
-  //   props.navigation.navigate('');
-  // };
 
-  // const searchForLocation = async text => {
-  //   const response = await axios.get(``, {
-  //     headers: { Authorization: MAPBOX_ACCESS_TOKEN }
-  //   });
+  const markerClick = (event, spotDescription) => {
+    let spot;
+    for (let i = 0; i < parkingSpots.length; i++) {
+      if (parkingSpots[i].description == spotDescription) {
+        spot = parkingSpots[i];
+      }
+    }
+    props.navigation.navigate('MapSingleSpotScreen', {
+      parkingSpot: spot
+    });
+  };
 
-  // console.log(response, 'response');
-  // }
+  const onRegionChangeComplete = async () => {
+    const currState = state;
+    const loc = await Geocoder.from(region.latitude, region.longitude).catch(
+      () => {
+        console.log('error geocoding');
+      }
+    );
+    let results = loc.results[0].address_components;
+    let newState;
+    results.forEach(obj => {
+      if (obj.short_name.length == 2 && obj.short_name != 'US') {
+        newState = obj.short_name;
+      }
+    });
+    if (newState != currState) {
+      setState(newState);
+      fetchParkingSpots(newState);
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.AndroidSafeArea}>
-      {/* <View style={styles.searchBar}>
-        <TextInput
-          style={styles.textInputSearchBar}
-          onChangeText={text => setText(text)}
-          onSubmitEditing={text => {
-            searchForLocation(text);
-          }}
-          placeholder={'Search'}
-          placeholderTextColor={'#666'}
-        />
-      </View> */}
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.searchBar}>
         <GooglePlacesAutocomplete
-          placeholder="Search"
+          placeholder='Search'
           query={{
             key: GOOGLE_API_KEY,
-            language: "en",
+            language: 'en'
           }}
-          onPress={async (data, details = null) => {
+          onPress={async (data = null) => {
             setSearchLocation(data.description);
             let coords = await geocode(data.description);
             setRegion({
               ...coords,
               latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              longitudeDelta: 0.0421
             });
           }}
-          onFail={(error) => console.error(error)}
+          onFail={error => console.error(error)}
         />
       </View>
       <MapView
@@ -158,26 +127,37 @@ export default function MapScreen(props) {
         showsUserLocation
         showsMyLocationButton={true}
         region={region}
+        onRegionChangeComplete={async region => {
+          let tempRegion = {
+            latitude: Number(region.latitude).toFixed(4),
+            longitude: Number(region.longitude).toFixed(4),
+            latitudeDelta: Number(region.latitudeDelta),
+            longitudeDelta: Number(region.longitudeDelta)
+          };
+          setRegion(tempRegion);
+          onRegionChangeComplete();
+        }}
       >
-        {dummyData.map((spot, idx) => {
-          return (
-            <Marker
-              key={idx}
-              coordinate={{
-                latitude: spot.latitude,
-                longitude: spot.longitude,
-              }}
-            >
-              <Callout>
-                <TouchableHighlight onPress={() => markerClick()}>
-                  <View>
-                    <Text>{spot.description}</Text>
-                  </View>
-                </TouchableHighlight>
-              </Callout>
-            </Marker>
-          );
-        })}
+        {parkingSpots &&
+          parkingSpots.map(spot => {
+            return (
+              <Marker
+                key={spot.id}
+                coordinate={{
+                  latitude: spot.latitude,
+                  longitude: spot.longitude
+                }}
+                pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
+              >
+                <Callout
+                  key={spot.id}
+                  onPress={event => markerClick(event, spot.description)}
+                >
+                  <Text>{spot.description}</Text>
+                </Callout>
+              </Marker>
+            );
+          })}
       </MapView>
     </SafeAreaView>
   );
