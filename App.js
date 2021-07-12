@@ -20,7 +20,6 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode;
 }
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -64,7 +63,7 @@ export default function App() {
         <NavigationContainer>
           <Tab.Navigator>
             <Tab.Screen name="Map">
-              {(props) => <MapScreen {...props} extraData={user} />}
+              {(props) => <MapScreen {...props} user={user} />}
             </Tab.Screen>
             <Tab.Screen name="Provide">
               {(props) => <ProvideScreen {...props} user={user} />}
