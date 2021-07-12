@@ -7,14 +7,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import {
   LoginScreen,
-  HomeScreen,
   RegistrationScreen,
   ProvideScreen,
   AccountScreen,
+  MapScreen,
 } from "./src/screens";
-
 import { decode, encode } from "base-64";
-
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -25,58 +23,71 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export default function App() {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+export default class extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { user: null, loading: true };
+    this.handleUser = this.handleUser.bind(this);
+  }
+  // const [loading, setLoading] = useState(true);
+  // const [user, setUser] = useState(null);
 
-  useEffect(() => {
+  async handleUser() {
     const usersRef = firebase.firestore().collection("users");
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        usersRef
-          .doc(user.uid)
-          .get()
-          .then((document) => {
-            const userData = document.data();
-            setLoading(false);
-            setUser(userData);
-          })
-          .catch((error) => {
-            setLoading(false);
-          });
+        try {
+          const userData = (await usersRef.doc(user.uid).get()).data();
+          this.setState({ loading: false });
+          // setUser(userData);
+
+          this.setState({ user: userData });
+        } catch (error) {
+          console.log(error);
+          this.setState({ loading: false });
+        }
       } else {
-        setLoading(false);
+        this.setState({ loading: false });
       }
     });
-  }, []);
-
-  if (loading) {
-    return <></>;
   }
-  return (
-    <>
-      {user ? (
-        <NavigationContainer>
-          <Tab.Navigator>
-            <Tab.Screen name="Map">
-              {(props) => <HomeScreen {...props} extraData={user} />}
-            </Tab.Screen>
-            <Tab.Screen name="Provide">
-              {(props) => <ProvideScreen {...props} user={user} />}
-            </Tab.Screen>
-            <Tab.Screen name="Account">
-              {(props) => <AccountScreen {...props} user={user} />}
-            </Tab.Screen>
-          </Tab.Navigator>
-        </NavigationContainer>
-      ) : (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      )}
-    </>
-  );
+
+  render() {
+    //if (this.state.loading) return <></>;
+    const user = this.state.user;
+
+    return (
+      <>
+        {user ? (
+          <NavigationContainer>
+            <Tab.Navigator>
+              <Tab.Screen name="Map">
+                {(props) => <MapScreen {...props} extraData={user} />}
+              </Tab.Screen>
+              <Tab.Screen name="Provide">
+                {(props) => <ProvideScreen {...props} user={user} />}
+              </Tab.Screen>
+              <Tab.Screen name="Account">
+                {(props) => <AccountScreen {...props} user={user} />}
+              </Tab.Screen>
+            </Tab.Navigator>
+          </NavigationContainer>
+        ) : (
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Login">
+                {(props) => (
+                  <LoginScreen {...props} onLogin={this.handleUser} />
+                )}
+              </Stack.Screen>
+              <Stack.Screen
+                name="Registration"
+                component={RegistrationScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
+      </>
+    );
+  }
 }

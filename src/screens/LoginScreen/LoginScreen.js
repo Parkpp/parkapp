@@ -4,12 +4,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import styles from './styles';
 import { firebase } from '../../firebase/config'
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen(props) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+   // console.log(props)
 
     const onFooterLinkPress = () => {
-        navigation.navigate('Registration')
+        props.navigation.navigate('Registration')
     }
 
     const onLoginPress = () => {
@@ -28,7 +29,7 @@ export default function LoginScreen({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('Home', {user: user})
+                        props.onLogin()
                     })
                     .catch(error => {
                         alert(error)
