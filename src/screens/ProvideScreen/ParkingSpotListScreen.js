@@ -48,7 +48,7 @@ export const ParkingSpotListScreen = (props) => {
             parkingSpots.push(doc.data());
           });
         } catch (error) {
-          console.log(error);
+          console.log("hello this might be an error");
         }
 
         setParkingSpots(parkingSpots);
@@ -56,6 +56,7 @@ export const ParkingSpotListScreen = (props) => {
     }, [])
   );
 
+  // /Users/Etty/parkapp/node_modules/react-native-reanimated/lib/reanimated1/animations/decay.js
   const updateSpot = (spot) => {
     //console.log("This is the parking spot informaion", spot);
     props.navigation.navigate("UpdateParkingSpot", { spot: spot });
@@ -68,8 +69,8 @@ export const ParkingSpotListScreen = (props) => {
   const buttonsOrActiveStatus = (spot) => {
     if (spot.reserved) {
       return (
-        <View style={{flex:1}}>
-          <Text>ACTIVE</Text>;
+        <View>
+          <Text>ACTIVE</Text>
         </View>
       );
     } else {
@@ -94,10 +95,10 @@ export const ParkingSpotListScreen = (props) => {
   };
 
   return (
-    
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} persistentScrollbar={true}>
         {spots.map((spot, idx) => {
+          console.log(spot);
           return (
             <View key={idx} style={styles.singleParkingSpot}>
               <View style={styles.parkingSpotInfo}>
