@@ -59,7 +59,7 @@ export default function MapScreen (props) {
       let currLoc = await Location.getCurrentPositionAsync();
       setLocation(currLoc);
     };
-    fetchParkingSpots(state);
+    fetchParkingSpots();
   }, []);
 
   const markerClick = (event, spotDescription) => {
