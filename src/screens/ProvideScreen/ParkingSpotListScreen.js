@@ -5,13 +5,16 @@ import { decode, encode } from "base-64";
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useFocusEffect } from "@react-navigation/native";
 import styles from "./styles";
+import { parkingSpots } from "../../../parkingSeed";
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -19,47 +22,114 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-//parkingSpots()
-//API call to convert entered user loction to Geopoint long and lat
-//Need to pull in data from firebase
+//parkingSpots();
+
 export const ParkingSpotListScreen = (props) => {
   const [spots, setParkingSpots] = useState([]);
   const user = props.user;
-  useEffect(() => {
-    //Make call to firebase
-    const getParkingSpots = async () => {
-      //Need logic to check "userId" field and filter query  as so
-      const db = firebase.firestore();
-      const parkingSpotsRef = db
-        .collection("parkingSpots")
-        .where("userId", "==", user.id);
-      const snapshot = await parkingSpotsRef.get();
-      if (snapshot.empty) {
-        console.log("No matching documents.");
-      }
-      let parkingSpots = [];
-      snapshot.forEach((doc) => {
-        parkingSpots.push(doc.data());
-      });
-      setParkingSpots(parkingSpots);
-    };
-    getParkingSpots();
-  }, []);
-  const toSingleSpotView = (spot) => {
-    props.navigation.navigate("singleSpot", { parkingSpot: spot });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      (async () => {
+        // Do something when the screen is focused
+        let parkingSpots = [];
+
+        try {
+          const parkingSpotsRef = firebase
+            .firestore()
+            .collection("parkingSpots")
+            .where("userId", "==", user.id);
+          const snapshot = await parkingSpotsRef.get();
+
+          if (snapshot.empty) {
+            console.log("No matching documents.");
+          }
+          snapshot.forEach((doc) => {
+            parkingSpots.push(doc.data());
+          });
+        } catch (error) {
+          console.log(error);
+        }
+
+        setParkingSpots(parkingSpots);
+      })();
+    }, [])
+  );
+
+  const updateSpot = (spot) => {
+    //console.log("This is the parking spot informaion", spot);
+    props.navigation.navigate("UpdateParkingSpot", { spot: spot });
   };
-  return (
-    <SafeAreaView style={styles.container}>
-      {spots.map((spot, idx) => {
-        return (
-          <TouchableOpacity key={idx} onPress={() => toSingleSpotView(spot)}>
-            <View>
-              {/* //render image, location */}
-              <Text>{spot.description}</Text>
-            </View>
+
+  const deleteSpot = (spot) => {
+    props.navigation.navigate("DeleteParkingSpot", { spot: spot });
+  };
+
+  const buttonsOrActiveStatus = (spot) => {
+    if (spot.reserved) {
+      return (
+        <View style={{flex:1}}>
+          <Text>ACTIVE</Text>;
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.provideButton}
+            onPress={() => updateSpot(spot)}
+          >
+            <Text style={styles.buttonTitle}>Update</Text>
           </TouchableOpacity>
-        );
-      })}
+
+          <TouchableOpacity
+            style={styles.provideButton}
+            onPress={() => deleteSpot(spot)}
+          >
+            <Text style={styles.buttonTitle}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  };
+
+  return (
+    
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView} persistentScrollbar={true}>
+        {spots.map((spot, idx) => {
+          return (
+            <View key={idx} style={styles.singleParkingSpot}>
+              <View style={styles.parkingSpotInfo}>
+                {/* //render image, location */}
+                <ScrollView style={styles.parkingInfoScrollView}>
+                  <Text>
+                    Description: {spot.description ? spot.description : "N/A"}
+                  </Text>
+                  <Text>Street: {spot.street}</Text>
+                  <Text>City: {spot.city}</Text>
+                  <Text>State: {spot.state}</Text>
+                  <Text>Rate: ${spot.rate}/hr</Text>
+                  <Text>Start time: {spot.startTime}</Text>
+                  <Text>End time: {spot.endTime}</Text>
+                  <Text>
+                    Status: {spot.reserved ? "reserved" : "available"}
+                  </Text>
+
+                  {/* <Text>${spot.daysofWeek}</Text> */}
+                </ScrollView>
+                <View>
+                  <Image
+                    style={styles.parkingSpotImage}
+                    source={{ uri: spot.imageUrl }}
+                  />
+                </View>
+              </View>
+              {buttonsOrActiveStatus(spot)}
+            </View>
+          );
+        })}
+      </ScrollView>
     </SafeAreaView>
   );
 };

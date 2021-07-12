@@ -8,6 +8,16 @@ import {
 } from "react-native";
 import styles from "./styles";
 
+
+//Use a duration to select time
+
+// .1 A list of times  
+// .2 Modify the list to contain only times within start and end time
+    //
+//
+
+
+
 const mockData = {
   slots: {
     slot1: "9:00am to 9:30am",

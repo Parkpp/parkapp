@@ -20,11 +20,6 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-//Render Buttons to link to other Stack.screens
-//Functions to handle button navigation
-
-//const Tab = create();
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -49,21 +44,16 @@ const styles = StyleSheet.create({
 });
 
 export const ProvideScreen = (props) => {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
 
-  //Funtion to handle navigation to Current Session Screen
+  //Stack Screen Nagivation
   const toCurrentSession = () => {
     props.navigation.navigate("CurrentSession");
   };
 
-  //Funtion to handle navigation to Current Session Screen
   const toParkingSpotList = () => {
-      //'Root', { screen: 'Settings' }
     props.navigation.navigate("ParkingSpotList");
   };
 
-  //Funtion to handle navigation to Current Session Screen
   const toProvideParking = () => {
     props.navigation.navigate("ProvideParking");
   };
@@ -91,4 +81,4 @@ export const ProvideScreen = (props) => {
       </View>
     </View>
   );
-}
+};
