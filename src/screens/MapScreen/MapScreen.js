@@ -13,7 +13,7 @@ import { dummyData } from '../../../parkingSeed';
 //   db.collection('parkingSpots').add(doc);
 // });
 
-LogBox.ignoreAllLogs(true);
+//LogBox.ignoreAllLogs(true);
 
 Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 

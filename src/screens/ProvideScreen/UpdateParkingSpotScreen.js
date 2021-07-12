@@ -13,7 +13,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import styles from "./styles";
-
+//import SelectTime from './SelectTime'
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -23,80 +23,61 @@ if (!global.atob) {
 
 import * as Location from "expo-location";
 
-export const ProvideParkingScreen = (props) => {
-  const [description, setdescription] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [postalCode, setpostalCode] = useState("");
-  const [rate, setRate] = useState("");
+export const UpdateParkingSpotScreen = (props) => {
+  // values in form initialized to current info of parking spot
+  const spotToUpdate = props.route.params.spot;
+  const [description, setdescription] = useState(spotToUpdate.description);
+  const [street, setStreet] = useState(spotToUpdate.street);
+  const [city, setCity] = useState(spotToUpdate.city);
+  const [state, setState] = useState(spotToUpdate.state);
+  const [postalCode, setpostalCode] = useState(spotToUpdate.postalCode);
+  const [rate, setRate] = useState(spotToUpdate.rate);
   const [spotCheck, setSpotCheck] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-
   const [coords, setCoords] = useState({});
+  const [startTime, setStartTime] = useState(spotToUpdate.startTime);
+  const [endTime, setEndTime] = useState(spotToUpdate.endTime);
 
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        //setErrorMsg("Permission to access location was denied");
-        return;
-      }
-    })();
-  }, []);
 
+  //Geocoding- retrieve lat & long from user entered address
   const onRegisterPress = async () => {
     const address = `${street}, ${city}, ${state}`;
-    console.log(address);
-    //check if form entered data returns longitude and latidude from geocoding APi
-
     const returnedCoords = await Location.geocodeAsync(address);
-
-    console.log(returnedCoords[0]);
-
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
-    //Navigate to simple map component render
-    //props.navigation.navigate('map', {coor})
-
-    return;
   };
 
-  //API call to firebase to save data
-  const addParkingSpot = async () => {
+  //API call to firebase to add user confirmed parking spot
+  const updateParkingSpot = async () => {
     const db = firebase.firestore();
     const parkingRef = db.collection("parkingSpots");
 
+    //Retreive registered map API address of user confirmed coordinates
     try {
       const [address] = await Location.reverseGeocodeAsync({
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
 
-      let spot = parkingRef.doc();
-      await spot.set({
-        id: spot.id,
-        userId: props.user.id,
+      //Update parking spot info in firebase
+      await parkingRef.doc(spotToUpdate.id).update({
         description: description,
         street: `${address.name} ${address.street}`,
         city: address.city,
         country: address.country,
         postalCode: address.postalCode,
-        State: address.region,
+        state: address.region,
         imageUrl:
           "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
         latitude: coords.latitude,
         longitude: coords.longitude,
-        reserved: false,
       });
     } catch (error) {
       console.log(error);
     }
 
-    props.navigation.navigate("ProvideScreen");
+    props.navigation.navigate("ParkingSpotList");
   };
 
   const returnToForm = () => {
@@ -139,7 +120,7 @@ export const ProvideParkingScreen = (props) => {
           <View style={{ flex: 1, flexDirection: "column" }}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => addParkingSpot()}
+              onPress={() => updateParkingSpot()}
             >
               <Text style={styles.buttonTitle}>Yes</Text>
             </TouchableOpacity>
@@ -163,7 +144,7 @@ export const ProvideParkingScreen = (props) => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Description"
+              placeholder={description}
               placeholderTextColor="#aaaaaa"
               onChangeText={(text) => setdescription(text)}
               value={description}
@@ -172,7 +153,7 @@ export const ProvideParkingScreen = (props) => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Street Address"
+              placeholder={street}
               placeholderTextColor="#aaaaaa"
               onChangeText={(text) => setStreet(text)}
               value={street}
@@ -182,7 +163,7 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="City"
+              placeholder={city}
               onChangeText={(text) => setCity(text)}
               value={city}
               underlineColorAndroid="transparent"
@@ -191,7 +172,7 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="State"
+              placeholder={state}
               onChangeText={(text) => setState(text)}
               value={state}
               underlineColorAndroid="transparent"
@@ -200,16 +181,17 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="postalCode"
+              placeholder={postalCode}
               onChangeText={(text) => setpostalCode(text)}
               value={postalCode}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
+
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="rate"
+              placeholder={rate}
               onChangeText={(text) => setRate(text)}
               value={rate}
               underlineColorAndroid="transparent"
@@ -218,7 +200,7 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="startTime"
+              placeholder={startTime}
               onChangeText={(text) => setStartTime(text)}
               value={startTime}
               underlineColorAndroid="transparent"
@@ -227,19 +209,21 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="endTime"
+              placeholder= {endTime}
               onChangeText={(text) => setEndTime(text)}
               value={endTime}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
 
+            {/* <SelectTime/> */}
+
             {/* Upload image */}
             <TouchableOpacity
               style={styles.button}
               onPress={() => onRegisterPress()}
             >
-              <Text style={styles.buttonTitle}>Register Spot</Text>
+              <Text style={styles.buttonTitle}>Update Parking Spot</Text>
             </TouchableOpacity>
           </KeyboardAwareScrollView>
         </View>
