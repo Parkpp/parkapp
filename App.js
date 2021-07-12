@@ -19,7 +19,6 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode;
 }
-
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -28,9 +27,14 @@ export default class extends React.Component {
     super(props);
     this.state = { user: null, loading: true };
     this.handleUser = this.handleUser.bind(this);
+
+    //State for UserLogged in status
+    // const authListener = firebase.auth().onAuthStateChanged((user) => {
+    //   setUserLogged(user ? true : false);
+    // });
+
+    //    return authListener;
   }
-  // const [loading, setLoading] = useState(true);
-  // const [user, setUser] = useState(null);
 
   async handleUser() {
     const usersRef = firebase.firestore().collection("users");
@@ -56,6 +60,7 @@ export default class extends React.Component {
 
     return (
       <>
+      {/* Check User Logged not user object */}
         {user ? (
           <NavigationContainer>
             <Tab.Navigator>

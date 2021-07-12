@@ -26,6 +26,7 @@ export default StyleSheet.create({
     marginRight: 30,
     paddingLeft: 16,
   },
+
   button: {
     backgroundColor: "red",
     marginLeft: 30,
@@ -75,24 +76,24 @@ export default StyleSheet.create({
 
   parkingInfoScrollView: {
     flex: 1,
-    margin: 1
+    margin: 1,
   },
 
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",
-    margin: 10
+    margin: 10,
   },
 
   singleParkingSpot: {
     flex: 1,
     margin: 20,
-    borderStyle: 'solid',
-    borderColor: 'black',
+    borderStyle: "solid",
+    borderColor: "black",
     borderWidth: 1,
-    backgroundColor: '#FAEDD3',
-    borderRadius: 2
+    backgroundColor: "#FAEDD3",
+    borderRadius: 2,
   },
   parkingSpotImage: {
     flex: 1,
@@ -100,7 +101,7 @@ export default StyleSheet.create({
     height: 100,
     resizeMode: "cover",
     margin: 1,
-    borderRadius: 2
+    borderRadius: 2,
   },
   parkingSpotInfo: {
     flex: 1,

@@ -53,7 +53,7 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16
   },
-  AndroidSafeArea: {
+  safeArea: {
     flex: 1,
     backgroundColor:
       Platform.OS === 'android'
@@ -68,7 +68,8 @@ export default StyleSheet.create({
     top: Platform.OS === 'android' ? 30 : Platform.OS === 'ios' ? 50 : 10,
     width: Platform.OS === 'ios' ? '96%' : '83%',
     left: '2%',
-    zIndex: 3
+    zIndex: 3,
+    opacity: 0.75
   },
   textInputSearchBar: {
     borderRadius: 10,
@@ -80,5 +81,9 @@ export default StyleSheet.create({
     height: 45,
     paddingHorizontal: 10,
     fontSize: 18
+  },
+  image: {
+    width: 300,
+    height: 150
   }
 });

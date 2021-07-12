@@ -94,6 +94,7 @@ export const ParkingSpotListScreen = (props) => {
   };
 
   return (
+    
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} persistentScrollbar={true}>
         {spots.map((spot, idx) => {
