@@ -8,7 +8,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import Geocoder from "react-native-geocoding";
 import { LogBox } from "react-native";
 
-//LogBox.ignoreAllLogs(true);
+LogBox.ignoreAllLogs(true);
 
 Geocoder.init(GOOGLE_API_KEY, { language: "en" });
 

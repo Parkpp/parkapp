@@ -31,57 +31,30 @@ export const DeleteParkingSpotScreen = (props) => {
     //Check if parking spot is currnetlu active in parkingSpot db
     const parkingSpotRef = db.collection("parkingSpots").doc(spotToDelete.id);
     const spot = await (await parkingSpotRef.get()).data();
-    console.log(spot)
-
-    if (!spot.reserved) {
-      console.log("This parking spot is not reserved");
-
-      await db.collection("parkingSpots").doc(spot.id).delete();
-
-      returnToParkingSpotsList()
-    } else {
-      setCanDelete(false);
-    }
+    await db.collection("parkingSpots").doc(spot.id).delete();
+    returnToParkingSpotsList();
   };
 
   const returnToParkingSpotsList = () => {
     props.navigation.navigate("ParkingSpotList");
   };
 
-  console.log(canDelete);
   return (
-    <>
-      {!canDelete ? (
-        <TouchableOpacity
-          style={{ flex: 1, }}
-          onPress={() => returnToParkingSpotsList()}
-        >
-          <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
-            <Text>
-              This spot can not be deleted because it is currently reserved
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.container}>
-          <View></View>
+    <View>
+      <Text>Do you want to delete this parking spot</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => confirmDeleteParkingSpot()}
+      >
+        <Text style={styles.buttonTitle}>Yes</Text>
+      </TouchableOpacity>
 
-          <Text>Do you want to delete this parking spot</Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => confirmDeleteParkingSpot()}
-          >
-            <Text style={styles.buttonTitle}>Yes</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => returnToParkingSpotsList()}
-          >
-            <Text style={styles.buttonTitle}>No</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => returnToParkingSpotsList()}
+      >
+        <Text style={styles.buttonTitle}>No</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
