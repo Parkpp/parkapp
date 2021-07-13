@@ -172,7 +172,7 @@ export default function RegistrationScreen({ navigation }) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
           keyboardType="numeric"
-          maxLength={10}
+          maxLength={4}
         />
         <TextInput
           style={styles.input}
