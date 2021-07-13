@@ -96,5 +96,8 @@ export default StyleSheet.create({
     padding: 10,
     zIndex: 2,
     opacity: 0.75
+  },
+  keyText: {
+    margin: 2
   }
 });

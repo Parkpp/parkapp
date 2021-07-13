@@ -109,9 +109,9 @@ export default function MapScreen (props) {
         />
       </View>
       <View style={styles.key}>
-        <Text>Key</Text>
-        <Text>🔵: Owned Spots</Text>
-        <Text>🔴: Unowned Spots</Text>
+        <Text style={styles.keyText}>Key</Text>
+        <Text style={styles.keyText}>🔵: Owned Spots</Text>
+        <Text style={styles.keyText}>🔴: Unowned Spots</Text>
       </View>
       <MapView
         ref={map => {
