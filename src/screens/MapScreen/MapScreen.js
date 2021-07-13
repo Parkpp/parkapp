@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Text, View, SafeAreaView } from 'react-native';
 import styles from './styles';
 import { firebase, GOOGLE_API_KEY } from '../../firebase/config';
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapView, {
+  PROVIDER_GOOGLE,
+  Marker,
+  Callout,
+  Camera
+} from 'react-native-maps';
 import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
@@ -20,11 +25,16 @@ Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 export default function MapScreen (props) {
   const [parkingSpots, setParkingSpots] = useState(null);
   const [region, setRegion] = useState({
-    latitude: 40.757952,
-    longitude: -73.985572,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421
+    center: {
+      latitude: 40.757952,
+      longitude: -73.985572
+    },
+    pitch: 0,
+    zoom: 13,
+    heading: 0,
+    altitude: 0
   });
+  const mapRef = useRef < MapView > null;
 
   const geocode = async text => {
     let coords = await Geocoder.from(text);
@@ -82,9 +92,18 @@ export default function MapScreen (props) {
           onPress={async (data = null) => {
             let coords = await geocode(data.description);
             setRegion({
-              ...coords,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421
+              center: coords,
+              pitch: 0,
+              zoom: 13,
+              heading: 0,
+              altitude: 0
+            });
+            mapRef.animateCamera({
+              center: coords,
+              pitch: 2,
+              heading: 20,
+              altitude: 200,
+              zoom: 40
             });
           }}
           onFail={error => console.error(error)}
@@ -96,13 +115,20 @@ export default function MapScreen (props) {
         <Text>🔴: Unowned Spots</Text>
       </View>
       <MapView
+        ref={map => {
+          map = map;
+        }}
         loadingEnabled={true}
         style={{ flex: 1 }}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
+        showsBuildings
         showsMyLocationButton={true}
-        region={region}
-        onRegionChangeComplete={async region => {
+        rotateEnabled={true}
+        mapType={'mutedStandard'}
+        camera={region}
+        initialCamera={region}
+        onCameraChangeComplete={async region => {
           let tempRegion = {
             latitude: Number(region.latitude).toFixed(4),
             longitude: Number(region.longitude).toFixed(4),
