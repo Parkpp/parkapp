@@ -74,7 +74,8 @@ export default function MapScreen (props) {
       return spot.id == spotId;
     });
     props.navigation.navigate('MapSingleSpotScreen', {
-      parkingSpot: spot[0]
+      parkingSpot: spot[0],
+      user: props.user
     });
   };
 

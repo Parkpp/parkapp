@@ -61,12 +61,6 @@ export const ProvideScreen = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={toCurrentSession}>
-          <View>
-            <Text style={styles.buttonText}>CurrentSession</Text>
-          </View>
-        </TouchableOpacity>
-
         <TouchableOpacity onPress={toParkingSpotList}>
           <View>
             <Text style={styles.buttonText}>ParkingSpots</Text>

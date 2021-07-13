@@ -6,6 +6,7 @@ import { firebase } from '../../firebase/config';
 
 export default function MapSingleSpotScreen (props) {
   let spot = props.route.params.parkingSpot;
+  const user = props.route.params.user
   return (
     <View style={styles.container}>
       <Text>{spot.description}</Text>
@@ -23,7 +24,7 @@ export default function MapSingleSpotScreen (props) {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          props.navigation.navigate('ReservationScreen');
+          props.navigation.navigate('ReservationScreen',{user: user, spot: spot});
         }}
       >
         <Text>Would you like to reserve this spot?</Text>

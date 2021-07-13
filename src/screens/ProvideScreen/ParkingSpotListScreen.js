@@ -69,7 +69,7 @@ export const ParkingSpotListScreen = (props) => {
   const buttonsOrActiveStatus = (spot) => {
     if (spot.reserved) {
       return (
-        <View>
+        <View styles={{flex:1, justifyContent:'center', alignItems:'center'}}>
           <Text>ACTIVE</Text>
         </View>
       );

@@ -13,7 +13,11 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import styles from "./styles";
-//import SelectTime from './SelectTime'
+
+import { times } from "./SelectTime";
+
+import ModalDropdown from "react-native-modal-dropdown";
+
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -37,8 +41,9 @@ export const UpdateParkingSpotScreen = (props) => {
   const [startTime, setStartTime] = useState(spotToUpdate.startTime);
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
 
-  //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
+  console.log(spotToUpdate)
+  //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
   //Geocoding- retrieve lat & long from user entered address
   const onRegisterPress = async () => {
@@ -60,6 +65,7 @@ export const UpdateParkingSpotScreen = (props) => {
         longitude: coords.longitude,
       });
 
+      console.log(address)
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
         description: description,
@@ -72,6 +78,8 @@ export const UpdateParkingSpotScreen = (props) => {
           "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
         latitude: coords.latitude,
         longitude: coords.longitude,
+        startTime: startTime,
+        endTime: endTime,
       });
     } catch (error) {
       console.log(error);
@@ -140,7 +148,7 @@ export const UpdateParkingSpotScreen = (props) => {
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/icon.png")}
+              source={require("../../../assets/park.png")}
             />
             <TextInput
               style={styles.input}
@@ -172,7 +180,7 @@ export const UpdateParkingSpotScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={state}
+              placeholder={state ?state:'State'}
               onChangeText={(text) => setState(text)}
               value={state}
               underlineColorAndroid="transparent"
@@ -197,27 +205,35 @@ export const UpdateParkingSpotScreen = (props) => {
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder={startTime}
-              onChangeText={(text) => setStartTime(text)}
-              value={startTime}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-            />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder= {endTime}
-              onChangeText={(text) => setEndTime(text)}
-              value={endTime}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+            <ModalDropdown
+              defaultValue={startTime ? startTime : "Enter start time"}
+              options={times}
+              onSelect={(idx, value) => setStartTime(value)}
+              dropdownStyle={{ width: "auto" }}
+              dropdownTextStyle={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+              style={{
+                ...styles.input,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             />
 
-            {/* <SelectTime/> */}
-
+            <ModalDropdown
+              defaultValue={endTime ? endTime : "Enter end time"}
+              options={times}
+              onSelect={(idx, value) => setEndTime(value)}
+              style={{
+                ...styles.input,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
             {/* Upload image */}
             <TouchableOpacity
               style={styles.button}
