@@ -72,7 +72,7 @@ export default class extends React.Component {
           <NavigationContainer>
             <Tab.Navigator>
               <Tab.Screen name="Map">
-                {(props) => <MapScreen {...props} extraData={user} />}
+                {(props) => <MapScreen {...props} user={user} />}
               </Tab.Screen>
               <Tab.Screen name="Provide">
                 {(props) => <ProvideScreen {...props} user={user} />}

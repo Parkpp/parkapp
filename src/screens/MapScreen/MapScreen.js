@@ -76,6 +76,7 @@ export default function MapScreen(props) {
     }
     props.navigation.navigate("MapSingleSpotScreen", {
       parkingSpot: spot,
+      user: props.user,
     });
   };
 
