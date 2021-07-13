@@ -13,13 +13,11 @@ import { dummyData } from '../../../parkingSeed';
 //   db.collection('parkingSpots').add(doc);
 // });
 
-//LogBox.ignoreAllLogs(true);
+LogBox.ignoreAllLogs(true);
 
 Geocoder.init(GOOGLE_API_KEY, { language: 'en' });
 
 export default function MapScreen (props) {
-  const [location, setLocation] = useState(null);
-  const [searchLocation, setSearchLocation] = useState(null);
   const [parkingSpots, setParkingSpots] = useState(null);
   const [region, setRegion] = useState({
     latitude: 40.757952,
@@ -55,44 +53,27 @@ export default function MapScreen (props) {
 
   useEffect(() => {
     async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      let currLoc = await Location.getCurrentPositionAsync();
-      setLocation(currLoc);
+      await Location.requestForegroundPermissionsAsync();
+      await Location.getCurrentPositionAsync();
     };
     fetchParkingSpots();
   }, []);
 
-  const markerClick = (event, spotDescription) => {
+  const markerClick = (event, spotId) => {
     let spot;
-    for (let i = 0; i < parkingSpots.length; i++) {
-      if (parkingSpots[i].description == spotDescription) {
-        spot = parkingSpots[i];
-      }
-    }
+    let tempSpots = parkingSpots;
+    // for (let i = 0; i < parkingSpots.length; i++) {
+    //   if (parkingSpots[i].description == spotDescription) {
+    //     spot = parkingSpots[i];
+    //   }
+    // }
+    tempSpots.filter(spot => {
+      spot.id == spotId;
+    });
     props.navigation.navigate('MapSingleSpotScreen', {
-      parkingSpot: spot
+      parkingSpot: tempSpots[0]
     });
   };
-
-  // const onRegionChangeComplete = async () => {
-  //   const currState = state;
-  //   const loc = await Geocoder.from(region.latitude, region.longitude).catch(
-  //     () => {
-  //       console.log('error geocoding');
-  //     }
-  //   );
-  //   let results = loc.results[0].address_components;
-  //   let newState;
-  //   results.forEach(obj => {
-  //     if (obj.short_name.length == 2 && obj.short_name != 'US') {
-  //       newState = obj.short_name;
-  //     }
-  //   });
-  //   if (newState != currState) {
-  //     setState(newState);
-  //     fetchParkingSpots(newState);
-  //   }
-  // };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -104,8 +85,7 @@ export default function MapScreen (props) {
             language: 'en'
           }}
           onPress={async (data = null) => {
-            setSearchLocation(data.description);
-            let coords = await geocode(searchLocation);
+            let coords = await geocode(data.description);
             setRegion({
               ...coords,
               latitudeDelta: 0.0922,
@@ -114,6 +94,11 @@ export default function MapScreen (props) {
           }}
           onFail={error => console.error(error)}
         />
+      </View>
+      <View style={styles.key}>
+        <Text>Key</Text>
+        <Text>🔵: Owned Spots</Text>
+        <Text>🔴: Unowned Spots</Text>
       </View>
       <MapView
         loadingEnabled={true}
@@ -130,29 +115,27 @@ export default function MapScreen (props) {
             longitudeDelta: Number(region.longitudeDelta)
           };
           setRegion(tempRegion);
-          // onRegionChangeComplete();
         }}
       >
-        {parkingSpots &&
-          parkingSpots.map(spot => {
-            return (
-              <Marker
+        {parkingSpots?.map(spot => {
+          return (
+            <Marker
+              key={spot.id}
+              coordinate={{
+                latitude: spot.latitude,
+                longitude: spot.longitude
+              }}
+              pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
+            >
+              <Callout
                 key={spot.id}
-                coordinate={{
-                  latitude: spot.latitude,
-                  longitude: spot.longitude
-                }}
-                pinColor={props.user.id == spot.userId ? 'blue' : 'red'}
+                onPress={event => markerClick(event, spot.id)}
               >
-                <Callout
-                  key={spot.id}
-                  onPress={event => markerClick(event, spot.description)}
-                >
-                  <Text>{spot.description}</Text>
-                </Callout>
-              </Marker>
-            );
-          })}
+                <Text>{spot.description}</Text>
+              </Callout>
+            </Marker>
+          );
+        })}
       </MapView>
     </SafeAreaView>
   );
