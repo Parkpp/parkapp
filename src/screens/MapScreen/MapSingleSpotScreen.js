@@ -19,7 +19,7 @@ export default function MapSingleSpotScreen (props) {
         {`${spot.street} ${spot.city}, ${spot.state} ${spot.postalCode}`}
       </Text>
       <Text>{`$${spot.rate}/hr`}</Text>
-      <Text>Availability</Text>
+      <Text>{spot.reserved ? 'Reserved' : 'Available'}</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {

@@ -45,6 +45,7 @@ export default function MapScreen (props) {
     let ctr = 0;
     await snapshot.forEach(doc => {
       parkingSpots.push(doc.data());
+      console.log(doc.id, 'doc.id');
       parkingSpots[ctr].id = doc.id;
       ctr++;
     });
@@ -60,18 +61,12 @@ export default function MapScreen (props) {
   }, []);
 
   const markerClick = (event, spotId) => {
-    let spot;
     let tempSpots = parkingSpots;
-    // for (let i = 0; i < parkingSpots.length; i++) {
-    //   if (parkingSpots[i].description == spotDescription) {
-    //     spot = parkingSpots[i];
-    //   }
-    // }
-    tempSpots.filter(spot => {
-      spot.id == spotId;
+    let spot = tempSpots.filter(spot => {
+      return spot.id == spotId;
     });
     props.navigation.navigate('MapSingleSpotScreen', {
-      parkingSpot: tempSpots[0]
+      parkingSpot: spot[0]
     });
   };
 
