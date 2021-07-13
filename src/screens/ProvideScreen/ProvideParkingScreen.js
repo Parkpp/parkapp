@@ -39,8 +39,6 @@ export const ProvideParkingScreen = (props) => {
 
   const [coords, setCoords] = useState({});
 
-  //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -75,7 +73,7 @@ export const ProvideParkingScreen = (props) => {
         longitude: coords.longitude,
       });
 
-      console.log(address)
+      console.log(address);
       let spot = parkingRef.doc();
       await spot.set({
         id: spot.id,
