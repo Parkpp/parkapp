@@ -130,10 +130,14 @@ export default function MapScreen (props) {
         initialCamera={region}
         onCameraChangeComplete={async region => {
           let tempRegion = {
-            latitude: Number(region.latitude).toFixed(4),
-            longitude: Number(region.longitude).toFixed(4),
-            latitudeDelta: Number(region.latitudeDelta),
-            longitudeDelta: Number(region.longitudeDelta)
+            center: {
+              latitude: Number(region.latitude).toFixed(4),
+              longitude: Number(region.longitude).toFixed(4)
+            },
+            pitch: 0,
+            zoom: 13,
+            heading: 0,
+            altitude: 0
           };
           setRegion(tempRegion);
         }}
