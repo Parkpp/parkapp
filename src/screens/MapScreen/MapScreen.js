@@ -12,7 +12,7 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
 import { LogBox } from 'react-native';
-import { dummyData } from '../../../parkingSeed';
+// import { dummyData } from '../../../parkingSeed';
 // const db = firebase.firestore();
 // dummyData.forEach(doc => {
 //   db.collection('parkingSpots').add(doc);
@@ -55,7 +55,6 @@ export default function MapScreen (props) {
     let ctr = 0;
     await snapshot.forEach(doc => {
       parkingSpots.push(doc.data());
-      console.log(doc.id, 'doc.id');
       parkingSpots[ctr].id = doc.id;
       ctr++;
     });
