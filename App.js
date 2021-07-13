@@ -10,7 +10,8 @@ import {
   RegistrationScreen,
   ProvideScreen,
   AccountScreen,
-  MapScreen
+  MapScreen,
+  InfoScreen
 } from './src/screens';
 import { decode, encode } from 'base-64';
 if (!global.btoa) {
@@ -86,6 +87,11 @@ export default class extends React.Component {
         ) : (
           <NavigationContainer>
             <Stack.Navigator>
+              <Stack.Screen
+                name='Info'
+                component={InfoScreen}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name='Login'>
                 {props => <LoginScreen {...props} onLogin={this.handleUser} />}
               </Stack.Screen>
