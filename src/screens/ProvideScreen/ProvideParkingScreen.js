@@ -9,10 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  SectionList,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import styles from "./styles";
+import ModalDropdown from "react-native-modal-dropdown";
+import { times } from "./SelectTime";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -36,8 +39,6 @@ export const ProvideParkingScreen = (props) => {
 
   const [coords, setCoords] = useState({});
 
-  //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,13 +51,9 @@ export const ProvideParkingScreen = (props) => {
 
   const onRegisterPress = async () => {
     const address = `${street}, ${city}, ${state}`;
-    console.log(address);
     //check if form entered data returns longitude and latidude from geocoding APi
 
     const returnedCoords = await Location.geocodeAsync(address);
-
-    console.log(returnedCoords[0]);
-
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
     //Navigate to simple map component render
@@ -76,6 +73,7 @@ export const ProvideParkingScreen = (props) => {
         longitude: coords.longitude,
       });
 
+      console.log(address);
       let spot = parkingRef.doc();
       await spot.set({
         id: spot.id,
@@ -91,6 +89,8 @@ export const ProvideParkingScreen = (props) => {
         latitude: coords.latitude,
         longitude: coords.longitude,
         reserved: false,
+        startTime: startTime,
+        endTime: endTime,
       });
     } catch (error) {
       console.log(error);
@@ -159,7 +159,7 @@ export const ProvideParkingScreen = (props) => {
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/icon.png")}
+              source={require("../../../assets/park.png")}
             />
             <TextInput
               style={styles.input}
@@ -200,7 +200,7 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="postalCode"
+              placeholder="Postalcode"
               onChangeText={(text) => setpostalCode(text)}
               value={postalCode}
               underlineColorAndroid="transparent"
@@ -209,29 +209,41 @@ export const ProvideParkingScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder="rate"
+              placeholder="Rate (per hour)"
               onChangeText={(text) => setRate(text)}
               value={rate}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="startTime"
-              onChangeText={(text) => setStartTime(text)}
-              value={startTime}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+
+            <ModalDropdown
+              defaultValue={startTime ? startTime : "Enter start time"}
+              options={times}
+              onSelect={(idx, value) => setStartTime(value)}
+              dropdownStyle={{ width: "auto" }}
+              dropdownTextStyle={{
+                flex: 1,
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+              style={{
+                ...styles.input,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             />
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="endTime"
-              onChangeText={(text) => setEndTime(text)}
-              value={endTime}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+
+            <ModalDropdown
+              defaultValue={endTime ? endTime : "Enter end time"}
+              options={times}
+              onSelect={(idx, value) => setEndTime(value)}
+              style={{
+                ...styles.input,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             />
 
             {/* Upload image */}

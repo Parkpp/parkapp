@@ -75,7 +75,8 @@ export default function MapScreen (props) {
       return spot.id == spotId;
     });
     props.navigation.navigate('MapSingleSpotScreen', {
-      parkingSpot: spot[0]
+      parkingSpot: spot[0],
+      user: props.user
     });
   };
 
@@ -97,13 +98,13 @@ export default function MapScreen (props) {
               heading: 0,
               altitude: 0
             });
-            mapRef.animateCamera({
-              center: coords,
-              pitch: 2,
-              heading: 20,
-              altitude: 200,
-              zoom: 40
-            });
+            // mapRef.animateCamera({
+            //   center: coords,
+            //   pitch: 2,
+            //   heading: 20,
+            //   altitude: 200,
+            //   zoom: 40
+            // });
           }}
           onFail={error => console.error(error)}
         />
