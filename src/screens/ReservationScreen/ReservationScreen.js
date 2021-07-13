@@ -18,29 +18,29 @@ import { firebase } from "../../firebase/config";
 
 
 
-// const mockData = {
-//   slots: {
-//     slot1: "9:00am to 9:30am",
-//     slot2: "9:30am to 10:00am",
-//     slot3: "10:00am to 10:30am",
-//     slot4: "10:30am to 11:00am",
-//     slot5: "11:00am to 11:30am",
-//     slot6: "11:30am to 12:00pm",
-//   },
-// };
+const mockData = {
+  slots: {
+    slot1: "9:00am to 9:30am",
+    slot2: "9:30am to 10:00am",
+    slot3: "10:00am to 10:30am",
+    slot4: "10:30am to 11:00am",
+    slot5: "11:00am to 11:30am",
+    slot6: "11:30am to 12:00pm",
+  },
+};
 
-// const mockDataArr = [
-//   "9:00am to 9:30am",
-//   "9:30am to 10:00am",
-//   "10:00am to 10:30am",
-//   "10:30am to 11:00am",
-//   "11:00am to 11:30am",
-//   "11:30am to 12:00pm",
-// ];
+const mockDataArr = [
+  "9:00am to 9:30am",
+  "9:30am to 10:00am",
+  "10:00am to 10:30am",
+  "10:30am to 11:00am",
+  "11:00am to 11:30am",
+  "11:30am to 12:00pm",
+];
 
 export default function ReservationScreen(props) {
   const user = props.route.params.user;
-  const spot = props.rout.params.spot
+  const spot = props.route.params.spot
 
   const startTimeLimit = spot.startTime
   const endTimeLimit = spot.endTinme
@@ -82,17 +82,17 @@ export default function ReservationScreen(props) {
 
   //Make call to firebase to retrieve user vehicle information
 
-  useEffect(() => {
-    (async () => {
+  // useEffect(() => {
+  //   (async () => {
 
-      const db = firebase.firestore();
-      let vehicle = db.collection("vehicles").where("userId", "==", user.id);
+  //     const db = firebase.firestore();
+  //     let vehicle = db.collection("vehicles").where("userId", "==", user.id);
 
-       vehicle = vehicle.get()
-       console.log(vehicle)
+  //      vehicle = vehicle.get()
+  //      console.log(vehicle)
      
-    })();
-  }, []);
+  //   })();
+  // }, []);
 
 
   //Make call to firebase to 
