@@ -99,5 +99,13 @@ export default StyleSheet.create({
   },
   keyText: {
     margin: 2
+  },
+  refreshButton: {
+    position: 'absolute',
+    margin: 10,
+    left: 50,
+    zIndex: 2,
+    opacity: 0.75,
+    fontSize: 10
   }
 });

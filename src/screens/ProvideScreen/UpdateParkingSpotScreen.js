@@ -1,22 +1,22 @@
-import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
-import { firebase } from "../../firebase/config";
-import { decode, encode } from "base-64";
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { firebase } from '../../firebase/config';
+import { decode, encode } from 'base-64';
 import {
   Image,
   SafeAreaView,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-} from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
-import styles from "./styles";
+  View
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import styles from './styles';
 
-import { times } from "./SelectTime";
+import { times } from './SelectTime';
 
-import ModalDropdown from "react-native-modal-dropdown";
+import ModalDropdown from 'react-native-modal-dropdown';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -25,9 +25,9 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-import * as Location from "expo-location";
+import * as Location from 'expo-location';
 
-export const UpdateParkingSpotScreen = (props) => {
+export const UpdateParkingSpotScreen = props => {
   // values in form initialized to current info of parking spot
   const spotToUpdate = props.route.params.spot;
   const [description, setdescription] = useState(spotToUpdate.description);
@@ -41,8 +41,7 @@ export const UpdateParkingSpotScreen = (props) => {
   const [startTime, setStartTime] = useState(spotToUpdate.startTime);
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
 
-
-  console.log(spotToUpdate)
+  console.log(spotToUpdate);
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
   //Geocoding- retrieve lat & long from user entered address
@@ -56,16 +55,16 @@ export const UpdateParkingSpotScreen = (props) => {
   //API call to firebase to add user confirmed parking spot
   const updateParkingSpot = async () => {
     const db = firebase.firestore();
-    const parkingRef = db.collection("parkingSpots");
+    const parkingRef = db.collection('parkingSpots');
 
     //Retreive registered map API address of user confirmed coordinates
     try {
       const [address] = await Location.reverseGeocodeAsync({
         latitude: coords.latitude,
-        longitude: coords.longitude,
+        longitude: coords.longitude
       });
 
-      console.log(address)
+      console.log(address);
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
         description: description,
@@ -75,17 +74,17 @@ export const UpdateParkingSpotScreen = (props) => {
         postalCode: address.postalCode,
         state: address.region,
         imageUrl:
-          "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
+          'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
         latitude: coords.latitude,
         longitude: coords.longitude,
         startTime: startTime,
-        endTime: endTime,
+        endTime: endTime
       });
     } catch (error) {
       console.log(error);
     }
 
-    props.navigation.navigate("ParkingSpotList");
+    props.navigation.navigate('ParkingSpotList');
   };
 
   const returnToForm = () => {
@@ -99,33 +98,34 @@ export const UpdateParkingSpotScreen = (props) => {
           <MapView
             style={{ flex: 4 }}
             loadingEnabled={true}
-            //provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_GOOGLE}
+            mapType={'mutedStandard'}
             region={{
               latitude: coords.latitude,
               longitude: coords.longitude,
               latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              longitudeDelta: 0.0421
             }}
           >
             <Marker
               coordinate={{
                 latitude: coords.latitude,
-                longitude: coords.longitude,
+                longitude: coords.longitude
               }}
             ></Marker>
           </MapView>
           <Text
             style={{
-              color: "black",
+              color: 'black',
               fontSize: 16,
-              fontWeight: "bold",
-              marginLeft: 100,
+              fontWeight: 'bold',
+              marginLeft: 100
             }}
           >
             Is this the correct location?
           </Text>
 
-          <View style={{ flex: 1, flexDirection: "column" }}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => updateParkingSpot()}
@@ -143,95 +143,95 @@ export const UpdateParkingSpotScreen = (props) => {
       ) : (
         <View style={styles.container}>
           <KeyboardAwareScrollView
-            style={{ flex: 1, width: "100%" }}
-            keyboardShouldPersistTaps="always"
+            style={{ flex: 1, width: '100%' }}
+            keyboardShouldPersistTaps='always'
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/park.png")}
+              source={require('../../../assets/park.png')}
             />
             <TextInput
               style={styles.input}
               placeholder={description}
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setdescription(text)}
+              placeholderTextColor='#aaaaaa'
+              onChangeText={text => setdescription(text)}
               value={description}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
               placeholder={street}
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setStreet(text)}
+              placeholderTextColor='#aaaaaa'
+              onChangeText={text => setStreet(text)}
               value={street}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
+              placeholderTextColor='#aaaaaa'
               placeholder={city}
-              onChangeText={(text) => setCity(text)}
+              onChangeText={text => setCity(text)}
               value={city}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder={state ?state:'State'}
-              onChangeText={(text) => setState(text)}
+              placeholderTextColor='#aaaaaa'
+              placeholder={state ? state : 'State'}
+              onChangeText={text => setState(text)}
               value={state}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
+              placeholderTextColor='#aaaaaa'
               placeholder={postalCode}
-              onChangeText={(text) => setpostalCode(text)}
+              onChangeText={text => setpostalCode(text)}
               value={postalCode}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
 
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
+              placeholderTextColor='#aaaaaa'
               placeholder={rate}
-              onChangeText={(text) => setRate(text)}
+              onChangeText={text => setRate(text)}
               value={rate}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <ModalDropdown
-              defaultValue={startTime ? startTime : "Enter start time"}
+              defaultValue={startTime ? startTime : 'Enter start time'}
               options={times}
               onSelect={(idx, value) => setStartTime(value)}
-              dropdownStyle={{ width: "auto" }}
+              dropdownStyle={{ width: 'auto' }}
               dropdownTextStyle={{
                 flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
+                justifyContent: 'center',
+                alignContent: 'center'
               }}
               style={{
                 ...styles.input,
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             />
 
             <ModalDropdown
-              defaultValue={endTime ? endTime : "Enter end time"}
+              defaultValue={endTime ? endTime : 'Enter end time'}
               options={times}
               onSelect={(idx, value) => setEndTime(value)}
               style={{
                 ...styles.input,
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             />
             {/* Upload image */}

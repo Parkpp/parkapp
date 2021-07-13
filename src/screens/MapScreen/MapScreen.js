@@ -102,9 +102,12 @@ export default function MapScreen (props) {
         />
       </View>
       <View style={styles.key}>
+        <Text style={styles.refreshButton} onPress={() => fetchParkingSpots()}>
+          Tap to refresh 🔄
+        </Text>
         <Text style={styles.keyText}>Key</Text>
-        <Text style={styles.keyText}>🔵: Owned Spots</Text>
-        <Text style={styles.keyText}>🔴: Unowned Spots</Text>
+        <Text style={styles.keyText}>🔵: Your Spots</Text>
+        <Text style={styles.keyText}>🔴: Available Spots</Text>
       </View>
       <MapView
         loadingEnabled={true}
@@ -113,7 +116,6 @@ export default function MapScreen (props) {
         showsUserLocation
         showsBuildings
         showsMyLocationButton={true}
-        rotateEnabled={true}
         mapType={'mutedStandard'}
         camera={region}
         initialCamera={region}
