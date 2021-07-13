@@ -85,5 +85,19 @@ export default StyleSheet.create({
   image: {
     width: 300,
     height: 150
+  },
+  key: {
+    position: 'absolute',
+    borderRadius: 10,
+    top:
+      Platform.OS === 'android' ? '10%' : Platform.OS === 'ios' ? '12%' : '20%',
+    backgroundColor: 'white',
+    margin: 10,
+    padding: 10,
+    zIndex: 2,
+    opacity: 0.75
+  },
+  keyText: {
+    margin: 2
   }
 });

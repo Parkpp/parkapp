@@ -52,16 +52,6 @@ export function UserProfileUpdateScreen(props) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        {/* <TextInput
-        style={styles.input}
-        placeholder="E-mail"
-        placeholderTextColor="#aaaaaa"
-        onChangeText={(text) => setEmail(text)}
-        defaultValue={email}
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-        keyboardType="email-address"
-      /> */}
         <TextInput
           style={styles.input}
           placeholder="Phone Number"

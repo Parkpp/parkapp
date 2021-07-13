@@ -7,8 +7,6 @@ import { firebase } from '../../firebase/config';
 export default function MapSingleSpotScreen (props) {
   let spot = props.route.params.parkingSpot;
   const user = props.route.params.user
-  
-  const img = spot.imageUrl;
   return (
     <View style={styles.container}>
       <Text>{spot.description}</Text>
@@ -19,10 +17,10 @@ export default function MapSingleSpotScreen (props) {
         style={styles.image}
       ></Image>
       <Text>
-        {`${spot.street} ${spot.city}, ${spot.state} ${spot.zipcode}`}
+        {`${spot.street} ${spot.city}, ${spot.state} ${spot.postalCode}`}
       </Text>
-      <Text>Rate placeholder</Text>
-      <Text>Availability Placeholder?</Text>
+      <Text>{`$${spot.rate}/hr`}</Text>
+      <Text>{spot.reserved ? 'Reserved' : 'Available'}</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
