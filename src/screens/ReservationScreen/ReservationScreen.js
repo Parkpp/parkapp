@@ -57,13 +57,8 @@ export default function ReservationScreen(props) {
   const onChangeStartTime = (event, selectedTime) => {
     const currentTime = selectedTime || startTime;
     setStartTime(currentTime);
-    let tempSelection = new Date(currentTime);
-    // Returns date object
-    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
-    //Returns a time string
-    console.log("Selected Start Time-->", `Start Time:${tempTime}`);
-    setAndroidStartTime(tempTime);
-    setShowStartTime(!showStartTime);
+    setAndroidStartTime(formatTime(currentTime));
+    setShowStartTime(false);
   };
 
   const revealStartTimeSelector = () => {
@@ -73,22 +68,27 @@ export default function ReservationScreen(props) {
   const onChangeEndTime = (event, selectedTime) => {
     const currentTime = selectedTime || endTime;
     setEndTime(currentTime);
-    let tempSelection = new Date(currentTime);
-    // Returns date object
-    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
-    //Returns a time string
-    console.log("Selected End Time-->", `End Time:${tempTime}`);
-    setAndroidEndTime(tempTime);
-    setShowEndTime(!showEndTime);
+    setAndroidEndTime(formatTime(currentTime));
+    setShowEndTime(false);
     //Validation occurs here so that End time > Start Time
   };
 
   const revealEndTimeSelector = () => {
-    setShowStartTime(true);
+    setShowEndTime(true);
+  };
+
+  const formatTime = (date) => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
   };
 
   //If Platform = android, create state for buttons to show when clicked that renders out a time selection
-  console.log("What is the current start time prompt---->", startTime);
   return (
     <SafeAreaView>
       <ScrollView>
