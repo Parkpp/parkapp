@@ -34,7 +34,6 @@ export default function MapScreen (props) {
     heading: 0,
     altitude: 0
   });
-  const mapRef = useRef < MapView > null;
 
   const geocode = async text => {
     let coords = await Geocoder.from(text);
@@ -98,33 +97,25 @@ export default function MapScreen (props) {
               heading: 0,
               altitude: 0
             });
-            // mapRef.animateCamera({
-            //   center: coords,
-            //   pitch: 2,
-            //   heading: 20,
-            //   altitude: 200,
-            //   zoom: 40
-            // });
           }}
           onFail={error => console.error(error)}
         />
       </View>
       <View style={styles.key}>
+        <Text style={styles.refreshButton} onPress={() => fetchParkingSpots()}>
+          Tap to refresh 🔄
+        </Text>
         <Text style={styles.keyText}>Key</Text>
-        <Text style={styles.keyText}>🔵: Owned Spots</Text>
-        <Text style={styles.keyText}>🔴: Unowned Spots</Text>
+        <Text style={styles.keyText}>🔵: Your Spots</Text>
+        <Text style={styles.keyText}>🔴: Available Spots</Text>
       </View>
       <MapView
-        ref={map => {
-          map = map;
-        }}
         loadingEnabled={true}
         style={{ flex: 1 }}
         provider={PROVIDER_GOOGLE}
         showsUserLocation
         showsBuildings
         showsMyLocationButton={true}
-        rotateEnabled={true}
         mapType={'mutedStandard'}
         camera={region}
         initialCamera={region}

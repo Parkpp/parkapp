@@ -1,7 +1,7 @@
-import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
-import { firebase } from "../../firebase/config";
-import { decode, encode } from "base-64";
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { firebase } from '../../firebase/config';
+import { decode, encode } from 'base-64';
 import {
   Image,
   SafeAreaView,
@@ -9,13 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  SectionList,
-} from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
-import styles from "./styles";
-import ModalDropdown from "react-native-modal-dropdown";
-import { times } from "./SelectTime";
+  SectionList
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import styles from './styles';
+import ModalDropdown from 'react-native-modal-dropdown';
+import { times } from './SelectTime';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -24,25 +24,25 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-import * as Location from "expo-location";
+import * as Location from 'expo-location';
 
-export const ProvideParkingScreen = (props) => {
-  const [description, setdescription] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [postalCode, setpostalCode] = useState("");
-  const [rate, setRate] = useState("");
+export const ProvideParkingScreen = props => {
+  const [description, setdescription] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [postalCode, setpostalCode] = useState('');
+  const [rate, setRate] = useState('');
   const [spotCheck, setSpotCheck] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   const [coords, setCoords] = useState({});
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
+      if (status !== 'granted') {
         //setErrorMsg("Permission to access location was denied");
         return;
       }
@@ -65,12 +65,12 @@ export const ProvideParkingScreen = (props) => {
   //API call to firebase to save data
   const addParkingSpot = async () => {
     const db = firebase.firestore();
-    const parkingRef = db.collection("parkingSpots");
+    const parkingRef = db.collection('parkingSpots');
 
     try {
       const [address] = await Location.reverseGeocodeAsync({
         latitude: coords.latitude,
-        longitude: coords.longitude,
+        longitude: coords.longitude
       });
 
       console.log(address);
@@ -85,18 +85,18 @@ export const ProvideParkingScreen = (props) => {
         postalCode: address.postalCode,
         State: address.region,
         imageUrl:
-          "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
+          'https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg',
         latitude: coords.latitude,
         longitude: coords.longitude,
         reserved: false,
         startTime: startTime,
-        endTime: endTime,
+        endTime: endTime
       });
     } catch (error) {
       console.log(error);
     }
 
-    props.navigation.navigate("ProvideScreen");
+    props.navigation.navigate('ProvideScreen');
   };
 
   const returnToForm = () => {
@@ -110,33 +110,34 @@ export const ProvideParkingScreen = (props) => {
           <MapView
             style={{ flex: 4 }}
             loadingEnabled={true}
-            //provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_GOOGLE}
+            mapType={'mutedStandard'}
             region={{
               latitude: coords.latitude,
               longitude: coords.longitude,
               latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              longitudeDelta: 0.0421
             }}
           >
             <Marker
               coordinate={{
                 latitude: coords.latitude,
-                longitude: coords.longitude,
+                longitude: coords.longitude
               }}
             ></Marker>
           </MapView>
           <Text
             style={{
-              color: "black",
+              color: 'black',
               fontSize: 16,
-              fontWeight: "bold",
-              marginLeft: 100,
+              fontWeight: 'bold',
+              marginLeft: 100
             }}
           >
             Is this the correct location?
           </Text>
 
-          <View style={{ flex: 1, flexDirection: "column" }}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => addParkingSpot()}
@@ -154,95 +155,95 @@ export const ProvideParkingScreen = (props) => {
       ) : (
         <View style={styles.container}>
           <KeyboardAwareScrollView
-            style={{ flex: 1, width: "100%" }}
-            keyboardShouldPersistTaps="always"
+            style={{ flex: 1, width: '100%' }}
+            keyboardShouldPersistTaps='always'
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/park.png")}
+              source={require('../../../assets/park.png')}
             />
             <TextInput
               style={styles.input}
-              placeholder="Description"
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setdescription(text)}
+              placeholder='Description'
+              placeholderTextColor='#aaaaaa'
+              onChangeText={text => setdescription(text)}
               value={description}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholder="Street Address"
-              placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setStreet(text)}
+              placeholder='Street Address'
+              placeholderTextColor='#aaaaaa'
+              onChangeText={text => setStreet(text)}
               value={street}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="City"
-              onChangeText={(text) => setCity(text)}
+              placeholderTextColor='#aaaaaa'
+              placeholder='City'
+              onChangeText={text => setCity(text)}
               value={city}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="State"
-              onChangeText={(text) => setState(text)}
+              placeholderTextColor='#aaaaaa'
+              placeholder='State'
+              onChangeText={text => setState(text)}
               value={state}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Postalcode"
-              onChangeText={(text) => setpostalCode(text)}
+              placeholderTextColor='#aaaaaa'
+              placeholder='Postalcode'
+              onChangeText={text => setpostalCode(text)}
               value={postalCode}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
             <TextInput
               style={styles.input}
-              placeholderTextColor="#aaaaaa"
-              placeholder="Rate (per hour)"
-              onChangeText={(text) => setRate(text)}
+              placeholderTextColor='#aaaaaa'
+              placeholder='Rate (per hour)'
+              onChangeText={text => setRate(text)}
               value={rate}
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
+              underlineColorAndroid='transparent'
+              autoCapitalize='none'
             />
 
             <ModalDropdown
-              defaultValue={startTime ? startTime : "Enter start time"}
+              defaultValue={startTime ? startTime : 'Enter start time'}
               options={times}
               onSelect={(idx, value) => setStartTime(value)}
-              dropdownStyle={{ width: "auto" }}
+              dropdownStyle={{ width: 'auto' }}
               dropdownTextStyle={{
                 flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
+                justifyContent: 'center',
+                alignContent: 'center'
               }}
               style={{
                 ...styles.input,
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             />
 
             <ModalDropdown
-              defaultValue={endTime ? endTime : "Enter end time"}
+              defaultValue={endTime ? endTime : 'Enter end time'}
               options={times}
               onSelect={(idx, value) => setEndTime(value)}
               style={{
                 ...styles.input,
                 flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             />
 

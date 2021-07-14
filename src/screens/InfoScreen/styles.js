@@ -53,59 +53,39 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16
   },
-  safeArea: {
-    flex: 1,
-    backgroundColor:
-      Platform.OS === 'android'
-        ? 'white'
-        : Platform.OS === 'ios'
-        ? 'black'
-        : 'white',
-    paddingTop: Platform.OS === 'android' ? 20 : 0
+  title: {
+    top: 25,
+    fontSize: 32,
+    margin: 25,
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
-  searchBar: {
-    position: 'absolute',
-    top: Platform.OS === 'android' ? 30 : Platform.OS === 'ios' ? 50 : 10,
-    width: Platform.OS === 'ios' ? '96%' : '83%',
-    left: '2%',
-    zIndex: 3,
-    opacity: 0.75
-  },
-  textInputSearchBar: {
+  body: {
     borderRadius: 10,
-    margin: 10,
-    color: '#000',
-    borderColor: '#666',
-    backgroundColor: '#FFF',
-    borderWidth: 1,
-    height: 45,
-    paddingHorizontal: 10,
-    fontSize: 18
+    backgroundColor: 'yellow',
+    margin: 10
+  },
+  bodyText: {
+    fontSize: 23,
+    margin: 20
+  },
+  confirmButton: {
+    position: 'absolute',
+    borderRadius: 10,
+    backgroundColor: 'green',
+    width: 250,
+    margin: 75,
+    top: 610
+  },
+  confirmButtonText: {
+    fontSize: 32,
+    padding: 10,
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
   image: {
-    width: 300,
-    height: 150
-  },
-  key: {
-    position: 'absolute',
-    borderRadius: 10,
-    top:
-      Platform.OS === 'android' ? '10%' : Platform.OS === 'ios' ? '12%' : '20%',
-    backgroundColor: 'white',
-    margin: 10,
-    padding: 10,
-    zIndex: 2,
-    opacity: 0.75
-  },
-  keyText: {
-    margin: 2
-  },
-  refreshButton: {
-    position: 'absolute',
-    margin: 10,
-    left: 50,
-    zIndex: 2,
-    opacity: 0.75,
-    fontSize: 10
+    width: 200,
+    height: 200,
+    marginHorizontal: 100
   }
 });
