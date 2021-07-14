@@ -50,7 +50,6 @@ export default function ReservationScreen(props) {
         vehiclesData.push(doc.data());
       });
       setVehicles(vehiclesData);
-      console.log(vehicles);
     })();
   }, []);
 
@@ -200,6 +199,13 @@ export default function ReservationScreen(props) {
             )}
           </View>
         )}
+        {/* Checkout Button */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Checkout")}
+        >
+          <Text style={styles.buttonTitle}>Checkout -&gt; </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
