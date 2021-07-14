@@ -74,7 +74,21 @@ export default class extends React.Component {
       <>
         {this.state.userLogged ? (
           <NavigationContainer>
-            <Tab.Navigator>
+            <Tab.Navigator
+            tabBarOptions={{
+              activeTintColor: "#ff6b35",
+              inactiveTintColor: "#00b2ca",
+              labelStyle: {
+                fontSize: 20,
+                bottom: 20,
+              },
+
+              style: {
+                backgroundColor: "#1A659E",
+                Size: 20,
+                elevation: 20,
+                height: 70,},}}>
+                  
               <Tab.Screen name='Map'>
                 {props => <MapScreen {...props} user={user} />}
               </Tab.Screen>

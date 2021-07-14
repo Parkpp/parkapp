@@ -14,14 +14,14 @@ import { firebase } from "../../firebase/config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function ReservationScreen(props) {
-  console.log("reservation", props);
   const user = props.route.params.user;
   const spot = props.route.params.spot;
+  console.log("reservation", user);
 
   const [vehicle, setVehicle] = useState({});
   const [selected, setSelected] = useState([]);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  const [selectedStartTime, setSelectedStartTime] = useState(null);
+  const [selectedEndTime, setSelectedEndTime] = useState(null);
 
   const timeInSeconds = (time) => {
     let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
@@ -40,7 +40,19 @@ export default function ReservationScreen(props) {
       const db = firebase.firestore();
       let vehicle = db.collection("vehicles").where("userId", "==", user.id);
 
-      vehicle = vehicle.get();
+      const snapshot = await vehicle.get();
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+      }
+      vehicle = [];
+      snapshot.forEach((doc) => {
+        vehicle.push(doc.data());
+      });
+
+      vehicle = vehicle[0];
+      console.log(vehicle);
+      setVehicle(vehicle);
+
       console.log(vehicle);
     })();
   }, []);
@@ -72,38 +84,40 @@ export default function ReservationScreen(props) {
         setEndTime(spot.endTime);
       }
     }
-
-    const reserveParking = async () => {
-      if (!(endTime && startTime)) {
-        alert(`please select available times for parking`);
-        return;
-      } else {
-        const db = firebase.firestore();
-        const ordersRef = db.collection("orders");
-
-        try {
-          let order = ordersRef.doc();
-          await spot.set({
-            id: order.id,
-            userId: user.id,
-            vehicle: vehicle.id,
-            parkingSpotId: "",
-            startTime: "",
-            duration: "",
-          });
-        } catch (error) {
-          console.log(error);
-        }
-        props.navigation.navigate("confirmation page");
-      }
-    };
-
-    return (
-      <SafeAreaView>
-        <View>
-          <Text>In reservation screen</Text>
-        </View>
-      </SafeAreaView>
-    );
   };
+
+  const reserveParking = async () => {
+
+    duration = timeInSeconds(selectedStartTime) - timeInSeconds(selectedEndTime)
+    if (!(endTime && startTime)) {
+      alert(`please select available times for parking`);
+      return;
+    } else {
+      const db = firebase.firestore();
+      const ordersRef = db.collection("orders");
+
+      try {
+        let order = ordersRef.doc();
+        await spot.set({
+          id: order.id,
+          userId: user.id,
+          vehicle: vehicle.id,
+          parkingSpotId: "",
+          startTime: "",
+          duration: "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      props.navigation.navigate("confirmation page");
+    }
+  };
+
+  return (
+    <SafeAreaView>
+      <View>
+        <Text>In reservation screen</Text>
+      </View>
+    </SafeAreaView>
+  );
 }
