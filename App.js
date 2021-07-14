@@ -44,6 +44,8 @@ export default class extends React.Component {
     });
   }
 
+  
+
   async handleUser () {
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged(async user => {

@@ -41,8 +41,7 @@ export const UpdateParkingSpotScreen = (props) => {
   const [startTime, setStartTime] = useState(spotToUpdate.startTime);
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
 
-
-  console.log(spotToUpdate)
+  console.log(spotToUpdate);
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
   //Geocoding- retrieve lat & long from user entered address
@@ -65,15 +64,19 @@ export const UpdateParkingSpotScreen = (props) => {
         longitude: coords.longitude,
       });
 
-      console.log(address)
+      console.log(address);
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
         description: description,
-        street: `${address.name} ${address.street}`,
+        street:
+          address.name === address.street
+            ? `${address.street}`
+            : `${address.name} ${address.street}`,
         city: address.city,
         country: address.country,
         postalCode: address.postalCode,
         state: address.region,
+        rate: rate,
         imageUrl:
           "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
         latitude: coords.latitude,
@@ -180,7 +183,7 @@ export const UpdateParkingSpotScreen = (props) => {
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
-              placeholder={state ?state:'State'}
+              placeholder={state ? state : "State"}
               onChangeText={(text) => setState(text)}
               value={state}
               underlineColorAndroid="transparent"

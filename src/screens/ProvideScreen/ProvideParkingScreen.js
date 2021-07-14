@@ -25,6 +25,7 @@ if (!global.atob) {
 }
 
 import * as Location from "expo-location";
+import { add } from "react-native-reanimated";
 
 export const ProvideParkingScreen = (props) => {
   const [description, setdescription] = useState("");
@@ -79,7 +80,10 @@ export const ProvideParkingScreen = (props) => {
         id: spot.id,
         userId: props.user.id,
         description: description,
-        street: `${address.name} ${address.street}`,
+        street:
+          address.name === address.street
+            ? `${address.street}`
+            : `${address.name} ${address.street}`,
         city: address.city,
         country: address.country,
         postalCode: address.postalCode,
