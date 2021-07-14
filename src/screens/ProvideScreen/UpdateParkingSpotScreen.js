@@ -13,10 +13,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
 import styles from "./styles";
-
-import { times } from "./SelectTime";
-
-import ModalDropdown from "react-native-modal-dropdown";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -40,14 +37,31 @@ export const UpdateParkingSpotScreen = (props) => {
   const [coords, setCoords] = useState({});
   const [startTime, setStartTime] = useState(spotToUpdate.startTime);
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
+  const [startPicker, setStartPicker] = useState(false);
+  const [endPicker, setEndPicker] = useState(false);
+
+ 
+  const date = new Date();
 
   console.log(spotToUpdate);
   //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
 
   //Geocoding- retrieve lat & long from user entered address
   const onRegisterPress = async () => {
+    if (description.length > 24)
+      return alert("Please enter a shorter description (max 25 char)");
+   
+    if (isNaN(rate) || rate == "")
+      return alert("please enter a number for rate");
+    if (startTime === "Select Start Time")
+      return alert("please select a start time");
+    if (endTime === "Select End Time")
+      return alert("please select an end time");
     const address = `${street}, ${city}, ${state}`;
+
     const returnedCoords = await Location.geocodeAsync(address);
+    if (!returnedCoords[0]) return alert("please enter full address");
+
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
   };
@@ -67,7 +81,7 @@ export const UpdateParkingSpotScreen = (props) => {
       console.log(address);
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
-        description: description,
+        description: (description.length < 1) ? 'None':description,
         street:
           address.name === address.street
             ? `${address.street}`
@@ -95,6 +109,41 @@ export const UpdateParkingSpotScreen = (props) => {
     setSpotCheck(false);
   };
 
+  const onStartChange = (event, selectedDate) => {
+    //console.log(event);
+    setStartPicker(false);
+    let tempSelection = new Date(selectedDate);
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    if (tempTime === "NaN:NaN") tempTime = startTime;
+    setStartTime(tempTime);
+  };
+  const onEndChange = (event, selectedDate) => {
+    //console.log(event);
+    setEndPicker(false);
+    let tempSelection = new Date(selectedDate);
+
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    console.log(tempTime);
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    // let selectedDateinSec = timeInSeconds(tempTime);
+
+    console.log(tempTime);
+    //if (tempTime === "NaN:NaN") tempTime = endTime;
+    setEndTime(tempTime);
+  };
+
+
   return (
     <>
       {spotCheck ? (
@@ -102,7 +151,8 @@ export const UpdateParkingSpotScreen = (props) => {
           <MapView
             style={{ flex: 4 }}
             loadingEnabled={true}
-            //provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_GOOGLE}
+            mapType={"mutedStandard"}
             region={{
               latitude: coords.latitude,
               longitude: coords.longitude,
@@ -208,35 +258,65 @@ export const UpdateParkingSpotScreen = (props) => {
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
-            <ModalDropdown
-              defaultValue={startTime ? startTime : "Enter start time"}
-              options={times}
-              onSelect={(idx, value) => setStartTime(value)}
-              dropdownStyle={{ width: "auto" }}
-              dropdownTextStyle={{
-                flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
-              }}
+            {startPicker ? (
+              <DateTimePicker
+                testId="start"
+                value={date}
+                mode={"time"}
+                display="default"
+                onChange={onStartChange}
+                minuteInterval={30}
+                style={{ margin: 10 }}
+              />
+            ) : (
+              <></>
+            )}
+            {endPicker ? (
+              <DateTimePicker
+                testId="start"
+                value={date}
+                mode={"time"}
+                display="default"
+                onChange={onEndChange}
+                minuteInterval={30}
+                style={{ margin: 10 }}
+              />
+            ) : (
+              <></>
+            )}
+            <View
               style={{
-                ...styles.input,
                 flex: 1,
-                alignItems: "center",
+                flexDirection: "row",
                 justifyContent: "center",
+                alignItems: "center",
               }}
-            />
+            >
+              <Text> Start Time:</Text>
+              <TouchableOpacity
+                style={{ ...styles.button, width: 220 }}
+                onPress={() => setStartPicker(true)}
+              >
+                <Text style={styles.buttonTitle}>{startTime}</Text>
+              </TouchableOpacity>
+            </View>
 
-            <ModalDropdown
-              defaultValue={endTime ? endTime : "Enter end time"}
-              options={times}
-              onSelect={(idx, value) => setEndTime(value)}
+            <View
               style={{
-                ...styles.input,
                 flex: 1,
-                alignItems: "center",
+                flexDirection: "row",
                 justifyContent: "center",
+                alignItems: "center",
               }}
-            />
+            >
+              <Text> End Time:</Text>
+              <TouchableOpacity
+                style={{ ...styles.button, width: 220 }}
+                onPress={() => setEndPicker(true)}
+              >
+                <Text style={styles.buttonTitle}>{endTime}</Text>
+              </TouchableOpacity>
+            </View>
             {/* Upload image */}
             <TouchableOpacity
               style={styles.button}

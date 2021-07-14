@@ -14,6 +14,7 @@ import { firebase } from "../../firebase/config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function ReservationScreen(props) {
+  console.log("reservation", props);
   const user = props.route.params.user;
   const spot = props.route.params.spot;
 
@@ -72,13 +73,11 @@ export default function ReservationScreen(props) {
       }
     }
 
-    const reserveParking =() =>{
-      if (!(endTime && startTime)){ 
-        alert(`please select available times for parking`)
-      return}
-
-      else{
-
+    const reserveParking = async () => {
+      if (!(endTime && startTime)) {
+        alert(`please select available times for parking`);
+        return;
+      } else {
         const db = firebase.firestore();
         const ordersRef = db.collection("orders");
 
@@ -88,55 +87,23 @@ export default function ReservationScreen(props) {
             id: order.id,
             userId: user.id,
             vehicle: vehicle.id,
-            parkingSpotId: '',
-            startTime: '',
-            duration: '',
+            parkingSpotId: "",
+            startTime: "",
+            duration: "",
           });
         } catch (error) {
           console.log(error);
         }
-        props.navigation.navigate('confirmation page')
+        props.navigation.navigate("confirmation page");
       }
-  };
+    };
 
-
-  const renderDateTimePickerStart = () => {
     return (
-      <View>
-        <DateTimePicker
-          testId="start"
-          value={date}
-          mode={"time"}
-          display="default"
-          onChange={onChange}
-          minuteInterval={30}
-          is24hour={false}
-          style={{ margin: 10 }}
-        />
-      </View>
+      <SafeAreaView>
+        <View>
+          <Text>In reservation screen</Text>
+        </View>
+      </SafeAreaView>
     );
   };
-
-  const renderDateTimePickerEnd = () => {
-    return (
-      <View>
-        <DateTimePicker
-          testId="end"
-          value={date}
-          mode={"time"}
-          display="default"
-          onChange={onChange}
-          minuteInterval={30}
-          is24hour={false}
-          style={{ margin: 10 }}
-        />
-      </View>
-    );
-  };
-
-  return (
-    <SafeAreaView>
-      <View></View>
-    </SafeAreaView>
-  );
 }

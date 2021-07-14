@@ -9,13 +9,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  SectionList,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import MapView, { PROVIDER_GOOGLE, Marker, Callout } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import styles from "./styles";
-import ModalDropdown from "react-native-modal-dropdown";
-import { times } from "./SelectTime";
+
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -23,22 +22,22 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode;
 }
-
 import * as Location from "expo-location";
-import { add } from "react-native-reanimated";
 
 export const ProvideParkingScreen = (props) => {
-  const [description, setdescription] = useState("");
+  const [description, setDescription] = useState("");
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [postalCode, setpostalCode] = useState("");
   const [rate, setRate] = useState("");
   const [spotCheck, setSpotCheck] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-
+  const [startTime, setStartTime] = useState("Select Start Time");
+  const [endTime, setEndTime] = useState("Select End Time");
   const [coords, setCoords] = useState({});
+  const [startPicker, setStartPicker] = useState(false);
+  const [endPicker, setEndPicker] = useState(false);
+  const date = new Date();
 
   useEffect(() => {
     (async () => {
@@ -51,12 +50,25 @@ export const ProvideParkingScreen = (props) => {
   }, []);
 
   const onRegisterPress = async () => {
+    if (description.length > 24)
+      return alert("Please enter a shorter description (max 25 char)");
+    if (description.length < 1)
+      if (isNaN(rate) || rate == "")
+        return alert("please enter a number for rate");
+    if (startTime === "Select Start Time")
+      return alert("please select a start time");
+    if (endTime === "Select End Time")
+      return alert("please select an end time");
+
     const address = `${street}, ${city}, ${state}`;
     //check if form entered data returns longitude and latidude from geocoding APi
 
     const returnedCoords = await Location.geocodeAsync(address);
+    if (!returnedCoords[0]) return alert("please enter full address");
+
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
+
     //Navigate to simple map component render
     //props.navigation.navigate('map', {coor})
 
@@ -70,8 +82,8 @@ export const ProvideParkingScreen = (props) => {
 
     try {
       const [address] = await Location.reverseGeocodeAsync({
-        latitude: coords.latitude,
         longitude: coords.longitude,
+        latitude: coords.latitude,
       });
 
       console.log(address);
@@ -79,7 +91,7 @@ export const ProvideParkingScreen = (props) => {
       await spot.set({
         id: spot.id,
         userId: props.user.id,
-        description: description,
+        description: description.length < 1 ? "None" : description,
         street:
           address.name === address.street
             ? `${address.street}`
@@ -87,7 +99,7 @@ export const ProvideParkingScreen = (props) => {
         city: address.city,
         country: address.country,
         postalCode: address.postalCode,
-        State: address.region,
+        state: address.region,
         imageUrl:
           "https://www.bigjoessealcoating.com/wp-content/uploads/2018/08/residential-sealcoating-495x337.jpg",
         latitude: coords.latitude,
@@ -95,6 +107,7 @@ export const ProvideParkingScreen = (props) => {
         reserved: false,
         startTime: startTime,
         endTime: endTime,
+        rate: rate,
       });
     } catch (error) {
       console.log(error);
@@ -107,6 +120,40 @@ export const ProvideParkingScreen = (props) => {
     setSpotCheck(false);
   };
 
+  const onStartChange = (event, selectedDate) => {
+    //console.log(event);
+    setStartPicker(false);
+    let tempSelection = new Date(selectedDate);
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    if (tempTime === "NaN:NaN") tempTime = startTime;
+    setStartTime(tempTime);
+  };
+  const onEndChange = (event, selectedDate) => {
+    //console.log(event);
+    setEndPicker(false);
+    let tempSelection = new Date(selectedDate);
+
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    console.log(tempTime);
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    // let selectedDateinSec = timeInSeconds(tempTime);
+
+    console.log(tempTime);
+    //if (tempTime === "NaN:NaN") tempTime = endTime;
+    setEndTime(tempTime);
+  };
+
   return (
     <>
       {spotCheck ? (
@@ -114,7 +161,8 @@ export const ProvideParkingScreen = (props) => {
           <MapView
             style={{ flex: 4 }}
             loadingEnabled={true}
-            //provider={PROVIDER_GOOGLE}
+            provider={PROVIDER_GOOGLE}
+            mapType={"mutedStandard"}
             region={{
               latitude: coords.latitude,
               longitude: coords.longitude,
@@ -167,16 +215,16 @@ export const ProvideParkingScreen = (props) => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Description"
+              placeholder="Enter short description (max 25 characters)"
               placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setdescription(text)}
+              onChangeText={(text) => Dsetdescription(text)}
               value={description}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
             <TextInput
               style={styles.input}
-              placeholder="Street Address"
+              placeholder="Address"
               placeholderTextColor="#aaaaaa"
               onChangeText={(text) => setStreet(text)}
               value={street}
@@ -192,6 +240,7 @@ export const ProvideParkingScreen = (props) => {
               underlineColorAndroid="transparent"
               autoCapitalize="none"
             />
+
             <TextInput
               style={styles.input}
               placeholderTextColor="#aaaaaa"
@@ -220,37 +269,67 @@ export const ProvideParkingScreen = (props) => {
               autoCapitalize="none"
             />
 
-            <ModalDropdown
-              defaultValue={startTime ? startTime : "Enter start time"}
-              options={times}
-              onSelect={(idx, value) => setStartTime(value)}
-              dropdownStyle={{ width: "auto" }}
-              dropdownTextStyle={{
-                flex: 1,
-                justifyContent: "center",
-                alignContent: "center",
-              }}
+            {startPicker ? (
+              <DateTimePicker
+                testId="start"
+                value={date}
+                mode={"time"}
+                display="default"
+                onChange={onStartChange}
+                minuteInterval={30}
+                style={{ margin: 10 }}
+              />
+            ) : (
+              <></>
+            )}
+            {endPicker ? (
+              <DateTimePicker
+                testId="start"
+                value={date}
+                mode={"time"}
+                display="default"
+                onChange={onEndChange}
+                minuteInterval={30}
+                style={{ margin: 10 }}
+              />
+            ) : (
+              <></>
+            )}
+            <View
               style={{
-                ...styles.input,
                 flex: 1,
-                alignItems: "center",
+                flexDirection: "row",
                 justifyContent: "center",
+                alignItems: "center",
               }}
-            />
+            >
+              <Text> Start Time:</Text>
+              <TouchableOpacity
+                style={{ ...styles.button, width: 220 }}
+                onPress={() => setStartPicker(true)}
+              >
+                <Text style={styles.buttonTitle}>{startTime}</Text>
+              </TouchableOpacity>
+            </View>
 
-            <ModalDropdown
-              defaultValue={endTime ? endTime : "Enter end time"}
-              options={times}
-              onSelect={(idx, value) => setEndTime(value)}
+            <View
               style={{
-                ...styles.input,
                 flex: 1,
-                alignItems: "center",
+                flexDirection: "row",
                 justifyContent: "center",
+                alignItems: "center",
               }}
-            />
-
+            >
+              <Text> End Time: </Text>
+              <TouchableOpacity
+                style={{ ...styles.button, width: 220 }}
+                onPress={() => setEndPicker(true)}
+              >
+                <Text style={styles.buttonTitle}>{endTime}</Text>
+              </TouchableOpacity>
+            </View>
             {/* Upload image */}
+
             <TouchableOpacity
               style={styles.button}
               onPress={() => onRegisterPress()}
