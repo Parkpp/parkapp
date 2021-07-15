@@ -66,7 +66,7 @@ export default function RegistrationScreen(props) {
           .doc(uid)
           .set(data)
           .then(() => {
-            props.onLogin();
+            props.navigation.navigate("Map", { user: data });
           })
           .catch((error) => {
             alert(error);
