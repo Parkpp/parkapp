@@ -217,7 +217,7 @@ export const ProvideParkingScreen = (props) => {
               style={styles.input}
               placeholder="Description"
               placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setdescription(text)}
+              onChangeText={(text) => setDescription(text)}
               value={description}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
