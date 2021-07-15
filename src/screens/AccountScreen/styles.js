@@ -25,7 +25,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
   },
   button: {
-    backgroundColor: "#788eec",
+    backgroundColor: "#1A659E",
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
@@ -52,5 +52,17 @@ export default StyleSheet.create({
     color: "#788eec",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  profileInfo: {
+    textAlign: "center",
+  },
+  textBackground: {
+    margin: 20,
+    borderStyle: "solid",
+    borderColor: "black",
+    borderWidth: 1,
+    backgroundColor: "#FAEDD3",
+    borderRadius: 2,
+    padding: 15,
   },
 });

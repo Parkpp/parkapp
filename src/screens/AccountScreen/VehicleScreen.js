@@ -29,10 +29,10 @@ export function VehicleScreen(props) {
   }, []);
 
   return (
-    <View>
+    <View style={styles.container}>
       {vehicles.map((vehicle, idx) => {
         return (
-          <View key={idx}>
+          <View key={idx} style={styles.textBackground}>
             <Text>Brand: {vehicle.make}</Text>
             <Text>Model: {vehicle.model}</Text>
             <Text>Year: {vehicle.year}</Text>
