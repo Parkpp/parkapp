@@ -1,0 +1,6 @@
+const colors = {
+  navBarBlue: "#1A659E",
+  solidOrange: "#ff6b35",
+  fadedOrange: "#FBC082",
+  textBackBeige: "#FAEDD3",
+};
