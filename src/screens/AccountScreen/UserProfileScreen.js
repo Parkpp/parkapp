@@ -37,33 +37,36 @@ export function UserProfileScreen(props) {
 
   // console.log("currentUser-->", currentUser);
   return (
-    <View>
-      {currentUser.map((singleUser, idx) => {
-        return (
-          <View key={idx}>
-            <Text>Profile Info</Text>
-            <Text>Full Name: {singleUser.fullName}</Text>
-            <Text>Username: {singleUser.username}</Text>
-            <Text>Email: {email}</Text>
-            <Text>Phone Number: {singleUser.phoneNumber}</Text>
-          </View>
-        );
-      })}
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate("Update Profile", { user: currentUser })
-        }
-      >
-        <Text style={styles.buttonTitle}>Update Profile -&gt; </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Update Credentials")}
-      >
-        <Text style={styles.buttonTitle}>Update Credentials -&gt; </Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <View>
+        {currentUser.map((singleUser, idx) => {
+          return (
+            <View key={idx} style={styles.textBackground}>
+              <Text>Profile Info:</Text>
+              <Text>Full Name: {singleUser.fullName}</Text>
+              <Text>Username: {singleUser.username}</Text>
+              <Text>Email: {email}</Text>
+              <Text>Phone Number: {singleUser.phoneNumber}</Text>
+            </View>
+          );
+        })}
+      </View>
+      <View>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate("Update Profile", { user: currentUser })
+          }
+        >
+          <Text style={styles.buttonTitle}>Update Profile -&gt; </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Update Credentials")}
+        >
+          <Text style={styles.buttonTitle}>Update Credentials -&gt; </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
