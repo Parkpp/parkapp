@@ -35,15 +35,14 @@ export default class extends React.Component {
       this.setState(user ? { userLogged: true } : { userLogged: false });
       const usersRef = firebase.firestore().collection("users");
       console.log("from component did mount -->", user);
-      if (user) {
-        try {
-          const userData = (await usersRef.doc(user.uid).get()).data();
-          this.setState({ loading: false });
-          this.setState({ user: userData });
-        } catch (error) {
-          console.log(error);
-          this.setState({ loading: false });
-        }
+
+      try {
+        const userData = (await usersRef.doc(user.uid).get()).data();
+        this.setState({ loading: false });
+        this.setState({ user: userData });
+      } catch (error) {
+        console.log(error);
+        this.setState({ loading: false });
       }
     });
   }
