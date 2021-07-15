@@ -13,16 +13,6 @@ import { firebase } from '../../firebase/config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function ReservationScreen (props) {
-  const user = props.user;
-  const spot = props.route.params.spot;
-
-  const timeInSeconds = time => {
-    let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
-    let minInSec = Number(time.slice(3, 5)) * 60;
-
-    return hourInSec + minInSec;
-  };
-
   const [vehicle, setVehicles] = useState([]);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -31,6 +21,19 @@ export default function ReservationScreen (props) {
   const [androidStartTime, setAndroidStartTime] = useState(null);
   const [androidEndTime, setAndroidEndTime] = useState(null);
   const date = new Date();
+  const [iosStartTime, setIosStartTime] = useState(new Date());
+  const [iosEndTime, setIosEndTime] = useState(new Date());
+  const user = props.user;
+  const spot = props.route.params.spot;
+
+  console.log('What are my props-->', props);
+
+  const timeInSeconds = time => {
+    let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
+    let minInSec = Number(time.slice(3, 5)) * 60;
+
+    return hourInSec + minInSec;
+  };
 
   //Make call to firebase to retrieve user vehicle information
   useEffect(() => {
@@ -60,6 +63,7 @@ export default function ReservationScreen (props) {
 
     const db = firebase.firestore();
     const ordersRef = db.collection('orders');
+    const parkingSpotRef = db.collection('parkingSpots');
 
     try {
       let order = ordersRef.doc();
@@ -79,29 +83,24 @@ export default function ReservationScreen (props) {
 
   const onChangeStartTime = (event, selectedTime) => {
     setShowStartTime(false);
-
     let tempSelection = new Date(selectedTime);
     let tempTime = tempSelection.getHours() + ':' + tempSelection.getMinutes();
-
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
-
     //temp time is a string in complete military format
-
     //Check if selected start time is is > than parking spot
     console.log('selected time-->', timeInSeconds(tempTime));
     console.log('spot startTime-->', timeInSeconds(spot.startTime));
 
-    if (!(timeInSeconds(tempTime) > timeInSeconds(spot.startTime))) {
+    if (!(timeInSeconds(tempTime) >= timeInSeconds(spot.startTime))) {
       alert(`Please select a start time after ${spot.startTime}`);
       return setShowStartTime(false);
     }
-
     setStartTime(tempTime);
     setAndroidStartTime(formatTime(selectedTime));
-
+    setIosStartTime(selectedTime);
     setShowStartTime(false);
   };
 
@@ -113,26 +112,21 @@ export default function ReservationScreen (props) {
     setShowEndTime(false);
     let tempSelection = new Date(selectedTime);
     let tempTime = tempSelection.getHours() + ':' + tempSelection.getMinutes();
-
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
-
     //temp time is a string in complete military format
-
     //Check if selected start time is is > than parking spot
     console.log('selected time-->', timeInSeconds(tempTime));
     console.log('spot End time-->', timeInSeconds(spot.endTime));
-
-    if (!(timeInSeconds(tempTime) < timeInSeconds(spot.endTime))) {
+    if (!(timeInSeconds(tempTime) <= timeInSeconds(spot.endTime))) {
       alert(`Please select an end time before ${spot.endTime}`);
       return setShowEndTime(true);
     }
-
     setEndTime(tempTime);
     setAndroidEndTime(formatTime(selectedTime));
-
+    setIosEndTime(selectedTime);
     setShowEndTime(false);
   };
 
@@ -182,7 +176,7 @@ export default function ReservationScreen (props) {
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId='Start Time'
-                value={date}
+                value={iosStartTime}
                 mode={'time'}
                 display='default'
                 onChange={onChangeStartTime}
@@ -197,7 +191,7 @@ export default function ReservationScreen (props) {
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId='End Time'
-                value={date}
+                value={iosEndTime}
                 mode={'time'}
                 display='default'
                 onChange={onChangeEndTime}
