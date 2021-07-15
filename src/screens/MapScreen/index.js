@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import MapScreen from "./MapScreen";
 import MapSingleSpotScreen from "./MapSingleSpotScreen";
 import ReservationScreen from "../ReservationScreen/ReservationScreen";
+import ConfirmationScreen from "../ReservationScreen/ConfirmationScreen";
 //import { PaymentScreen } from "./PaymentScreen";
 
 const mapStack = createStackNavigator();
@@ -27,16 +28,15 @@ export default function App(props) {
         <mapStack.Screen name="MapScreen" options={{ headerShown: false }}>
           {(props) => <MapScreen {...props} user={user} />}
         </mapStack.Screen>
-        <mapStack.Screen
-          name="MapSingleSpotScreen"
-          options={{ title: "Your Selection" }}
-        >
+        <mapStack.Screen name="Parking Spot">
           {(props) => <MapSingleSpotScreen {...props} user={user} />}
         </mapStack.Screen>
-        <mapStack.Screen
-          name="ReservationScreen"
-          component={ReservationScreen}
-        />
+        <mapStack.Screen name="Reservation">
+          {(props) => <ReservationScreen {...props} user={user} />}
+        </mapStack.Screen>
+        <mapStack.Screen name="Confirmation">
+          {(props) => <ConfirmationScreen {...props} user={user} />}
+        </mapStack.Screen>
         {/* <mapStack.Screen name='PaymentScreen' component={PaymentScreen} /> */}
       </mapStack.Navigator>
     </NavigationContainer>

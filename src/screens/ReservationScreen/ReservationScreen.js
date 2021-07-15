@@ -13,29 +13,24 @@ import { firebase } from "../../firebase/config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function ReservationScreen(props) {
-  const user = props.route.params.user;
+  const user = props.user;
   const spot = props.route.params.spot;
 
-  // const startTimeLimit = spot.startTime;
-  // const endTimeLimit = spot.endTinme;
+  const timeInSeconds = (time) => {
+    let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
+    let minInSec = Number(time.slice(3, 5)) * 60;
 
-  // startTimeHour = Number(startTimeLimit.slice(0, 2)) * 60 * 60;
-  // startTimeMins = Number(startTimeLimit.slice(3, 5)) * 60;
+    return hourInSec + minInSec;
+  };
 
-  // endTimeHour = Number(endTimeLimit.slice(0, 2)) * 60 * 60;
-  // endTimeMins = Number(endTimeLimit.slice(3, 5)) * 60;
-
-  // startTimeLimit = startTimeHour + startTimeMins;
-  // endTimeLimit = endTimeHour + endTimeMins;
-
-  const [vehicles, setVehicles] = useState([]);
-  // const [selected, setSelected] = useState([]);
+  const [vehicle, setVehicles] = useState([]);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
   const [showStartTime, setShowStartTime] = useState(false);
   const [showEndTime, setShowEndTime] = useState(false);
   const [androidStartTime, setAndroidStartTime] = useState(null);
   const [androidEndTime, setAndroidEndTime] = useState(null);
+  const date = new Date();
 
   //Make call to firebase to retrieve user vehicle information
   useEffect(() => {
@@ -53,10 +48,60 @@ export default function ReservationScreen(props) {
     })();
   }, []);
 
+  const reserveParking = async () => {
+    if (!(endTime && startTime)) {
+      alert(`please select available times for parking`);
+      return;
+    }
+
+    let duration;
+
+    if (timeInSeconds(startTime) > timeInSeconds(endTime)) duration = 24;
+
+    const db = firebase.firestore();
+    const ordersRef = db.collection("orders");
+
+    try {
+      let order = ordersRef.doc();
+      await spot.set({
+        id: order.id,
+        userId: user.id,
+        vehicle: vehicle.id,
+        parkingSpotId: "",
+        startTime: startTime,
+        duration: duration,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    props.navigation.navigate("Confirmation", { spot: spot });
+  };
+
   const onChangeStartTime = (event, selectedTime) => {
-    const currentTime = selectedTime || startTime;
-    setStartTime(currentTime);
-    setAndroidStartTime(formatTime(currentTime));
+    setShowStartTime(false);
+
+    let tempSelection = new Date(selectedTime);
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    //temp time is a string in complete military format
+
+    //Check if selected start time is is > than parking spot
+    console.log("selected time-->", timeInSeconds(tempTime));
+    console.log("spot startTime-->", timeInSeconds(spot.startTime));
+
+    if (!(timeInSeconds(tempTime) > timeInSeconds(spot.startTime))) {
+      alert(`Please select a start time after ${spot.startTime}`);
+      return setShowStartTime(false);
+    }
+
+    setStartTime(tempTime);
+    setAndroidStartTime(formatTime(selectedTime));
+
     setShowStartTime(false);
   };
 
@@ -65,11 +110,30 @@ export default function ReservationScreen(props) {
   };
 
   const onChangeEndTime = (event, selectedTime) => {
-    const currentTime = selectedTime || endTime;
-    setEndTime(currentTime);
-    setAndroidEndTime(formatTime(currentTime));
     setShowEndTime(false);
-    //Validation occurs here so that End time > Start Time
+    let tempSelection = new Date(selectedTime);
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
+
+    if (tempSelection.getHours().toString().length < 2)
+      tempTime = `0${tempTime}`;
+    if (tempSelection.getMinutes().toString().length < 2)
+      tempTime = `${tempTime}0`;
+
+    //temp time is a string in complete military format
+
+    //Check if selected start time is is > than parking spot
+    console.log("selected time-->", timeInSeconds(tempTime));
+    console.log("spot End time-->", timeInSeconds(spot.endTime));
+
+    if (!(timeInSeconds(tempTime) < timeInSeconds(spot.endTime))) {
+      alert(`Please select an end time before ${spot.endTime}`);
+      return setShowEndTime(true);
+    }
+
+    setEndTime(tempTime);
+    setAndroidEndTime(formatTime(selectedTime));
+
+    setShowEndTime(false);
   };
 
   const revealEndTimeSelector = () => {
@@ -92,7 +156,7 @@ export default function ReservationScreen(props) {
     <SafeAreaView>
       <ScrollView>
         {/*Vehicle Information*/}
-        {vehicles.map((vehicle, idx) => {
+        {vehicle.map((vehicle, idx) => {
           return (
             <View key={idx}>
               <Text>Brand: {vehicle.make}</Text>
@@ -118,7 +182,7 @@ export default function ReservationScreen(props) {
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId="Start Time"
-                value={startTime}
+                value={date}
                 mode={"time"}
                 display="default"
                 onChange={onChangeStartTime}
@@ -133,7 +197,7 @@ export default function ReservationScreen(props) {
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId="End Time"
-                value={endTime}
+                value={date}
                 mode={"time"}
                 display="default"
                 onChange={onChangeEndTime}
@@ -176,9 +240,9 @@ export default function ReservationScreen(props) {
             {showStartTime && (
               <DateTimePicker
                 testId="Start Time"
-                value={startTime}
+                value={date}
                 mode={"time"}
-                display="spinner"
+                display="default"
                 onChange={onChangeStartTime}
                 minuteInterval={30}
                 is24hour={true}
@@ -188,9 +252,9 @@ export default function ReservationScreen(props) {
             {showEndTime && (
               <DateTimePicker
                 testId="End Time"
-                value={endTime}
+                value={date}
                 mode={"time"}
-                display="spinner"
+                display="default"
                 onChange={onChangeEndTime}
                 minuteInterval={30}
                 is24hour={true}
@@ -200,10 +264,7 @@ export default function ReservationScreen(props) {
           </View>
         )}
         {/* Checkout Button */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Checkout")}
-        >
+        <TouchableOpacity style={styles.button} onPress={reserveParking}>
           <Text style={styles.buttonTitle}>Checkout -&gt; </Text>
         </TouchableOpacity>
       </ScrollView>

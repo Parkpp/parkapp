@@ -23,18 +23,8 @@ export default function App(props) {
   const user = props.user;
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: "#1A659E",
-          },
-          headerTintColor: "#ff6b35",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      >
-        <Stack.Screen name="ProvideScreen" component={ProvideScreen} />
+      <Stack.Navigator>
+        <Stack.Screen name="ProvideScreen"  component={ProvideScreen} />
         <Stack.Screen name="ParkingSpotList">
           {(props) => <ParkingSpotListScreen {...props} user={user} />}
         </Stack.Screen>

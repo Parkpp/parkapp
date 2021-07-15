@@ -45,9 +45,9 @@ export default class extends React.Component {
     });
   }
 
-  async handleUser() {
-    const usersRef = firebase.firestore().collection("users");
-    firebase.auth().onAuthStateChanged(async (user) => {
+  async handleUser () {
+    const usersRef = firebase.firestore().collection('users');
+    firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         try {
           const userData = (await usersRef.doc(user.uid).get()).data();

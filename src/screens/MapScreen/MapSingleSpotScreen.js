@@ -22,7 +22,7 @@ export default function MapSingleSpotScreen (props) {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          props.navigation.navigate('ReservationScreen', {
+          props.navigation.navigate('Reservation', {
             user: user,
             spot: spot
           });
