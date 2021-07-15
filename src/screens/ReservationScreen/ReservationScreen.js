@@ -13,16 +13,6 @@ import { firebase } from "../../firebase/config";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function ReservationScreen(props) {
-  const user = props.user;
-  const spot = props.route.params.spot;
-
-  const timeInSeconds = (time) => {
-    let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
-    let minInSec = Number(time.slice(3, 5)) * 60;
-
-    return hourInSec + minInSec;
-  };
-
   const [vehicle, setVehicles] = useState([]);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -31,6 +21,19 @@ export default function ReservationScreen(props) {
   const [androidStartTime, setAndroidStartTime] = useState(null);
   const [androidEndTime, setAndroidEndTime] = useState(null);
   const date = new Date();
+  const [iosStartTime, setIosStartTime] = useState(new Date());
+  const [iosEndTime, setIosEndTime] = useState(new Date());
+  const user = props.user;
+  const spot = props.route.params.spot;
+
+  console.log("What are my props-->", props);
+
+  const timeInSeconds = (time) => {
+    let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
+    let minInSec = Number(time.slice(3, 5)) * 60;
+
+    return hourInSec + minInSec;
+  };
 
   //Make call to firebase to retrieve user vehicle information
   useEffect(() => {
@@ -44,7 +47,6 @@ export default function ReservationScreen(props) {
       snapshot.forEach((doc) => {
         vehiclesData.push(doc.data());
       });
-      console.log(vehiclesData[0])
       setVehicles(vehiclesData);
     })();
   }, []);
@@ -55,41 +57,43 @@ export default function ReservationScreen(props) {
       return;
     }
 
-    let duration;
+    let duration = 0;
 
     if (timeInSeconds(startTime) > timeInSeconds(endTime)) duration = 24;
 
     const db = firebase.firestore();
     const ordersRef = db.collection("orders");
+    const parkingRef = db.collection("parkingSpots")
 
-    try {
+    
+    await parkingRef.doc(spot.id).update({
+      reserved: true})
+
+    console.log('vehicle id',vehicle[0])
+
       let order = ordersRef.doc();
       await order.set({
         id: order.id,
         userId: user.id,
-        vehicle: vehicle.id,
+        vehicle: vehicle[0].id,
         parkingSpotId: spot.id,
         startTime: startTime,
         duration: duration,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      })
+  
     props.navigation.navigate("Confirmation", { spot: spot });
   };
 
   const onChangeStartTime = (event, selectedTime) => {
     setShowStartTime(false);
-
     let tempSelection = new Date(selectedTime);
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
-
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    if (!(timeInSeconds(tempTime) > timeInSeconds(spot.startTime))) {
+    if (!(timeInSeconds(tempTime) >= timeInSeconds(spot.startTime))) {
       let hours = Number(spot.startTime.slice(0, 2));
 
       let AmOrPm = hours >= 12 ? "pm" : "am";
@@ -101,10 +105,9 @@ export default function ReservationScreen(props) {
       alert(`Please select a start time after ${finalTime}`);
       return setShowStartTime(false);
     }
-
     setStartTime(tempTime);
     setAndroidStartTime(formatTime(selectedTime));
-
+    setIosStartTime(selectedTime);
     setShowStartTime(false);
   };
 
@@ -116,17 +119,16 @@ export default function ReservationScreen(props) {
     setShowEndTime(false);
     let tempSelection = new Date(selectedTime);
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
-
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    if (!(timeInSeconds(tempTime) < timeInSeconds(spot.endTime))) {
+    if (!(timeInSeconds(tempTime) <= timeInSeconds(spot.endTime))) {
       let hours = Number(spot.endTime.slice(0, 2));
 
       let AmOrPm = hours >= 12 ? "pm" : "am";
-      
+
       hours = hours % 12 || 12;
       let minutes = spot.endTime.slice(3, 5);
       let finalTime = hours + ":" + minutes + " " + AmOrPm;
@@ -134,10 +136,9 @@ export default function ReservationScreen(props) {
       alert(`Please select an end time before ${finalTime}`);
       return setShowEndTime(false);
     }
-
     setEndTime(tempTime);
     setAndroidEndTime(formatTime(selectedTime));
-
+    setIosEndTime(selectedTime);
     setShowEndTime(false);
   };
 
@@ -160,7 +161,7 @@ export default function ReservationScreen(props) {
     let hours = Number(time.slice(0, 2));
 
     let AmOrPm = hours >= 12 ? "pm" : "am";
-  
+
     hours = hours % 12 || 12;
     let minutes = time.slice(3, 5);
     let finalTime = hours + ":" + minutes + AmOrPm;
@@ -169,8 +170,9 @@ export default function ReservationScreen(props) {
 
   //If Platform = android, create state for buttons to show when clicked that renders out a time selection
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+      {/* Vehicle info */}
+      <View>
         {/*Vehicle Information*/}
         {vehicle.map((vehicle, idx) => {
           return (
@@ -183,109 +185,126 @@ export default function ReservationScreen(props) {
             </View>
           );
         })}
-
+      </View>
+      {/* start and end time buttons */}
+      <View style= {{flex: 1}}> 
         {Platform.OS == "ios" ? (
           //IOS View for Time Selector
           <View
             style={{
               flex: 1,
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "center",
             }}
           >
             {/*Start Time*/}
-            <Text>Select Start Time after {convertTo12Hour(spot.startTime)}:</Text>
-            <View style={{ flex: 1, paddingHorizontal: 10 }}>
-              <DateTimePicker
-                testId="Start Time"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onChangeStartTime}
-                minuteInterval={30}
-                is24hour={true}
-                style={{ margin: 10 }}
-              />
+            <View style={{ flex: 1, flexDirection: "column", justifyContent:'center', alignContent:'center' }}>
+              <Text>
+                Select Start Time after {convertTo12Hour(spot.startTime)}:
+              </Text>
+              <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <DateTimePicker
+                  testId="Start Time"
+                  value={iosStartTime}
+                  mode={"time"}
+                  display="default"
+                  onChange={onChangeStartTime}
+                  minuteInterval={30}
+                  is24hour={true}
+                  style={{ margin: 10 }}
+                />
+              </View>
             </View>
             {/*End Time*/}
 
-            <Text>Select End Time before {convertTo12Hour(spot.endTime)}: </Text>
-            <View style={{ flex: 1, paddingHorizontal: 10 }}>
-              <DateTimePicker
-                testId="End Time"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onChangeEndTime}
-                minuteInterval={30}
-                is24hour={true}
-                style={{ margin: 10 }}
-              />
+            <View style={{ flex: 1, flexDirection: "column", justifyContent:'center', alignContent:'center'}}>
+              <Text>
+                Select End Time before {convertTo12Hour(spot.endTime)}:{" "}
+              </Text>
+              <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                <DateTimePicker
+                  testId="End Time"
+                  value={iosEndTime}
+                  mode={"time"}
+                  display="default"
+                  onChange={onChangeEndTime}
+                  minuteInterval={30}
+                  is24hour={true}
+                  style={{ margin: 10 }}
+                />
+              </View>
             </View>
           </View>
         ) : (
           //Android View for Time Selector
-          <SafeAreaView style ={styles.container}>
-          <View>
-            <Text>Select start time after {convertTo12Hour(spot.startTime)}:</Text>
+          <SafeAreaView style={styles.container}>
             <View>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => revealStartTimeSelector()}
-              >
-                {!androidStartTime ? (
-                  <Text>Select Start Time</Text>
-                ) : (
-                  <Text>{androidStartTime}</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-           <Text>Select end time before {convertTo12Hour(spot.endTime)}: </Text>
-            <View>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => revealEndTimeSelector()}
-              >
-                {!androidEndTime ? (
-                  <Text>Select End Time</Text>
-                ) : (
-                  <Text>{androidEndTime}</Text>
-                )}
-              </TouchableOpacity>
-            </View>
+              <Text>
+                Select start time after {convertTo12Hour(spot.startTime)}:
+              </Text>
+              <View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => revealStartTimeSelector()}
+                >
+                  {!androidStartTime ? (
+                    <Text>Select Start Time</Text>
+                  ) : (
+                    <Text>{androidStartTime}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+              <Text>
+                Select end time before {convertTo12Hour(spot.endTime)}:{" "}
+              </Text>
+              <View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => revealEndTimeSelector()}
+                >
+                  {!androidEndTime ? (
+                    <Text>Select End Time</Text>
+                  ) : (
+                    <Text>{androidEndTime}</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
 
-            {showStartTime && (
-              <DateTimePicker
-                testId="Start Time"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onChangeStartTime}
-                minuteInterval={30}
-                is24hour={true}
-                style={{ margin: 10 }}
-              />
-            )}
-            {showEndTime && (
-              <DateTimePicker
-                testId="End Time"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onChangeEndTime}
-                minuteInterval={30}
-                is24hour={true}
-                style={{ margin: 10 }}
-              />
-            )}
-          </View>
+              {showStartTime && (
+                <DateTimePicker
+                  testId="Start Time"
+                  value={date}
+                  mode={"time"}
+                  display="default"
+                  onChange={onChangeStartTime}
+                  minuteInterval={30}
+                  is24hour={true}
+                  style={{ margin: 10 }}
+                />
+              )}
+              {showEndTime && (
+                <DateTimePicker
+                  testId="End Time"
+                  value={date}
+                  mode={"time"}
+                  display="default"
+                  onChange={onChangeEndTime}
+                  minuteInterval={30}
+                  is24hour={true}
+                  style={{ margin: 10 }}
+                />
+              )}
+            </View>
           </SafeAreaView>
         )}
         {/* Checkout Button */}
-        <TouchableOpacity style={styles.button} onPress={reserveParking}>
+      </View>
+      {/* reservationButton */}
+      <View>
+        <TouchableOpacity style={styles.reservationButton} onPress={reserveParking}>
           <Text style={styles.buttonTitle}>Checkout -&gt; </Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
