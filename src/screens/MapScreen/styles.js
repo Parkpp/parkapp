@@ -5,7 +5,10 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center'
   },
-  title: {},
+  title: {
+    fontWeight: 'bold',
+    fontSize: 34
+  },
   logo: {
     flex: 1,
     height: 120,
@@ -25,14 +28,21 @@ export default StyleSheet.create({
     paddingLeft: 16
   },
   button: {
-    backgroundColor: '#788eec',
+    backgroundColor: '#1A659E',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,
     height: 48,
-    borderRadius: 5,
+    width: 250,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 5
   },
   buttonTitle: {
     color: 'white',
@@ -65,7 +75,7 @@ export default StyleSheet.create({
   },
   searchBar: {
     position: 'absolute',
-    top: Platform.OS === 'android' ? 30 : Platform.OS === 'ios' ? 50 : 10,
+    top: Platform.OS === 'android' ? 30 : Platform.OS === 'ios' ? 35 : 10,
     width: Platform.OS === 'ios' ? '96%' : '83%',
     left: '2%',
     zIndex: 3,
@@ -83,14 +93,14 @@ export default StyleSheet.create({
     fontSize: 18
   },
   image: {
-    width: 300,
-    height: 150
+    width: 400,
+    height: 250
   },
   key: {
     position: 'absolute',
     borderRadius: 10,
     top:
-      Platform.OS === 'android' ? '10%' : Platform.OS === 'ios' ? '12%' : '20%',
+      Platform.OS === 'android' ? '10%' : Platform.OS === 'ios' ? '9%' : '20%',
     backgroundColor: 'white',
     margin: 10,
     padding: 10,
@@ -107,5 +117,27 @@ export default StyleSheet.create({
     zIndex: 2,
     opacity: 0.75,
     fontSize: 10
+  },
+  textContainer: {
+    borderRadius: 10,
+    backgroundColor: '#FAEDD3',
+    margin: 10,
+    borderStyle: 'solid',
+    borderColor: 'black',
+    borderWidth: 1
+  },
+  text: {
+    fontSize: 18,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    paddingTop: 5
+  },
+  textLabels: {
+    fontSize: 22,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    paddingTop: 5
   }
 });

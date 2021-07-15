@@ -1,9 +1,9 @@
-import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
-import { firebase } from "./src/firebase/config";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { firebase } from './src/firebase/config';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
   LoginScreen,
@@ -11,9 +11,9 @@ import {
   ProvideScreen,
   AccountScreen,
   MapScreen,
-  InfoScreen,
-} from "./src/screens";
-import { decode, encode } from "base-64";
+  InfoScreen
+} from './src/screens';
+import { decode, encode } from 'base-64';
 if (!global.btoa) {
   global.btoa = encode;
 }
@@ -24,16 +24,16 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 export default class extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = { user: null, loading: true, userLogged: null };
     this.handleUser = this.handleUser.bind(this);
   }
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(async (user) => {
+  componentDidMount () {
+    firebase.auth().onAuthStateChanged(async user => {
       this.setState(user ? { userLogged: true } : { userLogged: false });
-      const usersRef = firebase.firestore().collection("users");
+      const usersRef = firebase.firestore().collection('users');
       try {
         const userData = (await usersRef.doc(user.uid).get()).data();
         this.setState({ loading: false });
@@ -63,7 +63,7 @@ export default class extends React.Component {
     });
   }
 
-  render() {
+  render () {
     if (this.state.loading) return <></>;
     const user = this.state.user;
     // console.log(user);
@@ -74,29 +74,28 @@ export default class extends React.Component {
           <NavigationContainer>
             <Tab.Navigator
               tabBarOptions={{
-                activeTintColor: "#ff6b35",
-                inactiveTintColor: "#00b2ca",
+                activeTintColor: '#ff6b35',
+                inactiveTintColor: '#00b2ca',
                 labelStyle: {
-                  fontSize: 20,
-                  bottom: 20,
+                  fontSize: 20
                 },
 
                 style: {
-                  backgroundColor: "#1A659E",
+                  backgroundColor: '#1A659E',
                   Size: 20,
                   elevation: 20,
-                  height: 70,
-                },
+                  height: 70
+                }
               }}
             >
-              <Tab.Screen name="Map">
-                {(props) => <MapScreen {...props} user={user} />}
+              <Tab.Screen name='Map'>
+                {props => <MapScreen {...props} user={user} />}
               </Tab.Screen>
-              <Tab.Screen name="Provide">
-                {(props) => <ProvideScreen {...props} user={user} />}
+              <Tab.Screen name='Provide'>
+                {props => <ProvideScreen {...props} user={user} />}
               </Tab.Screen>
-              <Tab.Screen name="Account">
-                {(props) => <AccountScreen {...props} user={user} />}
+              <Tab.Screen name='Account'>
+                {props => <AccountScreen {...props} user={user} />}
               </Tab.Screen>
             </Tab.Navigator>
           </NavigationContainer>
@@ -105,26 +104,24 @@ export default class extends React.Component {
             <Stack.Navigator
               screenOptions={{
                 headerStyle: {
-                  backgroundColor: "#1A659E",
+                  backgroundColor: '#1A659E'
                 },
-                headerTintColor: "#ff6b35",
+                headerTintColor: '#ff6b35',
                 headerTitleStyle: {
-                  fontWeight: "bold",
-                },
+                  fontWeight: 'bold'
+                }
               }}
             >
               <Stack.Screen
-                name="Info"
+                name='Info'
                 component={InfoScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="Login">
-                {(props) => (
-                  <LoginScreen {...props} onLogin={this.handleUser} />
-                )}
+              <Stack.Screen name='Login'>
+                {props => <LoginScreen {...props} onLogin={this.handleUser} />}
               </Stack.Screen>
               <Stack.Screen
-                name="Registration"
+                name='Registration'
                 component={RegistrationScreen}
               />
             </Stack.Navigator>
