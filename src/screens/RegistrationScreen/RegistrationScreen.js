@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 
-export default function RegistrationScreen({ navigation }) {
+export default function RegistrationScreen(props) {
   //User Info
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ export default function RegistrationScreen({ navigation }) {
   const [vehicleColor, setVehicleColor] = useState("");
 
   const onFooterLinkPress = () => {
-    navigation.navigate("Login");
+    props.navigation.navigate("Login");
   };
 
   const onRegisterPress = () => {
@@ -31,17 +31,19 @@ export default function RegistrationScreen({ navigation }) {
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
+    let number = Number(phoneNumber)
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
+      .then(async (response) => {
         const uid = response.user.uid;
         const data = {
           id: uid,
           email,
           fullName,
           username,
-          phoneNumber,
+          number,
           isProvider: false,
         };
         const vehicleData = {
@@ -56,13 +58,15 @@ export default function RegistrationScreen({ navigation }) {
         };
 
         const vehicleRef = firebase.firestore().collection("vehicles");
-        vehicleRef.add(vehicleData);
+        let vehicle = vehicleRef.doc();
+        vehicleData["id"] = vehicle.id;
+        await vehicle.set(vehicleData);
         const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
           .set(data)
           .then(() => {
-            navigation.navigate("Map", { user: data });
+            props.onLogin();
           })
           .catch((error) => {
             alert(error);
@@ -81,7 +85,7 @@ export default function RegistrationScreen({ navigation }) {
       >
         <Image
           style={styles.logo}
-          source={require("../../../assets/icon.png")}
+          source={require("../../../assets/CarinGarageClear.png")}
         />
         <TextInput
           style={styles.input}
@@ -115,7 +119,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Phone Number"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setPhoneNumber(Number(text))}
+          onChangeText={(text) => setPhoneNumber(text)}
           value={phoneNumber}
           underlineColorAndroid="transparent"
           autoCapitalize="none"

@@ -23,18 +23,28 @@ export default function App(props) {
   const user = props.user;
   return (
     <NavigationContainer independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen name="ProvideScreen"  component={ProvideScreen} />
-        <Stack.Screen name="ParkingSpotList">
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#1A659E",
+          },
+          headerTintColor: "#ff6b35",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <Stack.Screen name="Provide" component={ProvideScreen} />
+        <Stack.Screen name="My Parking Spots">
           {(props) => <ParkingSpotListScreen {...props} user={user} />}
         </Stack.Screen>
-        <Stack.Screen name="ProvideParking">
+        <Stack.Screen name="Provide Parking">
           {(props) => <ProvideParkingScreen {...props} user={user} />}
         </Stack.Screen>
-        <Stack.Screen name="UpdateParkingSpot">
+        <Stack.Screen name="Update Parking Spot">
           {(props) => <UpdateParkingSpotScreen {...props} user={user} />}
         </Stack.Screen>
-        <Stack.Screen name="DeleteParkingSpot">
+        <Stack.Screen name="Delete Parking Spot">
           {(props) => <DeleteParkingSpotScreen {...props} user={user} />}
         </Stack.Screen>
 

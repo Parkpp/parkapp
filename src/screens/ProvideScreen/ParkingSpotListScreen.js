@@ -48,7 +48,7 @@ export const ParkingSpotListScreen = (props) => {
             parkingSpots.push(doc.data());
           });
         } catch (error) {
-          console.log("hello this might be an error");
+          
         }
 
         setParkingSpots(parkingSpots);
@@ -59,17 +59,19 @@ export const ParkingSpotListScreen = (props) => {
   // /Users/Etty/parkapp/node_modules/react-native-reanimated/lib/reanimated1/animations/decay.js
   const updateSpot = (spot) => {
     //console.log("This is the parking spot informaion", spot);
-    props.navigation.navigate("UpdateParkingSpot", { spot: spot });
+    props.navigation.navigate("Update Parking Spot", { spot: spot });
   };
 
   const deleteSpot = (spot) => {
-    props.navigation.navigate("DeleteParkingSpot", { spot: spot });
+    props.navigation.navigate("Delete Parking Spot", { spot: spot });
   };
 
   const buttonsOrActiveStatus = (spot) => {
     if (spot.reserved) {
       return (
-        <View styles={{flex:1, justifyContent:'center', alignItems:'center'}}>
+        <View
+          styles={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <Text>ACTIVE</Text>
         </View>
       );
@@ -94,11 +96,24 @@ export const ParkingSpotListScreen = (props) => {
     }
   };
 
+  const convertTo12Hour = (time) => {
+    let hours = Number(time.slice(0, 2));
+
+    let AmOrPm = hours >= 12 ? "pm" : "am";
+
+    hours = hours % 12 || 12;
+    let minutes = time.slice(3, 5);
+    let finalTime = hours + ":" + minutes + AmOrPm;
+    return finalTime;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} persistentScrollbar={true}>
         {spots.map((spot, idx) => {
-          console.log(spot);
+          let startTime = convertTo12Hour(spot.startTime);
+          let endTime = convertTo12Hour(spot.endTime);
+
           return (
             <View key={idx} style={styles.singleParkingSpot}>
               <View style={styles.parkingSpotInfo}>
@@ -111,8 +126,8 @@ export const ParkingSpotListScreen = (props) => {
                   <Text>City: {spot.city}</Text>
                   <Text>State: {spot.state}</Text>
                   <Text>Rate: ${spot.rate}/hr</Text>
-                  <Text>Start time: {spot.startTime}</Text>
-                  <Text>End time: {spot.endTime}</Text>
+                  <Text>Start time: {startTime}</Text>
+                  <Text>End time: {endTime}</Text>
                   <Text>
                     Status: {spot.reserved ? "reserved" : "available"}
                   </Text>

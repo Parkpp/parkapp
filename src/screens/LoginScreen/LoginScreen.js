@@ -7,7 +7,6 @@ import { firebase } from "../../firebase/config";
 export default function LoginScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // console.log(props)
 
   const onFooterLinkPress = () => {
     props.navigation.navigate("Registration");

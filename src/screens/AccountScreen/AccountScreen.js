@@ -3,6 +3,8 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import LinearGradient from 'react-native-linear-gradient';
+
 
 const Stack = createStackNavigator();
 
@@ -13,24 +15,34 @@ export function AccountScreen(props) {
 
   return (
     <>
-      <View>
+    
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "stretch",
+          flexDirection: "column",
+        }}
+      >
         <TouchableOpacity
-          style={styles.button}
+          style={styles.accountButton}
           onPress={() => props.navigation.navigate("User Profile")}
         >
-          <Text style={styles.buttonTitle}>Profile -&gt; </Text>
+          <Text style={styles.accountButtonTitle}>Profile </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={styles.button}
+          style={styles.accountButton}
           onPress={() => props.navigation.navigate("Vehicle Information")}
         >
-          <Text style={styles.buttonTitle}>Vehicle -&gt; </Text>
+          <Text style={styles.accountButtonTitle}>Vehicle </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
-          style={styles.button}
+          style={styles.accountButton}
           onPress={() => onSignOutPress()}
         >
-          <Text style={styles.buttonTitle}>Sign Out</Text>
+          <Text style={styles.accountButtonTitle}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     </>
