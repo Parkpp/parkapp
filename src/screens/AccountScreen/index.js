@@ -14,7 +14,17 @@ export default function App(props) {
   const { user } = props;
   return (
     <NavigationContainer independent={true}>
-      <Account.Navigator>
+      <Account.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#1A659E",
+          },
+          headerTintColor: "#ff6b35",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
         <Account.Screen name="Account" component={AccountScreen} />
         <Account.Screen name="User Profile">
           {(props) => <UserProfileScreen {...props} user={user} />}

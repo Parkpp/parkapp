@@ -24,7 +24,7 @@ export default function App(props) {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
-        <Stack.Screen name="ProvideScreen" options={{ headerShown: false }} component={ProvideScreen} />
+        <Stack.Screen name="ProvideScreen"  component={ProvideScreen} />
         <Stack.Screen name="ParkingSpotList">
           {(props) => <ParkingSpotListScreen {...props} user={user} />}
         </Stack.Screen>

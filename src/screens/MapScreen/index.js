@@ -14,11 +14,21 @@ export default function App(props) {
   const { user } = props;
   return (
     <NavigationContainer independent={true}>
-      <mapStack.Navigator>
+      <mapStack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#1A659E",
+          },
+          headerTintColor: "#ff6b35",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      >
         <mapStack.Screen name="MapScreen" options={{ headerShown: false }}>
           {(props) => <MapScreen {...props} user={user} />}
         </mapStack.Screen>
-        <mapStack.Screen name="Parking Spot" >
+        <mapStack.Screen name="Parking Spot">
           {(props) => <MapSingleSpotScreen {...props} user={user} />}
         </mapStack.Screen>
         <mapStack.Screen name="Reservation">
@@ -27,7 +37,7 @@ export default function App(props) {
         <mapStack.Screen name="Confirmation">
           {(props) => <ConfirmationScreen {...props} user={user} />}
         </mapStack.Screen>
-          {/* <mapStack.Screen name='PaymentScreen' component={PaymentScreen} /> */}
+        {/* <mapStack.Screen name='PaymentScreen' component={PaymentScreen} /> */}
       </mapStack.Navigator>
     </NavigationContainer>
   );

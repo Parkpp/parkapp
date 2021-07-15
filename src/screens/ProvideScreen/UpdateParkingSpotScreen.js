@@ -201,7 +201,7 @@ export const UpdateParkingSpotScreen = (props) => {
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/park.png")}
+              source={require("../../../assets/CarinGarageClear.png")}
             />
             <TextInput
               style={styles.input}
