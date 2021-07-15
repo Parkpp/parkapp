@@ -73,7 +73,7 @@ export default function MapScreen (props) {
     let spot = tempSpots.filter(spot => {
       return spot.id == spotId;
     });
-    props.navigation.navigate('MapSingleSpotScreen', {
+    props.navigation.navigate('Parking Spot', {
       parkingSpot: spot[0],
       user: props.user
     });
