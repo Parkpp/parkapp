@@ -85,7 +85,7 @@ export const ProvideParkingScreen = (props) => {
         latitude: coords.latitude,
       });
 
-      console.log(address);
+
       let spot = parkingRef.doc();
       await spot.set({
         id: spot.id,
@@ -108,7 +108,7 @@ export const ProvideParkingScreen = (props) => {
         rate: rate,
       });
     } catch (error) {
-      console.log(error);
+  
     }
 
     props.navigation.navigate("Provide");
@@ -118,7 +118,7 @@ export const ProvideParkingScreen = (props) => {
     let hours = Number(time.slice(0, 2));
 
     let AmOrPm = hours >= 12 ? "pm" : "am";
-    console.log(AmOrPm);
+
     hours = hours % 12 || 12;
     let minutes = time.slice(3, 5);
     let finalTime = hours + ":" + minutes + AmOrPm;
@@ -130,7 +130,7 @@ export const ProvideParkingScreen = (props) => {
   };
 
   const onStartChange = (event, selectedDate) => {
-    //console.log(event);
+    
     setStartPicker(false);
     let tempSelection = new Date(selectedDate);
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
@@ -145,19 +145,19 @@ export const ProvideParkingScreen = (props) => {
     setDisplayStartTime(convertTo12Hour(tempTime));
   };
   const onEndChange = (event, selectedDate) => {
-    //console.log(event);
+   
     setEndPicker(false);
     let tempSelection = new Date(selectedDate);
 
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
 
-    console.log(tempTime);
+
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    console.log(tempTime);
+   
     if (tempTime === "NaN:NaN") tempTime = endTime;
     setEndTime(tempTime);
     setDisplayEndTime(convertTo12Hour(tempTime));

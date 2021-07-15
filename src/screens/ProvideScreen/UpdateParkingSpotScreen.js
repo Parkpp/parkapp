@@ -46,9 +46,6 @@ export const UpdateParkingSpotScreen = (props) => {
 
   const date = new Date();
 
-  console.log(spotToUpdate);
-  //const [imageUrl, setImageUrl] = useState("");  Stretch goal to upload picture from user phone
-
   //Geocoding- retrieve lat & long from user entered address
   const onRegisterPress = async () => {
     if (description.length > 24)
@@ -81,7 +78,6 @@ export const UpdateParkingSpotScreen = (props) => {
         longitude: coords.longitude,
       });
 
-      console.log(address);
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
         description: description.length < 1 ? "None" : description,
@@ -101,9 +97,7 @@ export const UpdateParkingSpotScreen = (props) => {
         startTime: startTime,
         endTime: endTime,
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
 
     props.navigation.navigate("My Parking Spots");
   };
@@ -116,14 +110,13 @@ export const UpdateParkingSpotScreen = (props) => {
     let hours = Number(time.slice(0, 2));
 
     let AmOrPm = hours >= 12 ? "pm" : "am";
-    console.log(AmOrPm);
+
     hours = hours % 12 || 12;
     let minutes = time.slice(3, 5);
     let finalTime = hours + ":" + minutes + AmOrPm;
     return finalTime;
   };
   const onStartChange = (event, selectedDate) => {
-    //console.log(event);
     setStartPicker(false);
     let tempSelection = new Date(selectedDate);
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();

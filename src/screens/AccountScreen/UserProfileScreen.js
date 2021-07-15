@@ -35,7 +35,6 @@ export function UserProfileScreen(props) {
     navigation.addListener("focus", () => setLoading(!loading));
   }, [props.navigation, loading]);
 
-  // console.log("currentUser-->", currentUser);
   return (
     <View style={styles.container}>
       <View>

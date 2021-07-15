@@ -1,18 +1,18 @@
-import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
+import "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Platform
-} from 'react-native';
-import styles from './styles';
-import { firebase } from '../../firebase/config';
-import DateTimePicker from '@react-native-community/datetimepicker';
+  Platform,
+} from "react-native";
+import styles from "./styles";
+import { firebase } from "../../firebase/config";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function ReservationScreen (props) {
+export default function ReservationScreen(props) {
   const [vehicle, setVehicles] = useState([]);
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
@@ -26,9 +26,7 @@ export default function ReservationScreen (props) {
   const user = props.user;
   const spot = props.route.params.spot;
 
-  console.log('What are my props-->', props);
-
-  const timeInSeconds = time => {
+  const timeInSeconds = (time) => {
     let hourInSec = Number(time.slice(0, 2)) * 60 * 60;
     let minInSec = Number(time.slice(3, 5)) * 60;
 
@@ -40,11 +38,11 @@ export default function ReservationScreen (props) {
     (async () => {
       const db = firebase.firestore();
       const vehicleRef = db
-        .collection('vehicles')
-        .where('userId', '==', user.id);
+        .collection("vehicles")
+        .where("userId", "==", user.id);
       const snapshot = await vehicleRef.get();
       let vehiclesData = [];
-      snapshot.forEach(doc => {
+      snapshot.forEach((doc) => {
         vehiclesData.push(doc.data());
       });
       setVehicles(vehiclesData);
@@ -63,13 +61,12 @@ export default function ReservationScreen (props) {
 
     const db = firebase.firestore();
     const ordersRef = db.collection("orders");
-    const parkingRef = db.collection("parkingSpots")
+    const parkingRef = db.collection("parkingSpots");
 
-    
-    await parkingRef.doc(spot.id).update({
-      reserved: true})
-
-    console.log('vehicle id',vehicle[0])
+    try {
+      await parkingRef.doc(spot.id).update({
+        reserved: true,
+      });
 
       let order = ordersRef.doc();
       await order.set({
@@ -79,15 +76,16 @@ export default function ReservationScreen (props) {
         parkingSpotId: spot.id,
         startTime: startTime,
         duration: duration,
-      })
-  
+      });
+    } catch (error) {}
+
     props.navigation.navigate("Confirmation", { spot: spot });
   };
 
   const onChangeStartTime = (event, selectedTime) => {
     setShowStartTime(false);
     let tempSelection = new Date(selectedTime);
-    let tempTime = tempSelection.getHours() + ':' + tempSelection.getMinutes();
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
@@ -118,7 +116,7 @@ export default function ReservationScreen (props) {
   const onChangeEndTime = (event, selectedTime) => {
     setShowEndTime(false);
     let tempSelection = new Date(selectedTime);
-    let tempTime = tempSelection.getHours() + ':' + tempSelection.getMinutes();
+    let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
@@ -145,14 +143,14 @@ export default function ReservationScreen (props) {
     setShowEndTime(true);
   };
 
-  const formatTime = date => {
+  const formatTime = (date) => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    let ampm = hours >= 12 ? 'pm' : 'am';
+    let ampm = hours >= 12 ? "pm" : "am";
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    let strTime = hours + ':' + minutes + ' ' + ampm;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
 
@@ -186,7 +184,7 @@ export default function ReservationScreen (props) {
         })}
       </View>
       {/* start and end time buttons */}
-      <View style= {{flex: 1}}> 
+      <View style={{ flex: 1 }}>
         {Platform.OS == "ios" ? (
           //IOS View for Time Selector
           <View
@@ -197,7 +195,14 @@ export default function ReservationScreen (props) {
             }}
           >
             {/*Start Time*/}
-            <View style={{ flex: 1, flexDirection: "column", justifyContent:'center', alignContent:'center' }}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
               <Text>
                 Select Start Time after {convertTo12Hour(spot.startTime)}:
               </Text>
@@ -216,7 +221,14 @@ export default function ReservationScreen (props) {
             </View>
             {/*End Time*/}
 
-            <View style={{ flex: 1, flexDirection: "column", justifyContent:'center', alignContent:'center'}}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
               <Text>
                 Select End Time before {convertTo12Hour(spot.endTime)}:{" "}
               </Text>
@@ -300,7 +312,10 @@ export default function ReservationScreen (props) {
       </View>
       {/* reservationButton */}
       <View>
-        <TouchableOpacity style={styles.reservationButton} onPress={reserveParking}>
+        <TouchableOpacity
+          style={styles.reservationButton}
+          onPress={reserveParking}
+        >
           <Text style={styles.buttonTitle}>Checkout -&gt; </Text>
         </TouchableOpacity>
       </View>

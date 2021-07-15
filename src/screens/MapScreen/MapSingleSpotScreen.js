@@ -50,7 +50,7 @@ export default function MapSingleSpotScreen (props) {
           </Text>
         </Text>
       </View>
-      {spot.userId == user.id ? (
+      {spot.userId == user.id || spot.reserved  ? (
         <></>
       ) : (
         <TouchableOpacity

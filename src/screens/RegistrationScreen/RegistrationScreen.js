@@ -4,7 +4,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
 
-export default function RegistrationScreen({ navigation }) {
+export default function RegistrationScreen(props) {
   //User Info
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ export default function RegistrationScreen({ navigation }) {
   const [vehicleColor, setVehicleColor] = useState("");
 
   const onFooterLinkPress = () => {
-    navigation.navigate("Login");
+    props.navigation.navigate("Login");
   };
 
   const onRegisterPress = () => {
@@ -31,17 +31,19 @@ export default function RegistrationScreen({ navigation }) {
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
+    let number = Number(phoneNumber)
+
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(async(response) => {
+      .then(async (response) => {
         const uid = response.user.uid;
         const data = {
           id: uid,
           email,
           fullName,
           username,
-          phoneNumber,
+          number,
           isProvider: false,
         };
         const vehicleData = {
@@ -64,7 +66,7 @@ export default function RegistrationScreen({ navigation }) {
           .doc(uid)
           .set(data)
           .then(() => {
-            navigation.navigate("Map", { user: data });
+            props.onLogin();
           })
           .catch((error) => {
             alert(error);
@@ -117,7 +119,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Phone Number"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setPhoneNumber(Number(text))}
+          onChangeText={(text) => setPhoneNumber(text)}
           value={phoneNumber}
           underlineColorAndroid="transparent"
           autoCapitalize="none"

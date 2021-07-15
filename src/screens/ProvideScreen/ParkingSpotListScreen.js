@@ -48,7 +48,7 @@ export const ParkingSpotListScreen = (props) => {
             parkingSpots.push(doc.data());
           });
         } catch (error) {
-          console.log("hello this might be an error");
+          
         }
 
         setParkingSpots(parkingSpots);
@@ -100,7 +100,7 @@ export const ParkingSpotListScreen = (props) => {
     let hours = Number(time.slice(0, 2));
 
     let AmOrPm = hours >= 12 ? "pm" : "am";
-    console.log(AmOrPm);
+
     hours = hours % 12 || 12;
     let minutes = time.slice(3, 5);
     let finalTime = hours + ":" + minutes + AmOrPm;

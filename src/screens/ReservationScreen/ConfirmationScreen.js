@@ -19,23 +19,18 @@ export default ConfirmationScreen = (props) => {
 
   console.log("In confirmation screen spot -->", spot);
 
-
-
   const returnToMapScreen = () => {
-
-    props.navigation.navigate('MapScreen')
-  }
+    props.navigation.navigate("MapScreen");
+  };
   return (
-    <SafeAreaView>
-      <TouchableOpacity
-       onPress={returnToMapScreen}
-      >
+    <SafeAreaView style= {{flex: 1, alignItems:'center', justifyContent: 'center'}}>
+      <TouchableOpacity onPress={returnToMapScreen}>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text>
             {" "}
-            {user.fullName}, your reservation at {spot.street} {spot.city}{" "}
+            {user.fullName}, your reservation at {spot.street}, {spot.city}{" "}
             {spot.state} has been confirmed!{" "}
           </Text>
         </View>
