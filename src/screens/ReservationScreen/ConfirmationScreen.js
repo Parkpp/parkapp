@@ -19,9 +19,17 @@ export default ConfirmationScreen = (props) => {
 
   console.log("In confirmation screen spot -->", spot);
 
+
+
+  const returnToMapScreen = () => {
+
+    props.navigation.navigate('MapScreen')
+  }
   return (
     <SafeAreaView>
-      <TouchableOpacity>
+      <TouchableOpacity
+       onPress={returnToMapScreen}
+      >
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >

@@ -23,6 +23,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 import * as Location from "expo-location";
+import { add } from "react-native-reanimated";
 
 export const ProvideParkingScreen = (props) => {
   const [description, setDescription] = useState("");
@@ -37,6 +38,8 @@ export const ProvideParkingScreen = (props) => {
   const [coords, setCoords] = useState({});
   const [startPicker, setStartPicker] = useState(false);
   const [endPicker, setEndPicker] = useState(false);
+  const [displayStartTime, setDisplayStartTime] = useState("Select Start Time");
+  const [displayEndTime, setDisplayEndTime] = useState("Select Start Time");
   const date = new Date();
 
   useEffect(() => {
@@ -68,10 +71,6 @@ export const ProvideParkingScreen = (props) => {
 
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
-
-    //Navigate to simple map component render
-    //props.navigation.navigate('map', {coor})
-
     return;
   };
 
@@ -92,10 +91,9 @@ export const ProvideParkingScreen = (props) => {
         id: spot.id,
         userId: props.user.id,
         description: description.length < 1 ? "None" : description,
-        street:
-          address.name === address.street
-            ? `${address.street}`
-            : `${address.name} ${address.street}`,
+        street: address.name.includes(address.street)
+          ? `${address.name}`
+          : `${address.name} ${address.street}`,
         city: address.city,
         country: address.country,
         postalCode: address.postalCode,
@@ -113,7 +111,18 @@ export const ProvideParkingScreen = (props) => {
       console.log(error);
     }
 
-    props.navigation.navigate("ProvideScreen");
+    props.navigation.navigate("Provide");
+  };
+
+  const convertTo12Hour = (time) => {
+    let hours = Number(time.slice(0, 2));
+
+    let AmOrPm = hours >= 12 ? "pm" : "am";
+    console.log(AmOrPm);
+    hours = hours % 12 || 12;
+    let minutes = time.slice(3, 5);
+    let finalTime = hours + ":" + minutes + AmOrPm;
+    return finalTime;
   };
 
   const returnToForm = () => {
@@ -133,6 +142,7 @@ export const ProvideParkingScreen = (props) => {
 
     if (tempTime === "NaN:NaN") tempTime = startTime;
     setStartTime(tempTime);
+    setDisplayStartTime(convertTo12Hour(tempTime));
   };
   const onEndChange = (event, selectedDate) => {
     //console.log(event);
@@ -147,11 +157,10 @@ export const ProvideParkingScreen = (props) => {
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    // let selectedDateinSec = timeInSeconds(tempTime);
-
     console.log(tempTime);
-    //if (tempTime === "NaN:NaN") tempTime = endTime;
+    if (tempTime === "NaN:NaN") tempTime = endTime;
     setEndTime(tempTime);
+    setDisplayEndTime(convertTo12Hour(tempTime));
   };
 
   return (
@@ -217,7 +226,7 @@ export const ProvideParkingScreen = (props) => {
               style={styles.input}
               placeholder="Description"
               placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => setdescription(text)}
+              onChangeText={(text) => setDescription(text)}
               value={description}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
@@ -308,7 +317,7 @@ export const ProvideParkingScreen = (props) => {
                 style={{ ...styles.button, width: 220 }}
                 onPress={() => setStartPicker(true)}
               >
-                <Text style={styles.buttonTitle}>{startTime}</Text>
+                <Text style={styles.buttonTitle}>{displayStartTime}</Text>
               </TouchableOpacity>
             </View>
 
@@ -325,7 +334,7 @@ export const ProvideParkingScreen = (props) => {
                 style={{ ...styles.button, width: 220 }}
                 onPress={() => setEndPicker(true)}
               >
-                <Text style={styles.buttonTitle}>{endTime}</Text>
+                <Text style={styles.buttonTitle}>{displayEndTime}</Text>
               </TouchableOpacity>
             </View>
             {/* Upload image */}

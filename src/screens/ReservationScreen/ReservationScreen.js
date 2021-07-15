@@ -44,6 +44,7 @@ export default function ReservationScreen(props) {
       snapshot.forEach((doc) => {
         vehiclesData.push(doc.data());
       });
+      console.log(vehiclesData[0])
       setVehicles(vehiclesData);
     })();
   }, []);
@@ -63,11 +64,11 @@ export default function ReservationScreen(props) {
 
     try {
       let order = ordersRef.doc();
-      await spot.set({
+      await order.set({
         id: order.id,
         userId: user.id,
         vehicle: vehicle.id,
-        parkingSpotId: "",
+        parkingSpotId: spot.id,
         startTime: startTime,
         duration: duration,
       });
@@ -88,14 +89,16 @@ export default function ReservationScreen(props) {
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    //temp time is a string in complete military format
-
-    //Check if selected start time is is > than parking spot
-    console.log("selected time-->", timeInSeconds(tempTime));
-    console.log("spot startTime-->", timeInSeconds(spot.startTime));
-
     if (!(timeInSeconds(tempTime) > timeInSeconds(spot.startTime))) {
-      alert(`Please select a start time after ${spot.startTime}`);
+      let hours = Number(spot.startTime.slice(0, 2));
+
+      let AmOrPm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12 || 12;
+      let minutes = spot.startTime.slice(3, 5);
+      let finalTime = hours + ":" + minutes + " " + AmOrPm;
+      finalTime;
+
+      alert(`Please select a start time after ${finalTime}`);
       return setShowStartTime(false);
     }
 
@@ -119,15 +122,17 @@ export default function ReservationScreen(props) {
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    //temp time is a string in complete military format
-
-    //Check if selected start time is is > than parking spot
-    console.log("selected time-->", timeInSeconds(tempTime));
-    console.log("spot End time-->", timeInSeconds(spot.endTime));
-
     if (!(timeInSeconds(tempTime) < timeInSeconds(spot.endTime))) {
-      alert(`Please select an end time before ${spot.endTime}`);
-      return setShowEndTime(true);
+      let hours = Number(spot.endTime.slice(0, 2));
+
+      let AmOrPm = hours >= 12 ? "pm" : "am";
+      
+      hours = hours % 12 || 12;
+      let minutes = spot.endTime.slice(3, 5);
+      let finalTime = hours + ":" + minutes + " " + AmOrPm;
+      finalTime;
+      alert(`Please select an end time before ${finalTime}`);
+      return setShowEndTime(false);
     }
 
     setEndTime(tempTime);
@@ -149,6 +154,17 @@ export default function ReservationScreen(props) {
     minutes = minutes < 10 ? "0" + minutes : minutes;
     let strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
+  };
+
+  const convertTo12Hour = (time) => {
+    let hours = Number(time.slice(0, 2));
+
+    let AmOrPm = hours >= 12 ? "pm" : "am";
+  
+    hours = hours % 12 || 12;
+    let minutes = time.slice(3, 5);
+    let finalTime = hours + ":" + minutes + AmOrPm;
+    return finalTime;
   };
 
   //If Platform = android, create state for buttons to show when clicked that renders out a time selection
@@ -178,7 +194,7 @@ export default function ReservationScreen(props) {
             }}
           >
             {/*Start Time*/}
-            <Text>Start Time:</Text>
+            <Text>Select Start Time after {convertTo12Hour(spot.startTime)}:</Text>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId="Start Time"
@@ -193,7 +209,7 @@ export default function ReservationScreen(props) {
             </View>
             {/*End Time*/}
 
-            <Text>End Time: </Text>
+            <Text>Select End Time before {convertTo12Hour(spot.endTime)}: </Text>
             <View style={{ flex: 1, paddingHorizontal: 10 }}>
               <DateTimePicker
                 testId="End Time"
@@ -209,8 +225,9 @@ export default function ReservationScreen(props) {
           </View>
         ) : (
           //Android View for Time Selector
+          <SafeAreaView style ={styles.container}>
           <View>
-            <Text>Start Time: </Text>
+            <Text>Select start time after {convertTo12Hour(spot.startTime)}:</Text>
             <View>
               <TouchableOpacity
                 style={styles.button}
@@ -223,7 +240,7 @@ export default function ReservationScreen(props) {
                 )}
               </TouchableOpacity>
             </View>
-            <Text>End Time: </Text>
+           <Text>Select end time before {convertTo12Hour(spot.endTime)}: </Text>
             <View>
               <TouchableOpacity
                 style={styles.button}
@@ -262,6 +279,7 @@ export default function ReservationScreen(props) {
               />
             )}
           </View>
+          </SafeAreaView>
         )}
         {/* Checkout Button */}
         <TouchableOpacity style={styles.button} onPress={reserveParking}>

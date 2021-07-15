@@ -39,8 +39,11 @@ export const UpdateParkingSpotScreen = (props) => {
   const [endTime, setEndTime] = useState(spotToUpdate.endTime);
   const [startPicker, setStartPicker] = useState(false);
   const [endPicker, setEndPicker] = useState(false);
+  const [displayStartTime, setDisplayStartTime] = useState(
+    spotToUpdate.startTime
+  );
+  const [displayEndTime, setDisplayEndTime] = useState(spotToUpdate.endTime);
 
- 
   const date = new Date();
 
   console.log(spotToUpdate);
@@ -50,7 +53,7 @@ export const UpdateParkingSpotScreen = (props) => {
   const onRegisterPress = async () => {
     if (description.length > 24)
       return alert("Please enter a shorter description (max 25 char)");
-   
+
     if (isNaN(rate) || rate == "")
       return alert("please enter a number for rate");
     if (startTime === "Select Start Time")
@@ -81,7 +84,7 @@ export const UpdateParkingSpotScreen = (props) => {
       console.log(address);
       //Update parking spot info in firebase
       await parkingRef.doc(spotToUpdate.id).update({
-        description: (description.length < 1) ? 'None':description,
+        description: description.length < 1 ? "None" : description,
         street:
           address.name === address.street
             ? `${address.street}`
@@ -102,13 +105,23 @@ export const UpdateParkingSpotScreen = (props) => {
       console.log(error);
     }
 
-    props.navigation.navigate("ParkingSpotList");
+    props.navigation.navigate("My Parking Spots");
   };
 
   const returnToForm = () => {
     setSpotCheck(false);
   };
 
+  const convertTo12Hour = (time) => {
+    let hours = Number(time.slice(0, 2));
+
+    let AmOrPm = hours >= 12 ? "pm" : "am";
+    console.log(AmOrPm);
+    hours = hours % 12 || 12;
+    let minutes = time.slice(3, 5);
+    let finalTime = hours + ":" + minutes + AmOrPm;
+    return finalTime;
+  };
   const onStartChange = (event, selectedDate) => {
     //console.log(event);
     setStartPicker(false);
@@ -122,27 +135,23 @@ export const UpdateParkingSpotScreen = (props) => {
 
     if (tempTime === "NaN:NaN") tempTime = startTime;
     setStartTime(tempTime);
+    setDisplayStartTime(convertTo12Hour(tempTime));
   };
   const onEndChange = (event, selectedDate) => {
-    //console.log(event);
     setEndPicker(false);
     let tempSelection = new Date(selectedDate);
 
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
 
-    console.log(tempTime);
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-    // let selectedDateinSec = timeInSeconds(tempTime);
-
-    console.log(tempTime);
-    //if (tempTime === "NaN:NaN") tempTime = endTime;
+    if (tempTime === "NaN:NaN") tempTime = endTime;
     setEndTime(tempTime);
+    setDisplayEndTime(convertTo12Hour(tempTime));
   };
-
 
   return (
     <>
@@ -297,7 +306,7 @@ export const UpdateParkingSpotScreen = (props) => {
                 style={{ ...styles.button, width: 220 }}
                 onPress={() => setStartPicker(true)}
               >
-                <Text style={styles.buttonTitle}>{startTime}</Text>
+                <Text style={styles.buttonTitle}>{displayStartTime}</Text>
               </TouchableOpacity>
             </View>
 
@@ -314,7 +323,7 @@ export const UpdateParkingSpotScreen = (props) => {
                 style={{ ...styles.button, width: 220 }}
                 onPress={() => setEndPicker(true)}
               >
-                <Text style={styles.buttonTitle}>{endTime}</Text>
+                <Text style={styles.buttonTitle}>{displayEndTime}</Text>
               </TouchableOpacity>
             </View>
             {/* Upload image */}

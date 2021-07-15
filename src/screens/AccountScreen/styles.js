@@ -65,4 +65,27 @@ export default StyleSheet.create({
     borderRadius: 2,
     padding: 15,
   },
+
+  //Account screen buttons
+  accountButton: {
+    //margin: 60,
+    flex:1,
+    backgroundColor: "#FAEDD3",
+   
+    justifyContent: "center",
+    alignItems: "center",
+    color: "#FAEDD3",
+    borderWidth:1,
+  },
+
+  accountButtonTitle: {
+    color:"#1A659E",
+    fontSize: 40,
+    //fontFamily: 'Gill Sans',
+    textAlign: 'center',
+    margin: 10,
+    backgroundColor: 'transparent',
+
+  },
 });
+

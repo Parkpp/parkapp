@@ -34,7 +34,7 @@ export default function RegistrationScreen({ navigation }) {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((response) => {
+      .then(async(response) => {
         const uid = response.user.uid;
         const data = {
           id: uid,
@@ -56,7 +56,9 @@ export default function RegistrationScreen({ navigation }) {
         };
 
         const vehicleRef = firebase.firestore().collection("vehicles");
-        vehicleRef.add(vehicleData);
+        let vehicle = vehicleRef.doc();
+        vehicleData["id"] = vehicle.id;
+        await vehicle.set(vehicleData);
         const usersRef = firebase.firestore().collection("users");
         usersRef
           .doc(uid)
@@ -81,7 +83,7 @@ export default function RegistrationScreen({ navigation }) {
       >
         <Image
           style={styles.logo}
-          source={require("../../../assets/icon.png")}
+          source={require("../../../assets/CarinGarageClear.png")}
         />
         <TextInput
           style={styles.input}

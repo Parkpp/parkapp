@@ -107,5 +107,5 @@ export default StyleSheet.create({
     zIndex: 2,
     opacity: 0.75,
     fontSize: 10
-  }
+  },
 });

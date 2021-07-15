@@ -45,9 +45,9 @@ export default class extends React.Component {
     });
   }
 
-  async handleUser () {
-    const usersRef = firebase.firestore().collection('users');
-    firebase.auth().onAuthStateChanged(async user => {
+  async handleUser() {
+    const usersRef = firebase.firestore().collection("users");
+    firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
         try {
           const userData = (await usersRef.doc(user.uid).get()).data();
@@ -95,6 +95,7 @@ export default class extends React.Component {
               <Tab.Screen name="Provide">
                 {(props) => <ProvideScreen {...props} user={user} />}
               </Tab.Screen>
+
               <Tab.Screen name="Account">
                 {(props) => <AccountScreen {...props} user={user} />}
               </Tab.Screen>
