@@ -1,12 +1,15 @@
-import React from 'react';
-import { Text, TouchableOpacity, View, Image } from 'react-native';
-import styles from './styles';
+import React from "react";
+import { Text, TouchableOpacity, View, Image } from "react-native";
+import styles from "./styles";
 
-export default function InfoScreen (props) {
+export default function InfoScreen(props) {
   return (
     <View>
       <Text style={styles.title}>Welcome to Park App</Text>
-      <Image style={styles.image} source={require('./park.png')} />
+      <Image
+        style={styles.image}
+        source={require("../../../assets/CarinGarage.png")}
+      />
       <View style={styles.body}>
         <Text style={styles.bodyText}>
           Park app is a platform where users can post their available parking
@@ -22,11 +25,11 @@ export default function InfoScreen (props) {
         onPress={() => {
           props.navigation.reset({
             index: 0,
-            routes: [{ name: 'Login' }]
+            routes: [{ name: "Login" }],
           });
         }}
       >
-        <Text style={styles.confirmButtonText}>I understand</Text>
+        <Text style={styles.confirmButtonText}>Enter</Text>
       </TouchableOpacity>
     </View>
   );

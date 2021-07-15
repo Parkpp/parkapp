@@ -211,13 +211,13 @@ export const ProvideParkingScreen = (props) => {
           >
             <Image
               style={styles.logo}
-              source={require("../../../assets/park.png")}
+              source={require("../../../assets/CarinGarage.png")}
             />
             <TextInput
               style={styles.input}
-              placeholder="Enter short description (max 25 characters)"
+              placeholder="Description"
               placeholderTextColor="#aaaaaa"
-              onChangeText={(text) => Dsetdescription(text)}
+              onChangeText={(text) => setdescription(text)}
               value={description}
               underlineColorAndroid="transparent"
               autoCapitalize="none"
