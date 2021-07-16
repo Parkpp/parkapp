@@ -4,6 +4,7 @@ import { firebase } from "../../firebase/config";
 import { decode, encode } from "base-64";
 import {
   Image,
+  Platform,
   SafeAreaView,
   Text,
   TextInput,
@@ -40,6 +41,8 @@ export const ProvideParkingScreen = (props) => {
   const [endPicker, setEndPicker] = useState(false);
   const [displayStartTime, setDisplayStartTime] = useState("Select Start Time");
   const [displayEndTime, setDisplayEndTime] = useState("Select Start Time");
+  const [iosStartTime, setIosStartTime] = useState(new Date());
+  const [iosEndTime, setIosEndTime] = useState(new Date());
   const date = new Date();
 
   useEffect(() => {
@@ -85,7 +88,6 @@ export const ProvideParkingScreen = (props) => {
         latitude: coords.latitude,
       });
 
-
       let spot = parkingRef.doc();
       await spot.set({
         id: spot.id,
@@ -107,9 +109,7 @@ export const ProvideParkingScreen = (props) => {
         endTime: endTime,
         rate: rate,
       });
-    } catch (error) {
-  
-    }
+    } catch (error) {}
 
     props.navigation.navigate("Provide");
   };
@@ -130,7 +130,6 @@ export const ProvideParkingScreen = (props) => {
   };
 
   const onStartChange = (event, selectedDate) => {
-    
     setStartPicker(false);
     let tempSelection = new Date(selectedDate);
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
@@ -142,24 +141,23 @@ export const ProvideParkingScreen = (props) => {
 
     if (tempTime === "NaN:NaN") tempTime = startTime;
     setStartTime(tempTime);
+    setIosStartTime(tempSelection);
     setDisplayStartTime(convertTo12Hour(tempTime));
   };
   const onEndChange = (event, selectedDate) => {
-   
     setEndPicker(false);
     let tempSelection = new Date(selectedDate);
 
     let tempTime = tempSelection.getHours() + ":" + tempSelection.getMinutes();
-
 
     if (tempSelection.getHours().toString().length < 2)
       tempTime = `0${tempTime}`;
     if (tempSelection.getMinutes().toString().length < 2)
       tempTime = `${tempTime}0`;
 
-   
     if (tempTime === "NaN:NaN") tempTime = endTime;
     setEndTime(tempTime);
+    setIosEndTime(tempSelection);
     setDisplayEndTime(convertTo12Hour(tempTime));
   };
 
@@ -275,76 +273,132 @@ export const ProvideParkingScreen = (props) => {
               onChangeText={(text) => setRate(text)}
               value={rate}
               underlineColorAndroid="transparent"
+              keyboardType="numeric"
               autoCapitalize="none"
             />
+            {Platform.OS == "ios" ? (
+              <View>
+                <View>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text> Start Time: </Text>
+                    <DateTimePicker
+                      testId="start"
+                      value={iosStartTime}
+                      mode={"time"}
+                      display="default"
+                      onChange={onStartChange}
+                      minuteInterval={30}
+                      style={{ flex: 1, margin: 10, paddingHorizontal: 50 }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text> End Time:   </Text>
+                    <DateTimePicker
+                      testId="start"
+                      value={iosEndTime}
+                      mode={"time"}
+                      display="default"
+                      onChange={onEndChange}
+                      minuteInterval={30}
+                      style={{ flex: 1, margin: 10, paddingHorizontal: 50 }}
+                    />
+                  </View>
+                </View>
 
-            {startPicker ? (
-              <DateTimePicker
-                testId="start"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onStartChange}
-                minuteInterval={30}
-                style={{ margin: 10 }}
-              />
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => onRegisterPress()}
+                >
+                  <Text style={styles.buttonTitle}>Register Spot</Text>
+                </TouchableOpacity>
+              </View>
             ) : (
-              <></>
-            )}
-            {endPicker ? (
-              <DateTimePicker
-                testId="start"
-                value={date}
-                mode={"time"}
-                display="default"
-                onChange={onEndChange}
-                minuteInterval={30}
-                style={{ margin: 10 }}
-              />
-            ) : (
-              <></>
-            )}
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text> Start Time:</Text>
-              <TouchableOpacity
-                style={{ ...styles.button, width: 220 }}
-                onPress={() => setStartPicker(true)}
-              >
-                <Text style={styles.buttonTitle}>{displayStartTime}</Text>
-              </TouchableOpacity>
-            </View>
+              //Android
+              <>
+                {startPicker ? (
+                  <DateTimePicker
+                    testId="start"
+                    value={date}
+                    mode={"time"}
+                    display="default"
+                    onChange={onStartChange}
+                    minuteInterval={30}
+                    style={{ margin: 10 }}
+                  />
+                ) : (
+                  <></>
+                )}
+                {endPicker ? (
+                  <DateTimePicker
+                    testId="start"
+                    value={date}
+                    mode={"time"}
+                    display="default"
+                    onChange={onEndChange}
+                    minuteInterval={30}
+                    style={{ margin: 10 }}
+                  />
+                ) : (
+                  <></>
+                )}
 
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text> End Time: </Text>
-              <TouchableOpacity
-                style={{ ...styles.button, width: 220 }}
-                onPress={() => setEndPicker(true)}
-              >
-                <Text style={styles.buttonTitle}>{displayEndTime}</Text>
-              </TouchableOpacity>
-            </View>
-            {/* Upload image */}
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text> Start Time:</Text>
+                  <TouchableOpacity
+                    style={{ ...styles.button, width: 220 }}
+                    onPress={() => setStartPicker(true)}
+                  >
+                    <Text style={styles.buttonTitle}>{displayStartTime}</Text>
+                  </TouchableOpacity>
+                </View>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => onRegisterPress()}
-            >
-              <Text style={styles.buttonTitle}>Register Spot</Text>
-            </TouchableOpacity>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text> End Time: </Text>
+                  <TouchableOpacity
+                    style={{ ...styles.button, width: 220 }}
+                    onPress={() => setEndPicker(true)}
+                  >
+                    <Text style={styles.buttonTitle}>{displayEndTime}</Text>
+                  </TouchableOpacity>
+                </View>
+                {/* Upload image */}
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => onRegisterPress()}
+                >
+                  <Text style={styles.buttonTitle}>Register Spot</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </KeyboardAwareScrollView>
         </View>
       )}

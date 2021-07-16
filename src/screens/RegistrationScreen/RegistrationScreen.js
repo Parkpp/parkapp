@@ -3,6 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
+import { Alert } from "react-native";
 
 export default function RegistrationScreen(props) {
   //User Info
@@ -24,6 +25,8 @@ export default function RegistrationScreen(props) {
   };
 
   const onRegisterPress = async () => {
+
+  
     if (password !== confirmPassword) {
       alert("Passwords don't match.");
       return;
@@ -31,13 +34,15 @@ export default function RegistrationScreen(props) {
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-    
+   
 
     try {
       let credentials = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
       console.log("credentials-->", credentials.user);
+     
+
       let uid = credentials.user.uid;
 
       const data = {
@@ -57,13 +62,20 @@ export default function RegistrationScreen(props) {
         color: vehicleColor,
         createdAt: timestamp,
       };
+     
       const vehicleRef = firebase.firestore().collection("vehicles");
       let vehicle = vehicleRef.doc();
       vehicleData["id"] = vehicle.id;
       await vehicle.set(vehicleData);
       const usersRef = firebase.firestore().collection("users");
       await usersRef.doc(uid).set(data);
-    } catch (error) {}
+    } catch (error) {
+
+     // alert(error)
+    }
+
+
+  
   };
 
   return (
