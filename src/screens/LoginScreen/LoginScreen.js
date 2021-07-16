@@ -27,7 +27,6 @@ export default function LoginScreen(props) {
               alert("User does not exist anymore.");
               return;
             }
-            props.onLogin();
           })
           .catch((error) => {
             alert(error);

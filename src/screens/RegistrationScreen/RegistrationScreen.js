@@ -23,7 +23,7 @@ export default function RegistrationScreen(props) {
     props.navigation.navigate("Login");
   };
 
-  const onRegisterPress = () => {
+  const onRegisterPress = async () => {
     if (password !== confirmPassword) {
       alert("Passwords don't match.");
       return;
@@ -31,50 +31,39 @@ export default function RegistrationScreen(props) {
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-    let number = Number(phoneNumber)
+    
 
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(async (response) => {
-        const uid = response.user.uid;
-        const data = {
-          id: uid,
-          email,
-          fullName,
-          username,
-          number,
-          isProvider: false,
-        };
-        const vehicleData = {
-          userId: uid,
-          // vehicleId: ,
-          make: vehicleMake,
-          model: vehicleModel,
-          year: vehicleYear,
-          licensePlate: licensePlate,
-          color: vehicleColor,
-          createdAt: timestamp,
-        };
+    try {
+      let credentials = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
+      console.log("credentials-->", credentials.user);
+      let uid = credentials.user.uid;
 
-        const vehicleRef = firebase.firestore().collection("vehicles");
-        let vehicle = vehicleRef.doc();
-        vehicleData["id"] = vehicle.id;
-        await vehicle.set(vehicleData);
-        const usersRef = firebase.firestore().collection("users");
-        usersRef
-          .doc(uid)
-          .set(data)
-          .then(() => {
-            props.navigation.navigate("Map", { user: data });
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      })
-      .catch((error) => {
-        alert(error);
-      });
+      const data = {
+        id: uid,
+        email,
+        fullName,
+        username,
+        phoneNumber,
+        isProvider: false,
+      };
+      const vehicleData = {
+        userId: uid,
+        make: vehicleMake,
+        model: vehicleModel,
+        year: vehicleYear,
+        licensePlate: licensePlate,
+        color: vehicleColor,
+        createdAt: timestamp,
+      };
+      const vehicleRef = firebase.firestore().collection("vehicles");
+      let vehicle = vehicleRef.doc();
+      vehicleData["id"] = vehicle.id;
+      await vehicle.set(vehicleData);
+      const usersRef = firebase.firestore().collection("users");
+      await usersRef.doc(uid).set(data);
+    } catch (error) {}
   };
 
   return (
@@ -171,7 +160,7 @@ export default function RegistrationScreen(props) {
           style={styles.input}
           placeholderTextColor="#aaaaaa"
           placeholder="Year"
-          onChangeText={(text) => setVehicleYear(Number(text))}
+          onChangeText={(text) => setVehicleYear(text)}
           value={vehicleYear}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
