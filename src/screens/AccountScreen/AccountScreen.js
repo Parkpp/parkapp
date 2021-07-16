@@ -3,8 +3,6 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import LinearGradient from 'react-native-linear-gradient';
-
 
 const Stack = createStackNavigator();
 

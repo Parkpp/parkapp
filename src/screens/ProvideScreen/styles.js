@@ -31,7 +31,7 @@ export default StyleSheet.create({
     backgroundColor: "red",
     marginLeft: 30,
     marginRight: 30,
-    marginTop: 20,
+    marginTop: 10,
     height: 48,
     borderRadius: 5,
     alignItems: "center",
@@ -62,8 +62,9 @@ export default StyleSheet.create({
       Platform.OS === "android"
         ? "white"
         : Platform.OS === "ios"
-        ? "black"
+        ? "white"
         : "white",
+
     paddingTop: Platform.OS === "android" ? 20 : 0,
   },
 
@@ -122,22 +123,21 @@ export default StyleSheet.create({
   //Provide screen buttons
   provideScreenButton: {
     //margin: 60,
-    flex:1,
+    flex: 1,
     backgroundColor: "#FAEDD3",
-   
+
     justifyContent: "center",
     alignItems: "center",
     color: "#FAEDD3",
-    borderWidth:1,
+    borderWidth: 1,
   },
 
   provideButtonTitle: {
-    color:"#1A659E",
+    color: "#1A659E",
     fontSize: 40,
     //fontFamily: 'Gill Sans',
-    textAlign: 'center',
+    textAlign: "center",
     margin: 10,
-    backgroundColor: 'transparent',
-
+    backgroundColor: "transparent",
   },
 });
