@@ -27,39 +27,20 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
     this.state = { user: null, loading: true, userLogged: null };
-    this.handleUser = this.handleUser.bind(this);
   }
-
-  componentDidMount() {
+  async componentDidMount() {
     firebase.auth().onAuthStateChanged(async (user) => {
       this.setState(user ? { userLogged: true } : { userLogged: false });
-      const usersRef = firebase.firestore().collection("users");
-      console.log("from component did mount -->", user);
+      let usersRef = firebase.firestore().collection("users");
 
       try {
-        const userData = (await usersRef.doc(user.uid).get()).data();
-        this.setState({ loading: false });
-        this.setState({ user: userData });
+        let userData = (await usersRef.doc(user.uid).get()).data();
+        if (!userData) {
+          userData = { id: user.uid };
+        }
+        this.setState({ loading: false, user: userData });
       } catch (error) {
         console.log(error);
-        this.setState({ loading: false });
-      }
-    });
-  }
-
-  async handleUser() {
-    const usersRef = firebase.firestore().collection("users");
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const userData = (await usersRef.doc(user.uid).get()).data();
-          this.setState({ loading: false });
-          this.setState({ user: userData });
-        } catch (error) {
-          console.log(error);
-          this.setState({ loading: false });
-        }
-      } else {
         this.setState({ loading: false });
       }
     });
@@ -120,14 +101,10 @@ export default class extends React.Component {
                 options={{ headerShown: false }}
               />
               <Stack.Screen name="Login">
-                {(props) => (
-                  <LoginScreen {...props} onLogin={this.handleUser} />
-                )}
+                {(props) => <LoginScreen {...props} />}
               </Stack.Screen>
               <Stack.Screen name="Registration">
-                {(props) => (
-                  <RegistrationScreen {...props} onLogin={this.handleUser} />
-                )}
+                {(props) => <RegistrationScreen {...props} />}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
