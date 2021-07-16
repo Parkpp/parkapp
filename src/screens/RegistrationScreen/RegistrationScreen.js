@@ -25,8 +25,6 @@ export default function RegistrationScreen(props) {
   };
 
   const onRegisterPress = async () => {
-
-  
     if (password !== confirmPassword) {
       alert("Passwords don't match.");
       return;
@@ -34,14 +32,11 @@ export default function RegistrationScreen(props) {
 
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-   
-
     try {
       let credentials = await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password);
       console.log("credentials-->", credentials.user);
-     
 
       let uid = credentials.user.uid;
 
@@ -62,7 +57,7 @@ export default function RegistrationScreen(props) {
         color: vehicleColor,
         createdAt: timestamp,
       };
-     
+
       const vehicleRef = firebase.firestore().collection("vehicles");
       let vehicle = vehicleRef.doc();
       vehicleData["id"] = vehicle.id;
@@ -70,12 +65,8 @@ export default function RegistrationScreen(props) {
       const usersRef = firebase.firestore().collection("users");
       await usersRef.doc(uid).set(data);
     } catch (error) {
-
-     // alert(error)
+      alert(error);
     }
-
-
-  
   };
 
   return (

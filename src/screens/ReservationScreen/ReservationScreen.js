@@ -167,24 +167,27 @@ export default function ReservationScreen(props) {
 
   //If Platform = android, create state for buttons to show when clicked that renders out a time selection
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: "column" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       {/* Vehicle info */}
-      <View>
+      <View style={{ marginTop: 20 }}>
         {/*Vehicle Information*/}
         {vehicle.map((vehicle, idx) => {
           return (
-            <View key={idx}>
-              <Text>Brand: {vehicle.make}</Text>
-              <Text>Model: {vehicle.model}</Text>
-              <Text>Year: {vehicle.year}</Text>
-              <Text>Color: {vehicle.color}</Text>
-              <Text>License Plate: {vehicle.licensePlate}</Text>
+            <View key={idx} style={styles.textBackground}>
+              <Text style={styles.text}>Brand: {vehicle.make}</Text>
+              <Text style={styles.text}>Model: {vehicle.model}</Text>
+              <Text style={styles.text}>Year: {vehicle.year}</Text>
+              <Text style={styles.text}>Color: {vehicle.color}</Text>
+              <Text style={styles.text}>
+                License Plate: {vehicle.licensePlate}
+              </Text>
             </View>
           );
         })}
       </View>
+
       {/* start and end time buttons */}
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, margin: 32, marginTop: 50 }}>
         {Platform.OS == "ios" ? (
           //IOS View for Time Selector
           <View
@@ -201,10 +204,11 @@ export default function ReservationScreen(props) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignContent: "center",
+                alignItems: "center",
               }}
             >
-              <Text>
-                Select Start Time after {convertTo12Hour(spot.startTime)}:
+              <Text style={styles.timeText}>
+                Select Start Time after {convertTo12Hour(spot.startTime)}:{" "}
               </Text>
               <View style={{ flex: 1, paddingHorizontal: 10 }}>
                 <DateTimePicker
@@ -215,7 +219,7 @@ export default function ReservationScreen(props) {
                   onChange={onChangeStartTime}
                   minuteInterval={30}
                   is24hour={true}
-                  style={{ margin: 10 }}
+                  style={{ margin: 10, paddingHorizontal: 50 }}
                 />
               </View>
             </View>
@@ -227,12 +231,13 @@ export default function ReservationScreen(props) {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignContent: "center",
+                alignItems: "center",
               }}
             >
-              <Text>
-                Select End Time before {convertTo12Hour(spot.endTime)}:{" "}
+              <Text style={styles.timeText}>
+                Select End Time before {convertTo12Hour(spot.endTime)}:
               </Text>
-              <View style={{ flex: 1, paddingHorizontal: 10 }}>
+              <View style={{ flex: 1, paddingHorizontal: 30 }}>
                 <DateTimePicker
                   testId="End Time"
                   value={iosEndTime}
@@ -241,7 +246,7 @@ export default function ReservationScreen(props) {
                   onChange={onChangeEndTime}
                   minuteInterval={30}
                   is24hour={true}
-                  style={{ margin: 10 }}
+                  style={{ margin: 10, paddingHorizontal: 50 }}
                 />
               </View>
             </View>
