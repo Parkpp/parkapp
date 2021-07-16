@@ -69,8 +69,15 @@ export const ProvideParkingScreen = (props) => {
     const address = `${street}, ${city}, ${state}`;
     //check if form entered data returns longitude and latidude from geocoding APi
 
-    const returnedCoords = await Location.geocodeAsync(address);
+    let returnedCoords;
+    try {
+      returnedCoords = await Location.geocodeAsync(address);
+    } catch (error) {
+      console.log(error);
+    }
+
     if (!returnedCoords[0]) return alert("please enter full address");
+    console.log(returnedCoords[0]);
 
     setCoords(returnedCoords[0]);
     setSpotCheck(true);
@@ -200,13 +207,13 @@ export const ProvideParkingScreen = (props) => {
               style={styles.button}
               onPress={() => addParkingSpot()}
             >
-              <Text style={styles.buttonTitle}>Yes</Text>
+              <Text style={styles.buttonTitle}>YES</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => returnToForm()}
             >
-              <Text style={styles.buttonTitle}>No</Text>
+              <Text style={styles.buttonTitle}>NO</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -306,7 +313,7 @@ export const ProvideParkingScreen = (props) => {
                       alignItems: "center",
                     }}
                   >
-                    <Text> End Time:   </Text>
+                    <Text> End Time: </Text>
                     <DateTimePicker
                       testId="start"
                       value={iosEndTime}
