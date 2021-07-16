@@ -16,7 +16,7 @@ export function UpdateVehicleScreen(props) {
     const vehicleRef = firebase
       .firestore()
       .collection("vehicles")
-      .where("userId", "==", vehicle.userId);
+      .doc(vehicle.id);
     //Double check userId in database
     const data = {
       make: vehicleMake,
@@ -25,6 +25,8 @@ export function UpdateVehicleScreen(props) {
       licensePlate: licensePlate,
       color: vehicleColor,
     };
+
+    console.log(vehicleRef);
     await vehicleRef.update(data);
     Alert.alert("Your vehicle information has been successfully updated!");
 
@@ -69,7 +71,7 @@ export function UpdateVehicleScreen(props) {
           placeholderTextColor="#aaaaaa"
           placeholder="Color"
           onChangeText={(text) => setVehicleColor(text)}
-          value={vehicle.color}
+          defaultValue={vehicle.color}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
@@ -78,7 +80,7 @@ export function UpdateVehicleScreen(props) {
           placeholderTextColor="#aaaaaa"
           placeholder="License Plate"
           onChangeText={(text) => setLicensePlate(text)}
-          value={vehicle.licensePlate}
+          defaultValue={vehicle.licensePlate}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />

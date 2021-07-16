@@ -30,6 +30,8 @@ export default class extends React.Component {
   }
   async componentDidMount() {
     firebase.auth().onAuthStateChanged(async (user) => {
+
+    
       this.setState(user ? { userLogged: true } : { userLogged: false });
       let usersRef = firebase.firestore().collection("users");
 
@@ -40,7 +42,7 @@ export default class extends React.Component {
         }
         this.setState({ loading: false, user: userData });
       } catch (error) {
-        console.log(error);
+        alert(error);
         this.setState({ loading: false });
       }
     });

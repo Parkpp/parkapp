@@ -19,6 +19,8 @@ export function UserProfileUpdateScreen(props) {
       username: username,
       phoneNumber: phoneNumber,
     };
+
+    console.log(userRef)
     await userRef.update(data);
     Alert.alert("Your profile has been successfully updated!");
 
