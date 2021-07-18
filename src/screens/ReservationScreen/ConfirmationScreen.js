@@ -15,10 +15,6 @@ export default ConfirmationScreen = (props) => {
   const user = props.user;
   const spot = props.route.params.spot;
 
-  // console.log("In confimation screen user -->", user);
-
-  // console.log("In confirmation screen spot -->", spot);
-
   const returnToMapScreen = () => {
     props.navigation.navigate("MapScreen");
   };
@@ -37,28 +33,23 @@ export default ConfirmationScreen = (props) => {
   const startTime = convertTo12Hour(props.route.params.spot.startTime);
   const endTime = convertTo12Hour(props.route.params.spot.endTime);
 
-  console.log(
-    "What is my start time",
-    startTime,
-    "<--and end time?-->",
-    endTime
-  );
-
   return (
-    <SafeAreaView style={{ justifyContent: "center", alignItems: "center" }}>
+    <SafeAreaView
+      style={{ justifyContent: "center", alignItems: "center", marginTop: 200 }}
+    >
       <TouchableOpacity onPress={returnToMapScreen}>
         <View style={styles.confirmationBackground}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 20,
               paddingLeft: 5,
               paddingRight: 5,
               paddingBottom: 10,
               paddingTop: 10,
             }}
           >
-            {user.fullName}, your reservation at {spot.street}, {spot.city}{" "}
-            {spot.state} has been confirmed!{" "}
+            {user.fullName}, your reservation at {spot.street} {spot.city},
+            {spot.state} for {startTime} to {endTime} has been confirmed!
           </Text>
         </View>
       </TouchableOpacity>
