@@ -97,4 +97,18 @@ export default StyleSheet.create({
     paddingBottom: 2,
     paddingTop: 2,
   },
+  confirmationBackground: {
+    margin: 20,
+    borderStyle: "solid",
+    borderColor: "black",
+    borderWidth: 1,
+    backgroundColor: "#FAEDD3",
+    borderRadius: 10,
+    padding: 15,
+    alignContent: "center",
+    marginLeft: 50,
+    marginRight: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
