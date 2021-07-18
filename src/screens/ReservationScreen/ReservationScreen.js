@@ -79,7 +79,11 @@ export default function ReservationScreen(props) {
       });
     } catch (error) {}
 
-    props.navigation.navigate("Confirmation", { spot: spot });
+    props.navigation.navigate("Confirmation", {
+      spot: spot,
+      reservedStartTime: startTime,
+      reservedEndTime: endTime,
+    });
   };
 
   const onChangeStartTime = (event, selectedTime) => {

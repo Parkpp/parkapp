@@ -30,8 +30,8 @@ export default ConfirmationScreen = (props) => {
     return finalTime;
   };
 
-  const startTime = convertTo12Hour(props.route.params.spot.startTime);
-  const endTime = convertTo12Hour(props.route.params.spot.endTime);
+  const startTime = convertTo12Hour(props.route.params.reservedStartTime);
+  const endTime = convertTo12Hour(props.route.params.reservedEndTime);
 
   return (
     <SafeAreaView
