@@ -313,7 +313,7 @@ export const ProvideParkingScreen = (props) => {
                       alignItems: "center",
                     }}
                   >
-                    <Text> End Time: </Text>
+                    <Text> End Time:  </Text>
                     <DateTimePicker
                       testId="start"
                       value={iosEndTime}
