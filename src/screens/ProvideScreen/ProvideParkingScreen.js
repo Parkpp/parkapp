@@ -40,7 +40,7 @@ export const ProvideParkingScreen = (props) => {
   const [startPicker, setStartPicker] = useState(false);
   const [endPicker, setEndPicker] = useState(false);
   const [displayStartTime, setDisplayStartTime] = useState("Select Start Time");
-  const [displayEndTime, setDisplayEndTime] = useState("Select Start Time");
+  const [displayEndTime, setDisplayEndTime] = useState("Select End Time");
   const [iosStartTime, setIosStartTime] = useState(new Date());
   const [iosEndTime, setIosEndTime] = useState(new Date());
   const date = new Date();

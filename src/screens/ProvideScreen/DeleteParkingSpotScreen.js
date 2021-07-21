@@ -36,7 +36,7 @@ export const DeleteParkingSpotScreen = (props) => {
   };
 
   const returnToParkingSpotsList = () => {
-    props.navigation.navigate("ParkingSpotList");
+    props.navigation.navigate("My Parking Spots");
   };
 
   return (
